@@ -6,6 +6,7 @@ import os, subprocess, cookielib, stat, requests, json, ast, sys, numpy as np, y
 #remplacer if == Flase/True par if not ->done
 #changer les sys.exit(84/0) en raise SnowRestSessionException("message")
 #commenter le code avec pydoc
+#enlever LE self.ConfigFile
 
 class SnowRestSessionException(Exception):
     pass
@@ -16,11 +17,11 @@ class SnowRestSession(object):
                 self.instance = None
                 self.authType = None
                 self.ssoMethod = None
-                self.oauthclientid = None
+                self.oauthClientId = None
                 self.oauthClientSecret = None
-                self.sessioncookiefile = None
-                self.sessioncookie = None
-                self.oauthtokenfile = None
+                self.sessionCookieFile = None
+                self.sessionCookie = None
+                self.oauthTokenFile = None
                 self.tokenDic = None
                 self.session = None
                 self.logfile = None
@@ -32,36 +33,36 @@ class SnowRestSession(object):
         def loadConfigFile(self, configfilepath):
                 try:
                         with open(configfilepath) as f:
-                                self.ConfigFile = yaml.safe_load(f)
+                                configfile = yaml.safe_load(f)
                 except Exception as e:
                         sys.stderr.write('SnowRestSession.loadConfigFile: Issue when opening the config file\n')
                         raise e
 
-                if 'instance' in self.ConfigFile:
-                        self.instance = 'https://' + self.ConfigFile['instance']
+                if 'instance' in configfile:
+                        self.instance = 'https://' + configfile['instance']
 
-                if 'auth' in self.ConfigFile:
-                        if 'type' in self.ConfigFile['auth']:
-                                self.authType = self.ConfigFile['auth']['type']
+                if 'auth' in configfile:
+                        if 'type' in configfile['auth']:
+                                self.authType = configfile['auth']['type']
 
-                        if 'sso_method' in self.ConfigFile['auth']:
-                                self.ssoMethod = self.ConfigFile['auth']['sso_method']
+                        if 'sso_method' in configfile['auth']:
+                                self.ssoMethod = configfile['auth']['sso_method']
 
-                        if 'oauth_client_id' in self.ConfigFile['auth']:
-                                self.oauthclientid = self.ConfigFile['auth']['oauth_client_id']
+                        if 'oauth_client_id' in configfile['auth']:
+                                self.oauthClientId = configfile['auth']['oauth_client_id']
 
-                        if 'oauth_client_secret' in self.ConfigFile['auth']:
-                                self.oauthClientSecret = self.ConfigFile['auth']['oauth_client_secret']
+                        if 'oauth_client_secret' in configfile['auth']:
+                                self.oauthClientSecret = configfile['auth']['oauth_client_secret']
 
-                if 'session' in self.ConfigFile:
-                        if 'cookie_file' in self.ConfigFile['session']:
-                                self.sessioncookiefile = self.ConfigFile['session']['cookie_file']
+                if 'session' in configfile:
+                        if 'cookie_file' in configfile['session']:
+                                self.sessionCookieFile = configfile['session']['cookie_file']
 
-                        if 'oauth_tokens_file' in self.ConfigFile['session']:
-                                self.oauthTokenFile = self.ConfigFile['session']['oauth_tokens_file']
+                        if 'oauth_tokens_file' in configfile['session']:
+                                self.oauthTokenFile = configfile['session']['oauth_tokens_file']
 
-                if 'log_file' in self.ConfigFile:
-                        self.logfile = self.ConfigFile['log_file']
+                if 'log_file' in configfile:
+                        self.logfile = configfile['log_file']
 
         def setInstance(self, instance):
                 self.instance = instance
@@ -73,13 +74,13 @@ class SnowRestSession(object):
                 self.ssoMethod = ssomethod
 
         def setOauthclientid(self, oauthclienid):
-                self.oauthclientid = oauthclienid
+                self.oauthClientId = oauthclienid
 
         def setOauthClientSecret(self, oauthclientsecret):
                 self.oauthClientSecret = oauthclientsecret
 
         def setSessionCookieFile(self, cookiefile):
-                self.sessioncookiefile = cookiefile
+                self.sessionCookieFile = cookiefile
 
         def setOauthTokenFile(self, oauthtokenfile):
                 self.oauthTokenFile
@@ -89,8 +90,8 @@ class SnowRestSession(object):
 
         def cernGetSsoCookie(self):
         #"""Get CERN SSO cookies."""
-            args = ["cern-get-sso-cookie", "--reprocess", "--url", self.instance,"--outfile", self.sessioncookiefile]
-            if not os.path.exists(self.sessioncookiefile):
+            args = ["cern-get-sso-cookie", "--reprocess", "--url", self.instance,"--outfile", self.sessionCookieFile]
+            if not os.path.exists(self.sessionCookieFile):
                 p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 p.wait()
                 self.freshCookie = True
@@ -100,23 +101,22 @@ class SnowRestSession(object):
                     p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                     p.wait()
                     self.freshCookie = True
-            self.sessioncookie = cookielib.MozillaCookieJar(self.sessioncookiefile)
-            self.sessioncookie.load()
+            self.sessionCookie = cookielib.MozillaCookieJar(self.sessionCookieFile)
+            self.sessionCookie.load()
             if not self.__good_cookie():
                 raise SnowRestSessionException('The account used to log in does not work in ServiceNow')
             if not self.storeCookie:
-                os.remove(self.sessioncookiefile)
+                os.remove(self.sessionCookieFile)
 
         def requests_session(self):
                 self.session = requests.Session()
-                print 'le COOKIE est :' + str(self.sessioncookie)
-                self.session.cookies = self.sessioncookie
+                self.session.cookies = self.sessionCookie
 
 
         def loadTokenFile(self):
             if not os.path.exists(self.oauthTokenFile + '.npy'):
                 self.freshToken = True
-                token = self.session.post(self.instance + '/oauth_token.do', data = {'grant_type' : 'password', 'client_id' : self.ConfigFile['auth']['oauth_client_id'], 'client_secret' : self.oauthClientSecret});
+                token = self.session.post(self.instance + '/oauth_token.do', data = {'grant_type' : 'password', 'client_id' : self.oauthClientId, 'client_secret' : self.oauthClientSecret});
                 if token.status_code == 200:
                     self.tokenDic = ast.literal_eval(token.text)
                     if self.storeToken:
@@ -126,8 +126,8 @@ class SnowRestSession(object):
                         raise SnowRestSessionException('SnowRestSession.loadConfigFile: Issue when opening the config file')
                     else:
                         self.cernGetSsoCookie()
-                        self.session.cookies = self.sessioncookie
-                        token = self.session.post('https://cerntraining.service-now.com/oauth_token.do', data = {'grant_type' : 'password', 'client_id' : self.ConfigFile['auth']['oauth_client_id'], 'client_secret' : self.ConfigFile['auth']['oauth_client_secret']});
+                        self.session.cookies = self.sessionCookie
+                        token = self.session.post('https://cerntraining.service-now.com/oauth_token.do', data = {'grant_type' : 'password', 'client_id' : self.oauthClientId, 'client_secret' : self.oauthClientSecret});
                         self.tokenDic = None
                         if token.status_code == 200:
                             self.tokenDic = ast.literal_eval(token.text)
@@ -142,12 +142,12 @@ class SnowRestSession(object):
                     raise SnowRestSessionException('failed to load token file maybe bad file ?')
         
         def refreshToken(self):
-            token = self.session.post(self.instance + '/oauth_token.do', data = {'grant_type' : 'refresh_token', 'client_id' : self.ConfigFile['auth']['oauth_client_id'], 'client_secret' : self.ConfigFile['auth']['oauth_client_secret'], 'refresh_token' : self.tokenDic['refresh_token']})
+            token = self.session.post(self.instance + '/oauth_token.do', data = {'grant_type' : 'refresh_token', 'client_id' : self.oauthClientId, 'client_secret' : self.oauthClientSecret, 'refresh_token' : self.tokenDic['refresh_token']})
             if token.status_code == 200:
                 self.tokenDic = ast.literal_eval(token.text)
                 np.save(self.oauthTokenFile, self.tokenDic)
             else:
-                token = self.session.post(self.instance + '/oauth_token.do', data = {'grant_type' : 'password', 'client_id' : self.ConfigFile['auth']['oauth_client_id'], 'client_secret' : self.ConfigFile['auth']['oauth_client_secret']})
+                token = self.session.post(self.instance + '/oauth_token.do', data = {'grant_type' : 'password', 'client_id' : self.oauthClientId, 'client_secret' : self.oauthClientSecret})
                 if token.status_code == 200:
                     self.tokenDic = ast.literal_eval(token.text)
                     np.save(self.oauthTokenFile, self.tokenDic)
@@ -167,20 +167,20 @@ class SnowRestSession(object):
                     raise SnowRestSessionException('failed to load token file maybe bad file ?')
                 else:
                     self.refreshToken()
-                    token = self.session.post(self.instance + '/oauth_token.do', data = {'grant_type' : 'password', 'client_id' : self.ConfigFile['auth']['oauth_client_id'], 'client_secret' : self.ConfigFile['auth']['oauth_client_secret']})
+                    token = self.session.post(self.instance + '/oauth_token.do', data = {'grant_type' : 'password', 'client_id' : self.oauthClientId, 'client_secret' : self.oauthClientSecret})
                     if token.status_code == 200:
                         self.tokenDic = ast.literal_eval(token.text)
-                        np.save(self.oauthtokenfile, self.tokenDic)
+                        np.save(self.oauthTokenFile, self.tokenDic)
                         result = self.session.get(url, headers = {'Authorization' : 'Bearer ' + self.tokenDic['access_token'], 'Accept' : 'application/json'})
                         if result.status_code != 401:
                             return result
                         else:
                             raise SnowRestSessionException('Cant access to Service Now')
                     else:
-                        token = self.session.post(self.instance + '/oauth_token.do', data = {'grant_type' : 'password', 'client_id' : self.ConfigFile['auth']['oauth_client_id'], 'client_secret' : self.ConfigFile['auth']['oauth_client_secret']})
+                        token = self.session.post(self.instance + '/oauth_token.do', data = {'grant_type' : 'password', 'client_id' : self.oauthClientId, 'client_secret' : self.oauthClientSecret})
                         if token.status_code == 200:
                             self.tokenDic = ast.literal_eval(token.text)
-                            np.save(self.oauthtokenfile, self.tokenDic)
+                            np.save(self.oauthTokenFile, self.tokenDic)
                             result = self.session.get(url, headers = {'Authorization' : 'Bearer ' + self.tokenDic['access_token'], 'Accept' : 'application/json'})
                             if result.status_code != 401:
                                 return result
@@ -190,15 +190,15 @@ class SnowRestSession(object):
                             if freshCookie:
                                 raise SnowRestSessionException('Problem !')
                             else:
-                                os.remove(self.sessioncookiefile)
+                                os.remove(self.sessionCookieFile)
                                 self.cernGetSsoCookie()
-                                self.session.cookies = self.sessioncookie
-                                token = self.session.post(self.instance + '/oauth_token.do', data = {'grant_type' : 'password', 'client_id' : self.ConfigFile['auth']['oauth_client_id'], 'client_secret' : self.ConfigFile['auth']['oauth_client_secret']})
+                                self.session.cookies = self.sessionCookie
+                                token = self.session.post(self.instance + '/oauth_token.do', data = {'grant_type' : 'password', 'client_id' : self.oauthClientId, 'client_secret' : self.oauthClientSecret})
                                 if not token.status_code == 200:
                                     raise SnowRestSessionException('Problem !')
                                 else:
                                     self.tokenDic = ast.literal_eval(token.text)
-                                    np.save(self.oauthtokenfile, self.tokenDic)
+                                    np.save(self.oauthTokenFile, self.tokenDic)
                                     result = self.session.get(url, headers = {'Authorization' : 'Bearer ' + self.tokenDic['access_token'], 'Accept' : 'application/json'})
                                     if not result.status_code == 401:
                                         return result
@@ -210,16 +210,11 @@ class SnowRestSession(object):
 
 
         def __good_cookie(self):
-            file = open(self.sessioncookiefile)
+            file = open(self.sessionCookieFile)
             a = file.read()
             if (a.find('glide_user_activity') != -1 and a.find('glide_session_store') != -1
                 and a.find('glide_user_route') != -1 and a.find('JSESSIONID') != -1 and a.find('BIGipServerpool_cerntraining') != -1):
                 return True
-            print a.find('glide_user_activity')
-            print a.find('glide_session_store')
-            print a.find('glide_user_route')
-            print a.find('JSESSIONID')
-            print a.find('BIGipServerpool_cerntraining')
             return False
 
 def main():
