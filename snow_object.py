@@ -212,7 +212,7 @@ class SnowRestSession(object):
             self.cernGetSsoCookie()
             self.requests_session()
             self.loadTokenFile()
-            return self.session.post(url, headers=headers, data)
+            return self.session.post(url, headers=headers, data=data)
 
         def __good_cookie(self):
             file = open(self.sessionCookieFile)
@@ -225,7 +225,7 @@ class SnowRestSession(object):
 def main():
         s = SnowRestSession()
         s.loadConfigFile('config.yaml')
-        a = s.post(self.instance + '/oauth_token.do', None, data = {'grant_type' : 'password', 'client_id' : self.oauthClientId, 'client_secret' : self.oauthClientSecret})
+        a = s.post(s.instance + '/oauth_token.do', None, data = {'grant_type' : 'password', 'client_id' : s.oauthClientId, 'client_secret' : s.oauthClientSecret})
         print a.text
 
 if __name__ == '__main__':
