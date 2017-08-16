@@ -208,6 +208,11 @@ class SnowRestSession(object):
         def getIncident(self, incident):
             return self.get(self.instance + '/api/now/v2/table/incident?sysparm_query=number=INC' + incident)
 
+        def post(self, url, headers=None, data=None):
+            self.cernGetSsoCookie()
+            self.requests_session()
+            self.loadTokenFile()
+            return self.session.post(url, headers=headers, data)
 
         def __good_cookie(self):
             file = open(self.sessionCookieFile)
@@ -220,7 +225,7 @@ class SnowRestSession(object):
 def main():
         s = SnowRestSession()
         s.loadConfigFile('config.yaml')
-        a = s.getIncident('1398570')
+        a = s.post(self.instance + '/oauth_token.do', None, data = {'grant_type' : 'password', 'client_id' : self.oauthClientId, 'client_secret' : self.oauthClientSecret})
         print a.text
 
 if __name__ == '__main__':
