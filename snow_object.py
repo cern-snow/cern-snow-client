@@ -225,7 +225,7 @@ class SnowRestSession(object):
                     if self.freshToken:
                         raise SnowRestSessionException('Probleme with account or with the link to put !')
                     else:
-                        os.remove(self.oauthTokenFile)
+                        os.remove(self.oauthTokenFile + '.npy')
                         self.loadTokenFile()
                         post = self.session.post(url, headers=headers, data=data)
                         if post.status_code == 200:
