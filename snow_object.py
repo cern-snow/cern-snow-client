@@ -212,7 +212,86 @@ class SnowRestSession(object):
             self.cernGetSsoCookie()
             self.requests_session()
             self.loadTokenFile()
-            return self.session.post(url, headers=headers, data=data)
+            post = self.session.post(url, headers=headers, data=data)
+            if post.status_code == 200:
+                return post
+            else:
+                if self.freshCookie:
+                    raise SnowRestSessionException('Probleme with account or with the link to put !')
+                else:
+                    os.remove(self.sessionCookieFile)
+                    self.cernGetSsoCookie()
+                    self.session.cookies = self.sessionCookie
+                    if self.freshToken:
+                        raise SnowRestSessionException('Probleme with account or with the link to put !')
+                    else:
+                        os.remove(self.oauthTokenFile)
+                        self.loadTokenFile()
+                        post = self.session.post(url, headers=headers, data=data)
+                        if post.status_code == 200:
+                            return post
+                        else:
+                            raise SnowRestSessionException('Probleme with account or with the link to put !')
+
+
+        def put(self, url, headers=None, data=None):
+            self.cernGetSsoCookie()
+            self.requests_session()
+            self.loadTokenFile()
+            put = self.session.put(url, headers=headers, data=data)
+            if put.status_code == 200:
+                return put
+            else:
+                if self.freshCookie:
+                    raise SnowRestSessionException('Problem with the account !')
+                else:
+                    os.remove(self.sessionCookieFile)
+                    self.cernGetSsoCookie()
+                    self.session.cookies = self.sessionCookie
+                    put = self.session.put(url, headers=headers, data=data)
+                    if put == 200:
+                        return put
+                    else:
+                        if self.freshToken:
+                            raise SnowRestSessionException('Problem with the account/token !')
+                        else:
+                            os.remove(self.oauthtokenfile)
+                            self.loadTokenFile()
+                            put = self.session.put(url, headers=headers, data=data)
+                            if put.status_code == 200:
+                                return put
+                            else:
+                                raise SnowRestSessionException('Probleme with account or with the link to put !')
+
+        def delete(self, url, headers=None):
+            self.cernGetSsoCookie()
+            self.requests_session()
+            self.loadTokenFile()
+            delete = self.session.delete(url, headers=headers)
+            if delete.status_code == 200:
+                return delete
+            else:
+                if self.freshCookie:
+                    raise SnowRestSessionException('Problem with the acount !')
+                else:
+                    os.remove(self.sessionCookieFile)
+                    self.cernGetSsoCookie()
+                    self.session.cookies = self.sessionCookie
+                    delete = self.session.delete(url, headers=headers)
+                    if delete.status_code == 200:
+                        return delete
+                    else:
+                        if self.freshToken:
+                            raise SnowRestSessionException('Problem with the account !')
+                        else:
+                            os.remove(self.oauthtokenfile)
+                            self.loadTokenFile()
+                            delete = self.session.delete(url, headers=headers)
+                            if delete.status_code == 200:
+                                return delete
+                            else:
+                                raise SnowRestSessionException('Probleme with account or with the link to delete !')
+
 
         def __good_cookie(self):
             file = open(self.sessionCookieFile)
@@ -222,11 +301,3 @@ class SnowRestSession(object):
                 return True
             return False
 
-def main():
-        s = SnowRestSession()
-        s.loadConfigFile('config.yaml')
-        a = s.post(s.instance + '/oauth_token.do', None, data = {'grant_type' : 'password', 'client_id' : s.oauthClientId, 'client_secret' : s.oauthClientSecret})
-        print a.text
-
-if __name__ == '__main__':
-        main()
