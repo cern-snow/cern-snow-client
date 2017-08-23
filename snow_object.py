@@ -29,6 +29,7 @@ class SnowRestSession(object):
                 self.freshToken = False
                 self.storeCookie = True
                 self.storeToken = True
+                self.sessionCreated = False
 
         def loadConfigFile(self, configfilepath):
                 try:
@@ -109,7 +110,9 @@ class SnowRestSession(object):
                 os.remove(self.sessionCookieFile)
 
         def requests_session(self):
-                self.session = requests.Session()
+                if not self.sessionCreated:
+                    self.sessionCreated = True
+                    self.session = requests.Session()
                 self.session.cookies = self.sessionCookie
 
 
