@@ -303,4 +303,3 @@ class SnowRestSession(object):
                 and a.find('glide_user_route') != -1 and a.find('JSESSIONID') != -1 and a.find('BIGipServerpool_cerntraining') != -1):
                 return True
             return False
-
