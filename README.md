@@ -1,26 +1,43 @@
 ## Synopsis
-
-Bonjour, bienvenue sur le snow-client script, le snow-client a été codé en python 2.6.6, il y a un main.py a completer avec vos demandes, ainsi qu'un function.py pour voir les fonctions que vous pouvez utiliser
+Hello, welcome on the snow-client script, the snow-client was coded in python 2.6.6, there is a main.py to complete with your requests, as well as a function.py to see the functions you can use.
 
 ## How to use it
 
-faire un fichier de config grace au script ou alors a la manière de l'exemple
+ -First, you need a config file, you can have an easy one by using "python gen_config", after that you can use the script.
+ -Second, you need to choose what you are going to do, you get do a get, put ... example below:
 
-use s.get('url', params)
-	s.getIncident('INC number')
-	s.post('url', header, data)
-	s.put('url', header, data)
-	s.delete('url', header)
+	s.get('url', params)
+        s.getIncident('INC number')
+        s.post('url', header, data)
+        s.put('url', header, data)
+        s.delete('url', header)
 
+ -Third, to use the script you just have to edit the main.py like in the example below:
+
+ 	import snow_object as sn
+
+	def main():
+            s = sn.SnowRestSession()
+            s.loadConfigFile('config.yaml')
+            a = s.post(s.instance + '/oauth_token.do', None, data = {'grant_type' :'password', 'client_id' : s.sn.oauthClientId, 'client_secret' : s.sn.oauthClie\
+ntSecret}
+	    print a.text
+
+	if __name__ == '__main__':
+           main()
 
 ## Motivation
 
-Les motivations qui nous ont poussé à faire ce projet + MOTIVATION
+ -The motivations behind this project are: + motivation example
 
 ## Installation
 
-sous lxplus faire git clone https://:@gitlab.cern.ch:8443/servicenow/snow-client.git, cd snow-client, python main.py
-
+on lxplus do:
+   git clone https://:@gitlab.cern.ch:8443/servicenow/snow-client.git
+   cd snow-client
+   python gen_config
+   modify the main.py
+   python main.py
 
 ## Contributors
 
