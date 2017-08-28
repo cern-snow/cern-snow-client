@@ -1,12 +1,6 @@
 import os, subprocess, cookielib, stat, requests, json, ast, sys, numpy as np, yaml
 
-#mettre en minuscule les item de ma classe ex: Authtype = authType ->done
-#enlever underscore ->done
-#enlever parenthese exterieur quand elles ne sont pas mandatory ->done
-#remplacer if == Flase/True par if not ->done
-#changer les sys.exit(84/0) en raise SnowRestSessionException("message")
 #commenter le code avec pydoc
-#enlever LE self.ConfigFile
 
 class SnowRestSessionException(Exception):
     pass
