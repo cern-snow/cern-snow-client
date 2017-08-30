@@ -107,8 +107,8 @@ class SnowRestSession(object):
                 if not self.sessionCreated:
                     self.sessionCreated = True
                     self.session = requests.Session()
+                    print 'ON CREE LA SESSION ET ON ASSIGNE LES COOKIES'
                 self.session.cookies = self.sessionCookie
-
 
         def loadTokenFile(self):
             if not os.path.exists(self.oauthTokenFile + '.npy'):
@@ -184,7 +184,7 @@ class SnowRestSession(object):
                             else:
                                 raise SnowRestSessionException('Problem !')
                         else:
-                            if freshCookie:
+                            if self.freshCookie:
                                 raise SnowRestSessionException('Problem !')
                             else:
                                 os.remove(self.sessionCookieFile)
@@ -222,6 +222,7 @@ class SnowRestSession(object):
                         os.remove(self.oauthTokenFile + '.npy')
                         self.loadTokenFile()
                         post = self.session.post(url, headers=headers, data=data)
+                        print post.status_code
                         if post.status_code == 200:
                             return post
                         else:
@@ -321,13 +322,20 @@ class SnowRestSession(object):
             return self.getRecord('incident', id=id, number=number)
         
         def insertRecord(self, table, data):
+            self.getLog()
             if not table:
                 raise SnowRestSessionException('insertRecord needs a table value')
-            url = self.instance + '/api/now/v2/table/' + table
+            url = self.instance + '/api/now/table/' + table
+            print url
             if data:
-                return self.post(url=url, headers={"Content-Type":"application/xml","Accept":"application/xml"}, data=data)
+                return self.post(url=url, headers = {'Authorization' : 'Bearer ' + self.tokenDic['access_token'], 'Accept' : 'application/json'} , data=data)
             else:
                 raise SnowRestSessionException('insertRecord needs a data value')
+            
+        def getLog(self):
+            self.cernGetSsoCookie()
+            self.requests_session()
+            self.loadTokenFile()
 
         def __good_cookie(self):
             file = open(self.sessionCookieFile)
