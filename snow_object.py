@@ -202,9 +202,6 @@ class SnowRestSession(object):
                                     else:
                                         raise SnowRestSessionException('Problem !')
 
-        def getIncident(self, incident):
-            return self.get(self.instance + '/api/now/v2/table/incident?sysparm_query=number=INC' + incident)
-
         def post(self, url, headers=None, data=None):
             self.cernGetSsoCookie()
             self.requests_session()
@@ -229,7 +226,6 @@ class SnowRestSession(object):
                             return post
                         else:
                             raise SnowRestSessionException('Probleme with account or with the link to put !')
-
 
         def put(self, url, headers=None, data=None):
             self.cernGetSsoCookie()
@@ -289,6 +285,49 @@ class SnowRestSession(object):
                             else:
                                 raise SnowRestSessionException('Probleme with account or with the link to delete !')
 
+        def getRecord(self, table, id=None, number=None):
+            # s.getRecord('incident', id='12345feab...')
+            # s.getRecord('incident', number='INC12345')
+            if not table:
+                raise SnowRestSessionException('getRecord needs a table value')
+            url = self.instance + '/api/now/v2/table/'+ table
+            if id:
+                url = url + '/' + id
+            elif number:
+                url = url + '?sysparm_query=number=' + number
+            else:
+                raise SnowRestSessionException('getRecord needs at least an id or a number')
+            return self.get(url)
+
+        def getRecords(table, filter = {}, encodedQuery = ""):
+            if not table:
+                raise SnowRestSessionException('getRecords needs a table value')
+            url = self.instance + '/api/now/v2/table/'+ table
+            if filter:
+                a = []
+                for key in filter:
+                    a.append(key + '=' + filter[key])
+                encodedQuery = '^'.join(a)
+            if encodedQuery:
+                url = url + '?sysparm_query=' + encodedQuery
+            else:
+                raise SnowRestSessionException('getRecords need at least a filter or an encodedQuery')
+            return self.get(url)
+
+        def getIncidents(self, filter = {}, encodedQuery= ""):
+            return self.getRecord('incident', filter=filter, encodedQuery=encodedQuery)
+
+        def getIncident(self, id=None, number=None):
+            return self.getRecord('incident', id=id, number=number)
+        
+        def insertRecord(self, table, data):
+            if not table:
+                raise SnowRestSessionException('insertRecord needs a table value')
+            url = self.instance + '/api/now/v2/table/' + table
+            if data:
+                return self.post(url=url, headers={"Content-Type":"application/xml","Accept":"application/xml"}, data=data)
+            else:
+                raise SnowRestSessionException('insertRecord needs a data value')
 
         def __good_cookie(self):
             file = open(self.sessionCookieFile)
