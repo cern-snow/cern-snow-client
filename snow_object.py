@@ -311,9 +311,12 @@ class SnowRestSession(object):
             return self.getRecord('incident', filter=filter, encodedQuery=encodedQuery)
         
         def getIncident(self, id=None, number=None):
+            # s.getIncident(id='1213dgazd...')
+            # s.getIncident(number='1367136')
             return self.getRecord('incident', id=id, number=number)
         
         def insertRecord(self, table, data):
+            # s.insertRecord(table='incident', data=data)
             if not table:
                 raise SnowRestSessionException('insertRecord needs a table value')
             url = self.instance + '/api/now/v2/table/' + table
