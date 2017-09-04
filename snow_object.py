@@ -107,7 +107,6 @@ class SnowRestSession(object):
                 if not self.sessionCreated:
                     self.sessionCreated = True
                     self.session = requests.Session()
-                    print 'ON CREE LA SESSION ET ON ASSIGNE LES COOKIES'
                 self.session.cookies = self.sessionCookie
 
         def loadTokenFile(self):
@@ -206,8 +205,9 @@ class SnowRestSession(object):
             self.cernGetSsoCookie()
             self.requests_session()
             self.loadTokenFile()
+            headers['Authorization'] = 'Bearer ' + self.tokenDic['access_token']
             post = self.session.post(url, headers=headers, data=data)
-            if post.status_code == 200:
+            if post.status_code == 201:
                 return post
             else:
                 if self.freshCookie:
@@ -221,9 +221,9 @@ class SnowRestSession(object):
                     else:
                         os.remove(self.oauthTokenFile + '.npy')
                         self.loadTokenFile()
+                        headers['Authorization'] = 'Bearer ' + self.tokenDic['access_token']
                         post = self.session.post(url, headers=headers, data=data)
-                        print post.status_code
-                        if post.status_code == 200:
+                        if post.status_code == 201:
                             return post
                         else:
                             raise SnowRestSessionException('Probleme with account or with the link to put !')
@@ -246,16 +246,7 @@ class SnowRestSession(object):
                     if put == 200:
                         return put
                     else:
-                        if self.freshToken:
-                            raise SnowRestSessionException('Problem with the account/token !')
-                        else:
-                            os.remove(self.oauthtokenfile)
-                            self.loadTokenFile()
-                            put = self.session.put(url, headers=headers, data=data)
-                            if put.status_code == 200:
-                                return put
-                            else:
-                                raise SnowRestSessionException('Probleme with account or with the link to put !')
+                        raise SnowRestSessionException('Problem with the account/token !')
 
         def delete(self, url, headers=None):
             self.cernGetSsoCookie()
@@ -298,6 +289,7 @@ class SnowRestSession(object):
                 url = url + '?sysparm_query=number=' + number
             else:
                 raise SnowRestSessionException('getRecord needs at least an id or a number')
+            print url + '\n'
             return self.get(url)
 
         def getRecords(table, filter = {}, encodedQuery = ""):
@@ -317,18 +309,18 @@ class SnowRestSession(object):
 
         def getIncidents(self, filter = {}, encodedQuery= ""):
             return self.getRecord('incident', filter=filter, encodedQuery=encodedQuery)
-
+        
         def getIncident(self, id=None, number=None):
             return self.getRecord('incident', id=id, number=number)
         
         def insertRecord(self, table, data):
-            self.getLog()
             if not table:
                 raise SnowRestSessionException('insertRecord needs a table value')
-            url = self.instance + '/api/now/table/' + table
+            url = self.instance + '/api/now/v2/table/' + table
             print url
             if data:
-                return self.post(url=url, headers = {'Authorization' : 'Bearer ' + self.tokenDic['access_token'], 'Accept' : 'application/json'} , data=data)
+                data = json.dumps(data)
+                return self.post(url=url, headers = {'Content-Type':'application/json','Accept':'application/json'} , data=data)
             else:
                 raise SnowRestSessionException('insertRecord needs a data value')
             
