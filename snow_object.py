@@ -232,6 +232,7 @@ class SnowRestSession(object):
             self.cernGetSsoCookie()
             self.requests_session()
             self.loadTokenFile()
+            print data
             put = self.session.put(url, headers=headers, data=data)
             if put.status_code == 200:
                 return put
@@ -243,7 +244,7 @@ class SnowRestSession(object):
                     self.cernGetSsoCookie()
                     self.session.cookies = self.sessionCookie
                     put = self.session.put(url, headers=headers, data=data)
-                    if put == 200:
+                    if put.status_code == 200:
                         return put
                     else:
                         raise SnowRestSessionException('Problem with the account/token !')
@@ -331,7 +332,7 @@ class SnowRestSession(object):
             # s.insertIncident(data=data)
             return self.insertRecord(table='incident', data=data)
 
-        def updateRecord(self, table, id=None, number=None, data):
+        def updateRecord(self, table=None, id=None, number=None, data={}):
             # s.updateRecord('incident', id='12345feab...')
             # s.updateRecord('incident', number='INC12345')
             if not table:
@@ -344,20 +345,13 @@ class SnowRestSession(object):
                 url = url + '?sysparm_query=number=' + number
             else:
                 raise SnowRestSessionException('updateRecord needs at least an id or a number')
+            print url
             return self.put(url, headers={'Content-Type':'application/json','Accept':'application/json'}, data=data)
 
-        def updateIncident(self, id=None, number=None, data):
+        def updateIncident(self, id=None, number=None, data={}):
             # s.updateIncident(id='12345feab...', data=data)
             # s.updateIncident(number='1234561', data=data)
-            data = json.dumps(data)
-            if id:
-                url = url + '/' + id
-            elif number:
-                url = url + '?sysparm_query=number=' + number
-            else:
-                raise SnowRestSessionException('updateIncident needs at least an id or a number')
             return self.updateRecord(table='incident', id=id, number=number, data=data)
-
 
         def __good_cookie(self):
             file = open(self.sessionCookieFile)
