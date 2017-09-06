@@ -232,7 +232,7 @@ class SnowRestSession(object):
             self.cernGetSsoCookie()
             self.requests_session()
             self.loadTokenFile()
-            print data
+            headers['Authorization'] = 'Bearer ' + self.tokenDic['access_token']
             put = self.session.put(url, headers=headers, data=data)
             if put.status_code == 200:
                 return put
@@ -247,7 +247,15 @@ class SnowRestSession(object):
                     if put.status_code == 200:
                         return put
                     else:
-                        raise SnowRestSessionException('Problem with the account/token !')
+                        os.remove(self.oauthTokenFile + '.npy')
+                        self.loadTokenFile()
+                        headers['Authorization'] = 'Bearer ' + self.tokenDic['access_token']
+                        put = self.session.put(url, headers=headers, data=data)
+                        print put.status_code
+                        if put.status_code == 200:
+                            return put
+                        else:
+                            raise SnowRestSessionException('Problem with the put request')
 
         def delete(self, url, headers=None):
             self.cernGetSsoCookie()
@@ -290,7 +298,6 @@ class SnowRestSession(object):
                 url = url + '?sysparm_query=number=' + number
             else:
                 raise SnowRestSessionException('getRecord needs at least an id or a number')
-            print url + '\n'
             return self.get(url)
 
         def getRecords(table, filter = {}, encodedQuery = ""):
@@ -321,7 +328,6 @@ class SnowRestSession(object):
             if not table:
                 raise SnowRestSessionException('insertRecord needs a table value')
             url = self.instance + '/api/now/v2/table/' + table
-            print url
             if data:
                 data = json.dumps(data)
                 return self.post(url=url, headers = {'Content-Type':'application/json','Accept':'application/json'} , data=data)
@@ -332,7 +338,7 @@ class SnowRestSession(object):
             # s.insertIncident(data=data)
             return self.insertRecord(table='incident', data=data)
 
-        def updateRecord(self, table=None, id=None, number=None, data={}):
+        def updateRecord(self, table=None, id=None, data={}):
             # s.updateRecord('incident', id='12345feab...')
             # s.updateRecord('incident', number='INC12345')
             if not table:
@@ -345,7 +351,6 @@ class SnowRestSession(object):
                 url = url + '?sysparm_query=number=' + number
             else:
                 raise SnowRestSessionException('updateRecord needs at least an id or a number')
-            print url
             return self.put(url, headers={'Content-Type':'application/json','Accept':'application/json'}, data=data)
 
         def updateIncident(self, id=None, number=None, data={}):
