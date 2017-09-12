@@ -338,17 +338,19 @@ class SnowRestSession(object):
             # s.insertIncident(data=data)
             return self.insertRecord(table='incident', data=data)
 
-        def updateRecord(self, table=None, id=None, data={}):
+        def updateRecord(self, table=None, id=None, number=None, data={}):
             # s.updateRecord('incident', id='12345feab...')
             # s.updateRecord('incident', number='INC12345')
             if not table:
                 raise SnowRestSessionException('updateRecord needs a table value')
-            url = self.instance + '/api/now/v2/table/'+ table
+            url = self.instance + '/api/now/v2/table/' + table
             data = json.dumps(data)
             if id:
                 url = url + '/' + id
             elif number:
-                url = url + '?sysparm_query=number=' + number
+                result = self.getIncident(number=number)
+                sysid = json.loads(result.text)
+                url = url + '/' + sysid['result'][0]['sys_id']
             else:
                 raise SnowRestSessionException('updateRecord needs at least an id or a number')
             return self.put(url, headers={'Content-Type':'application/json','Accept':'application/json'}, data=data)
@@ -357,6 +359,26 @@ class SnowRestSession(object):
             # s.updateIncident(id='12345feab...', data=data)
             # s.updateIncident(number='1234561', data=data)
             return self.updateRecord(table='incident', id=id, number=number, data=data)
+        
+        def incAddComment(self, id=None, number=None, comment=''):
+            if not comment:
+                raise SnowRestSessionException('the comment must be not empty')
+            return self.updateIncident(id=id, number=number, data={'comments' : comment})
+
+        def addComment(self, table=None, id=None, number=None, comment=''):
+            if not comment:
+                raise SnowRestSessionException('the comment must be not empty')
+            return self.updateRecord(table=table, id=id, number=number, data={'comments': comment})
+
+        def incAddWorkNote(self, id=None, number=None, workNote=''):
+            if not workNote:
+                raise SnowRestSessionException('the comment must be not empty')
+            return self.updateIncident(id=id, number=number, data={'work_notes' : workNote})
+
+        def addWorkNote(self, table=None, id=None, number=None, workNote=''):
+            if not workNote:
+                raise SnowRestSessionException('the comment must be not empty')
+            return self.updateRecord(table=table, id=id, number=number, data={'work_notes': workNote})
 
         def __good_cookie(self):
             file = open(self.sessionCookieFile)
