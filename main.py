@@ -1,4 +1,4 @@
-import snow_object as sn, pydoc
+import snow_client as sn, pydoc
 import json
 
 def main():
