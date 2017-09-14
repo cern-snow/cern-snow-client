@@ -27,61 +27,61 @@ class SnowRestSession(object):
 
         def loadConfigFile(self, configfilepath):
                 try:
-                        with open(configfilepath) as f:
-                                configfile = yaml.safe_load(f)
+                    with open(configfilepath) as f:
+                        configfile = yaml.safe_load(f)
                 except Exception as e:
-                        sys.stderr.write('SnowRestSession.loadConfigFile: Issue when opening the config file\n')
-                        raise e
-
+                    sys.stderr.write('SnowRestSession.loadConfigFile: Issue when opening the config file\n')
+                    raise e
+                
                 if 'instance' in configfile:
-                        self.instance = 'https://' + configfile['instance']
+                    self.instance = 'https://' + configfile['instance']
 
                 if 'auth' in configfile:
-                        if 'type' in configfile['auth']:
-                                self.authType = configfile['auth']['type']
+                    if 'type' in configfile['auth']:
+                        self.authType = configfile['auth']['type']
+                        
+                    if 'sso_method' in configfile['auth']:
+                        self.ssoMethod = configfile['auth']['sso_method']
+                        
+                    if 'oauth_client_id' in configfile['auth']:
+                        self.oauthClientId = configfile['auth']['oauth_client_id']
 
-                        if 'sso_method' in configfile['auth']:
-                                self.ssoMethod = configfile['auth']['sso_method']
+                    if 'oauth_client_secret' in configfile['auth']:
+                        self.oauthClientSecret = configfile['auth']['oauth_client_secret']
 
-                        if 'oauth_client_id' in configfile['auth']:
-                                self.oauthClientId = configfile['auth']['oauth_client_id']
-
-                        if 'oauth_client_secret' in configfile['auth']:
-                                self.oauthClientSecret = configfile['auth']['oauth_client_secret']
-
-                if 'session' in configfile:
+                    if 'session' in configfile:
                         if 'cookie_file' in configfile['session']:
-                                self.sessionCookieFile = configfile['session']['cookie_file']
+                            self.sessionCookieFile = configfile['session']['cookie_file']
 
-                        if 'oauth_tokens_file' in configfile['session']:
-                                self.oauthTokenFile = configfile['session']['oauth_tokens_file']
+                    if 'oauth_tokens_file' in configfile['session']:
+                        self.oauthTokenFile = configfile['session']['oauth_tokens_file']
 
-                if 'log_file' in configfile:
+                    if 'log_file' in configfile:
                         self.logfile = configfile['log_file']
 
         def setInstance(self, instance):
-                self.instance = instance
+            self.instance = instance
 
         def setAuthType(self, authtype):
-                self.authType = authtype
+            self.authType = authtype
 
         def setSsoMethod(self, ssomethod):
-                self.ssoMethod = ssomethod
+            self.ssoMethod = ssomethod
 
         def setOauthclientid(self, oauthclienid):
-                self.oauthClientId = oauthclienid
+            self.oauthClientId = oauthclienid
 
         def setOauthClientSecret(self, oauthclientsecret):
-                self.oauthClientSecret = oauthclientsecret
+            self.oauthClientSecret = oauthclientsecret
 
         def setSessionCookieFile(self, cookiefile):
-                self.sessionCookieFile = cookiefile
+            self.sessionCookieFile = cookiefile
 
         def setOauthTokenFile(self, oauthtokenfile):
-                self.oauthTokenFile
+            self.oauthTokenFile
 
         def setLogFile(self, logfile):
-                self.logfile = logfile
+            self.logfile = logfile
 
         def cernGetSsoCookie(self):
         #"""Get CERN SSO cookies."""
@@ -104,10 +104,10 @@ class SnowRestSession(object):
                 os.remove(self.sessionCookieFile)
 
         def requests_session(self):
-                if not self.sessionCreated:
-                    self.sessionCreated = True
-                    self.session = requests.Session()
-                self.session.cookies = self.sessionCookie
+            if not self.sessionCreated:
+                self.sessionCreated = True
+                self.session = requests.Session()
+            self.session.cookies = self.sessionCookie
 
         def loadTokenFile(self):
             if not os.path.exists(self.oauthTokenFile + '.npy'):
