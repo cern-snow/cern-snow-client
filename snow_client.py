@@ -374,15 +374,16 @@ class SnowRestSession(object):
         url = url + '/' + id
         return self.put(url, headers={'Content-Type':'application/json','Accept':'application/json'}, data=data)
 
-    def updateRequest(self, id=None, number=None, data{}):
+    def updateRequest(self, id=None, number=None, data={}):
         if number:
             result = self.getRequest(number=number)
             sysid = json.loads(result.text)
             id = sysid['result'][0]['sys_id']
-        if id and if data:
-            return self.updateRecord(table='u_request_fulfillment', id=id, data=data)
-        else:
-            raise SnowRestSessionException('updateRequest need at least an id or a number')
+        if id:
+            if data:
+                return self.updateRecord(table='u_request_fulfillment', id=id, data=data)
+            else:
+                raise SnowRestSessionException('updateRequest need at least an id or a number')
 
     def updateIncident(self, id=None, number=None, data={}):
         # s.updateIncident(id='12345feab...', data=data)
@@ -391,10 +392,11 @@ class SnowRestSession(object):
             result = self.getIncident(number=number)
             sysid = json.loads(result.text)
             id = sysid['result'][0]['sys_id']
-        if id and if data:
-            return self.updateRecord(table='incident', id=id, data=data)
-        else:
-            raise SnowRestSessionException('updateIncident need at least an id or a number')
+        if id:
+            if data:
+                return self.updateRecord(table='incident', id=id, data=data)
+            else:
+                raise SnowRestSessionException('updateIncident need at least an id or a number')
 
     def incAddComment(self, id=None, number=None, comment=''):
         if not comment:
