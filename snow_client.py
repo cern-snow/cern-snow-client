@@ -401,7 +401,7 @@ class SnowRestSession(object):
             raise SnowRestSessionException('the comment must be not empty')
         return self.updateIncident(id=id, number=number, data={'comments' : comment})
 
-    def incAddComment(self, id=None, number=None, comment=''):
+    def reqAddComment(self, id=None, number=None, comment=''):
         if not comment:
             raise SnowRestSessionException('the comment must be not empty')
         return self.updateRequest(id=id, number=number, data={'comments' : comment})    
