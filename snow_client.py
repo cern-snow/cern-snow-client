@@ -331,8 +331,14 @@ class SnowRestSession(object):
             raise SnowRestSessionException('getRecords need at least a filter or an encodedQuery')
         return self.get(url)
 
+    def getRequest(self, id=None, number=None):
+        return self.getRecord(table='u_request_fulfillment', id=id, number=number)
+
+    def getRequests(self, filter={}, encodedQuery=""):
+        return self.getRecord(table='u_request_fulfillment', filter=filter, encodedQuery=encodedQuery)
+
     def getIncidents(self, filter = {}, encodedQuery= ""):
-        return self.getRecord('incident', filter=filter, encodedQuery=encodedQuery)
+        return self.getRecord(table='incident', filter=filter, encodedQuery=encodedQuery)
         
     def getIncident(self, id=None, number=None):
         # s.getIncident(id='1213dgazd...')
@@ -354,37 +360,61 @@ class SnowRestSession(object):
         # s.insertIncident(data=data)
         return self.insertRecord(table='incident', data=data)
 
-    def updateRecord(self, table=None, id=None, number=None, data={}):
+    def insertRequest(self, data):
+        # s.insertIncident(data=data)
+        return self.insertRecord(table='u_request_fulfillment', data=data)
+
+    def updateRecord(self, table=None, id=None, data={}):
         # s.updateRecord('incident', id='12345feab...')
         # s.updateRecord('incident', number='INC12345')
         if not table:
             raise SnowRestSessionException('updateRecord needs a table value')
         url = self.instance + '/api/now/v2/table/' + table
         data = json.dumps(data)
-        if id:
-            url = url + '/' + id
-        elif number:
-            result = self.getIncident(number=number)
-            sysid = json.loads(result.text)
-            url = url + '/' + sysid['result'][0]['sys_id']
-        else:
-            raise SnowRestSessionException('updateRecord needs at least an id or a number')
+        url = url + '/' + id
         return self.put(url, headers={'Content-Type':'application/json','Accept':'application/json'}, data=data)
+
+    def updateRequest(self, id=None, number=None, data{}):
+        if number:
+            result = self.getRequest(number=number)
+            sysid = json.loads(result.text)
+            id = sysid['result'][0]['sys_id']
+        if id and if data:
+            return self.updateRecord(table='u_request_fulfillment', id=id, data=data)
+        else:
+            raise SnowRestSessionException('updateRequest need at least an id or a number')
 
     def updateIncident(self, id=None, number=None, data={}):
         # s.updateIncident(id='12345feab...', data=data)
         # s.updateIncident(number='1234561', data=data)
-        return self.updateRecord(table='incident', id=id, number=number, data=data)
-        
+        if number:
+            result = self.getIncident(number=number)
+            sysid = json.loads(result.text)
+            id = sysid['result'][0]['sys_id']
+        if id and if data:
+            return self.updateRecord(table='incident', id=id, data=data)
+        else:
+            raise SnowRestSessionException('updateIncident need at least an id or a number')
+
     def incAddComment(self, id=None, number=None, comment=''):
         if not comment:
             raise SnowRestSessionException('the comment must be not empty')
         return self.updateIncident(id=id, number=number, data={'comments' : comment})
 
+    def incAddComment(self, id=None, number=None, comment=''):
+        if not comment:
+            raise SnowRestSessionException('the comment must be not empty')
+        return self.updateRequest(id=id, number=number, data={'comments' : comment})    
+
     def addComment(self, table=None, id=None, number=None, comment=''):
         if not comment:
             raise SnowRestSessionException('the comment must be not empty')
         return self.updateRecord(table=table, id=id, number=number, data={'comments': comment})
+
+    def reqAddWorkNote(self, id=None, number=None, workNote=''):
+        if not workNote:
+            raise SnowRestSessionException('the comment must be not empty')
+        return self.updateRequest(id=id, number=number, data={'work_notes' : workNote})
 
     def incAddWorkNote(self, id=None, number=None, workNote=''):
         if not workNote:
