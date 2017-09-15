@@ -345,7 +345,7 @@ class SnowRestSession(object):
         # s.getIncident(number='1367136')
         return self.getRecord('incident', id=id, number=number)
         
-    def insertRecord(self, table, data):
+    def insertRecord(self, table='', data={}):
         # s.insertRecord(table='incident', data=data)
         if not table:
             raise SnowRestSessionException('insertRecord needs a table value')
@@ -382,8 +382,7 @@ class SnowRestSession(object):
         if id:
             if data:
                 return self.updateRecord(table='u_request_fulfillment', id=id, data=data)
-            else:
-                raise SnowRestSessionException('updateRequest need at least an id or a number')
+        raise SnowRestSessionException('updateRequest need at least an id or a number, and a data')
 
     def updateIncident(self, id=None, number=None, data={}):
         # s.updateIncident(id='12345feab...', data=data)
@@ -395,8 +394,7 @@ class SnowRestSession(object):
         if id:
             if data:
                 return self.updateRecord(table='incident', id=id, data=data)
-            else:
-                raise SnowRestSessionException('updateIncident need at least an id or a number')
+        raise SnowRestSessionException('updateIncident need at least an id or a number')
 
     def incAddComment(self, id=None, number=None, comment=''):
         if not comment:
