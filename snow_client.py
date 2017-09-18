@@ -479,8 +479,10 @@ class SnowRestSession(object):
         :number:string (RQF318....)
         :comment:string
         """
+        if not table:
+            raise SnowRestSessionException('addComment need a table')
         if number:
-            result = self.getIncident(number=number)
+            result = self.getRecord(table=table, number=number)
             sysid = json.loads(result.text)
             id = sysid['result'][0]['sys_id']
         if not id:
@@ -519,8 +521,10 @@ class SnowRestSession(object):
         :number:string (RQF318....)
         :workNote:string
         """
+        if not table:
+            raise SnowRestSessionException('addWorkNote need a table')
         if number:
-            result = self.getIncident(number=number)
+            result = self.getRecord(table=table, number=number)
             sysid = json.loads(result.text)
             id = sysid['result'][0]['sys_id']
         if not id:
