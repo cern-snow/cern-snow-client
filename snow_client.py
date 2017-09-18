@@ -479,9 +479,15 @@ class SnowRestSession(object):
         :number:string (RQF318....)
         :comment:string
         """
+        if number:
+            result = self.getIncident(number=number)
+            sysid = json.loads(result.text)
+            id = sysid['result'][0]['sys_id']
+        if not id:
+            raise SnowRestSessionException('You must specified an id or a number')
         if not comment:
             raise SnowRestSessionException('the comment must be not empty')
-        return self.updateRecord(table=table, id=id, number=number, data={'comments': comment})
+        return self.updateRecord(table=table, id=id, data={'comments': comment})
 
     def reqAddWorkNote(self, id=None, number=None, workNote=''):
         """
@@ -513,9 +519,15 @@ class SnowRestSession(object):
         :number:string (RQF318....)
         :workNote:string
         """
+        if number:
+            result = self.getIncident(number=number)
+            sysid = json.loads(result.text)
+            id = sysid['result'][0]['sys_id']
+        if not id:
+            raise SnowRestSessionException('You must specified an id or a number')
         if not workNote:
             raise SnowRestSessionException('the comment must be not empty')
-        return self.updateRecord(table=table, id=id, number=number, data={'work_notes': workNote})
+        return self.updateRecord(table=table, id=id, data={'work_notes': workNote})
 
     def __good_cookie(self):
         file = open(self.sessionCookieFile)
