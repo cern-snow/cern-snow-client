@@ -384,14 +384,28 @@ class SnowRestSession(object):
             raise SnowRestSessionException('insertRecord needs a data value')
 
     def insertIncident(self, data):
+        """
+        This Method create an incident with the data you give in parameter
+        :data:dict
+        """
         # s.insertIncident(data=data)
         return self.insertRecord(table='incident', data=data)
 
     def insertRequest(self, data):
+        """
+        This Method create a request with the data you give in parameter
+        :data:dict
+        """
         # s.insertIncident(data=data)
         return self.insertRecord(table='u_request_fulfillment', data=data)
 
     def updateRecord(self, table=None, id=None, data={}):
+        """
+        This Method allow you to update any ticket
+        :table:string
+        :id:string
+        :data:dict
+        """
         # s.updateRecord('incident', id='12345feab...')
         # s.updateRecord('incident', number='INC12345')
         if not table:
@@ -402,6 +416,12 @@ class SnowRestSession(object):
         return self.put(url, headers={'Content-Type':'application/json','Accept':'application/json'}, data=data)
 
     def updateRequest(self, id=None, number=None, data={}):
+        """
+        This Method allow you to update the request ticket that you want to update
+        :id:string
+        :number:string (RQF318....)
+        :data:dict
+        """
         if number:
             result = self.getRequest(number=number)
             sysid = json.loads(result.text)
@@ -412,6 +432,12 @@ class SnowRestSession(object):
         raise SnowRestSessionException('updateRequest need at least an id or a number, and a data')
 
     def updateIncident(self, id=None, number=None, data={}):
+        """
+        This Method allow you to update the incident ticket that you want to update
+        :id:string
+        :number:string (RQF318....)
+        :data:dict
+        """
         # s.updateIncident(id='12345feab...', data=data)
         # s.updateIncident(number='1234561', data=data)
         if number:
@@ -424,31 +450,69 @@ class SnowRestSession(object):
         raise SnowRestSessionException('updateIncident need at least an id or a number')
 
     def incAddComment(self, id=None, number=None, comment=''):
+        """
+        This Method allow you to comment the incident ticket that you want to comment
+        :id:string
+        :number:string (RQF318....)
+        :comment:string
+        """
         if not comment:
             raise SnowRestSessionException('the comment must be not empty')
         return self.updateIncident(id=id, number=number, data={'comments' : comment})
 
     def reqAddComment(self, id=None, number=None, comment=''):
+        """
+        This Method allow you to comment the request ticket that you want to comment
+        :id:string
+        :number:string (RQF318....)
+        :comment:string
+        """
         if not comment:
             raise SnowRestSessionException('the comment must be not empty')
         return self.updateRequest(id=id, number=number, data={'comments' : comment})    
 
     def addComment(self, table=None, id=None, number=None, comment=''):
+        """
+        This Method allow you to commebt the ticket that you want to comment
+        :table:string
+        :id:string
+        :number:string (RQF318....)
+        :comment:string
+        """
         if not comment:
             raise SnowRestSessionException('the comment must be not empty')
         return self.updateRecord(table=table, id=id, number=number, data={'comments': comment})
 
     def reqAddWorkNote(self, id=None, number=None, workNote=''):
+        """
+        This Method allow you to add a worknote on the request ticket that you want
+        :id:string
+        :number:string (RQF318....)
+        :workNote:string
+        """
         if not workNote:
             raise SnowRestSessionException('the comment must be not empty')
         return self.updateRequest(id=id, number=number, data={'work_notes' : workNote})
 
     def incAddWorkNote(self, id=None, number=None, workNote=''):
+        """
+        This Method allow you to add a worknote on the incident ticket that you want
+        :id:string
+        :number:string (RQF318....)
+        :workNote:string
+        """
         if not workNote:
             raise SnowRestSessionException('the comment must be not empty')
         return self.updateIncident(id=id, number=number, data={'work_notes' : workNote})
 
     def addWorkNote(self, table=None, id=None, number=None, workNote=''):
+        """
+        This Method allow you to add a worknote on the ticket that you want
+        :table:string
+        :id:string
+        :number:string (RQF318....)
+        :workNote:string
+        """
         if not workNote:
             raise SnowRestSessionException('the comment must be not empty')
         return self.updateRecord(table=table, id=id, number=number, data={'work_notes': workNote})
