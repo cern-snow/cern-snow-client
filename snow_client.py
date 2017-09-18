@@ -12,9 +12,7 @@ class SnowRestSessionException(Exception):
     pass
 
 class SnowRestSession(object):
-    """
-    docstring for the SnowRestSession class witch contain few Method
-    """
+    
     def __init__(self):
         """
         This is the init of the SnowRestSession class
@@ -98,9 +96,13 @@ class SnowRestSession(object):
 
     def setLogFile(self, logfile):
         self.logfile = logfile
-
+    
     def cernGetSsoCookie(self):
         #"""Get CERN SSO cookies."""
+        """
+        This Methods get the cookie that connect you to the session and to the cern single sign on
+        :return:Nothing but assign the cookie in a variable of self
+        """
         args = ["cern-get-sso-cookie", "--reprocess", "--url", self.instance,"--outfile", self.sessionCookieFile]
         if not os.path.exists(self.sessionCookieFile):
             p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -120,12 +122,18 @@ class SnowRestSession(object):
             os.remove(self.sessionCookieFile)
 
     def requests_session(self):
+        """
+        This Methods creates a session and assignes cookies to the session to connect you to single sign on
+        """
         if not self.sessionCreated:
             self.sessionCreated = True
             self.session = requests.Session()
         self.session.cookies = self.sessionCookie
 
     def loadTokenFile(self):
+        """
+        This Methods load the token from the token file or create them if the token file doesnt exist
+        """
         if not os.path.exists(self.oauthTokenFile + '.npy'):
             self.freshToken = True
             token = self.session.post(self.instance + '/oauth_token.do', data = {'grant_type' : 'password', 'client_id' : self.oauthClientId, 'client_secret' : self.oauthClientSecret});
@@ -154,6 +162,9 @@ class SnowRestSession(object):
                 raise SnowRestSessionException('failed to load token file maybe bad file ?')
         
     def refreshToken(self):
+        """
+        This Method ask for token with the refresh token if token is expired and add them to the token file
+        """
         token = self.session.post(self.instance + '/oauth_token.do', data = {'grant_type' : 'refresh_token', 'client_id' : self.oauthClientId, 'client_secret' : self.oauthClientSecret, 'refresh_token' : self.tokenDic['refresh_token']})
         if token.status_code == 200:
             self.tokenDic = ast.literal_eval(token.text)
@@ -168,6 +179,11 @@ class SnowRestSession(object):
                     raise SnowRestSessionException('client id and secret might not work !')
 
     def get(self, url, params=None):
+        """
+        This method retrieves multiple records for the specified table with proper pagination information.
+        :url:string
+        :params:dict
+        """
         self.cernGetSsoCookie()
         self.requests_session()
         self.loadTokenFile()    
@@ -218,6 +234,12 @@ class SnowRestSession(object):
                                     raise SnowRestSessionException('Problem !')
 
     def post(self, url, headers=None, data=None):
+        """
+        This method inserts one record in the specified table. Multiple record insertion is not supported by this method.
+        :url:string
+        :headers:dict
+        :data:dict
+        """
         self.cernGetSsoCookie()
         self.requests_session()
         self.loadTokenFile()
@@ -245,6 +267,12 @@ class SnowRestSession(object):
                         raise SnowRestSessionException('Probleme with account or with the link to put !')
 
     def put(self, url, headers=None, data=None):
+        """
+        This method updates the specified record with the request body.
+        :url:string
+        :headers:dict
+        :data:dict
+        """
         self.cernGetSsoCookie()
         self.requests_session()
         self.loadTokenFile()
@@ -273,38 +301,13 @@ class SnowRestSession(object):
                     else:
                         raise SnowRestSessionException('Problem with the put request')
 
-    def delete(self, url, headers=None):
-        self.cernGetSsoCookie()
-        self.requests_session()
-        self.loadTokenFile()
-        delete = self.session.delete(url, headers=headers)
-        if delete.status_code == 200:
-            return delete
-        else:
-            if self.freshCookie:
-                raise SnowRestSessionException('Problem with the acount !')
-            else:
-                os.remove(self.sessionCookieFile)
-                self.cernGetSsoCookie()
-                self.session.cookies = self.sessionCookie
-                delete = self.session.delete(url, headers=headers)
-                if delete.status_code == 200:
-                    return delete
-                else:
-                    if self.freshToken:
-                        raise SnowRestSessionException('Problem with the account !')
-                    else:
-                        os.remove(self.oauthtokenfile)
-                        self.loadTokenFile()
-                        delete = self.session.delete(url, headers=headers)
-                        if delete.status_code == 200:
-                            return delete
-                        else:
-                            raise SnowRestSessionException('Probleme with account or with the link to delete !')
-
     def getRecord(self, table, id=None, number=None):
         # s.getRecord('incident', id='12345feab...')
         # s.getRecord('incident', number='INC12345')
+        """
+        The Method getRecord use the fonction get and return an object
+        :return:object_get
+        """
         if not table:
             raise SnowRestSessionException('getRecord needs a table value')
         url = self.instance + '/api/now/v2/table/'+ table
@@ -317,6 +320,10 @@ class SnowRestSession(object):
         return self.get(url)
 
     def getRecords(table, filter = {}, encodedQuery = ""):
+        """
+        The Method getRecords use the fonction get for many requests
+        :return:object_get
+        """
         if not table:
             raise SnowRestSessionException('getRecords needs a table value')
         url = self.instance + '/api/now/v2/table/'+ table
@@ -332,21 +339,41 @@ class SnowRestSession(object):
         return self.get(url)
 
     def getRequest(self, id=None, number=None):
+        """
+        The Method getRequest is a get for request table. You give the id or the number of the request
+        :return:get_object
+        """
         return self.getRecord(table='u_request_fulfillment', id=id, number=number)
 
     def getRequests(self, filter={}, encodedQuery=""):
-        return self.getRecord(table='u_request_fulfillment', filter=filter, encodedQuery=encodedQuery)
+        """
+        The Method getRequets is a get for many request.
+        :return:get_object
+        """
+        return self.getRecords(table='u_request_fulfillment', filter=filter, encodedQuery=encodedQuery)
 
     def getIncidents(self, filter = {}, encodedQuery= ""):
+        """
+        The Method getIncidents is a get for many incident
+        :return:get_object
+        """
         return self.getRecord(table='incident', filter=filter, encodedQuery=encodedQuery)
         
     def getIncident(self, id=None, number=None):
         # s.getIncident(id='1213dgazd...')
         # s.getIncident(number='1367136')
+        """
+        The Method getIncident is a get for an incident. You give the id or the number of the incident.
+        :return:get_object
+        """
         return self.getRecord('incident', id=id, number=number)
         
     def insertRecord(self, table='', data={}):
         # s.insertRecord(table='incident', data=data)
+        """
+        This Method is using the post request to insert something in a table
+        :return:post_object
+        """
         if not table:
             raise SnowRestSessionException('insertRecord needs a table value')
         url = self.instance + '/api/now/v2/table/' + table
