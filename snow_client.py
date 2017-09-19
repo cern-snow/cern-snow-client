@@ -319,13 +319,15 @@ class SnowRestSession(object):
             raise SnowRestSessionException('getRecord needs at least an id or a number')
         return self.get(url)
 
-    def getRecords(table, filter = {}, encodedQuery = ""):
+    def getRecords(self, table=None, filter = {}, encodedQuery = ""):
         """
         The Method getRecords use the fonction get for many requests
         :return:object_get
         """
+        print 'AHHHHHHH'
         if not table:
             raise SnowRestSessionException('getRecords needs a table value')
+        print self.instance
         url = self.instance + '/api/now/v2/table/'+ table
         if filter:
             a = []
