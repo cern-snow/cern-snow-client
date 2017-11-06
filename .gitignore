@@ -1,2 +1,5 @@
 # Pycharm project files
 .idea
+
+# Python byte code files
+*.pyc
