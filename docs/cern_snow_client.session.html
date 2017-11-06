@@ -1,0 +1,247 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module cern_snow_client.session</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="cern_snow_client.html"><font color="#ffffff">cern_snow_client</font></a>.session</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/dmartinc/cernbox/PycharmProjects/snow-client/cern_snow_client/session.py">/Users/dmartinc/cernbox/PycharmProjects/snow-client/cern_snow_client/session.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="ast.html">ast</a><br>
+<a href="cookielib.html">cookielib</a><br>
+<a href="json.html">json</a><br>
+</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+<a href="os.html">os</a><br>
+<a href="requests.html">requests</a><br>
+</td><td width="25%" valign=top><a href="subprocess.html">subprocess</a><br>
+<a href="sys.html">sys</a><br>
+<a href="yaml.html">yaml</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="cern_snow_client.session.html#SnowRestSession">SnowRestSession</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>(<a href="exceptions.html#BaseException">exceptions.BaseException</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="cern_snow_client.session.html#SnowRestSessionException">SnowRestSessionException</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SnowRestSession">class <strong>SnowRestSession</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="SnowRestSession-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>This&nbsp;is&nbsp;the&nbsp;init&nbsp;of&nbsp;the&nbsp;<a href="#SnowRestSession">SnowRestSession</a>&nbsp;class<br>
+:return:&nbsp;None</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-add_comment"><strong>add_comment</strong></a>(self, table<font color="#909090">=None</font>, sys_id<font color="#909090">=None</font>, number<font color="#909090">=None</font>, comment<font color="#909090">=None</font>)</dt><dd><tt>This&nbsp;Method&nbsp;allow&nbsp;you&nbsp;to&nbsp;commebt&nbsp;the&nbsp;ticket&nbsp;that&nbsp;you&nbsp;want&nbsp;to&nbsp;comment<br>
+:table:string<br>
+:sys_id:string<br>
+:number:string&nbsp;(RQF318....)<br>
+:comment:string</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-add_work_note"><strong>add_work_note</strong></a>(self, table<font color="#909090">=None</font>, sys_id<font color="#909090">=None</font>, number<font color="#909090">=None</font>, work_note<font color="#909090">=''</font>)</dt><dd><tt>This&nbsp;Method&nbsp;allow&nbsp;you&nbsp;to&nbsp;add&nbsp;a&nbsp;worknote&nbsp;on&nbsp;the&nbsp;ticket&nbsp;that&nbsp;you&nbsp;want<br>
+:table:string<br>
+:sys_id:string<br>
+:number:string&nbsp;(RQF318....)<br>
+:work_note:string</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-get"><strong>get</strong></a>(self, url, headers<font color="#909090">=None</font>, params<font color="#909090">=None</font>)</dt><dd><tt>This&nbsp;method&nbsp;retrieves&nbsp;multiple&nbsp;records&nbsp;for&nbsp;the&nbsp;specified&nbsp;table&nbsp;with&nbsp;proper&nbsp;pagination&nbsp;information.<br>
+:url:string<br>
+:params:dict</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-get_incident"><strong>get_incident</strong></a>(self, sys_id<font color="#909090">=None</font>, number<font color="#909090">=None</font>)</dt><dd><tt>The&nbsp;Method&nbsp;get_incident&nbsp;is&nbsp;a&nbsp;get&nbsp;for&nbsp;an&nbsp;incident.&nbsp;You&nbsp;give&nbsp;the&nbsp;id&nbsp;or&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;incident.<br>
+:return:get_object</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-get_incidents"><strong>get_incidents</strong></a>(self, query_filter<font color="#909090">=None</font>, query_encoded<font color="#909090">=''</font>)</dt><dd><tt>The&nbsp;Method&nbsp;getIncidents&nbsp;is&nbsp;a&nbsp;get&nbsp;for&nbsp;many&nbsp;incident<br>
+:return:get_object</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-get_record"><strong>get_record</strong></a>(self, table, sys_id<font color="#909090">=None</font>, number<font color="#909090">=None</font>)</dt><dd><tt>The&nbsp;Method&nbsp;get_record&nbsp;use&nbsp;the&nbsp;fonction&nbsp;get&nbsp;and&nbsp;return&nbsp;an&nbsp;<a href="__builtin__.html#object">object</a><br>
+:param&nbsp;table:<br>
+:param&nbsp;sys_id:<br>
+:param&nbsp;number:<br>
+:return:object_get</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-get_records"><strong>get_records</strong></a>(self, table<font color="#909090">=None</font>, query_filter<font color="#909090">=None</font>, query_encoded<font color="#909090">=''</font>)</dt><dd><tt>The&nbsp;Method&nbsp;get_records&nbsp;use&nbsp;the&nbsp;fonction&nbsp;get&nbsp;for&nbsp;many&nbsp;requests<br>
+:param&nbsp;table:<br>
+:param&nbsp;query_filter:<br>
+:param&nbsp;query_encoded:<br>
+:return:object_get</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-get_request"><strong>get_request</strong></a>(self, sys_id<font color="#909090">=None</font>, number<font color="#909090">=None</font>)</dt><dd><tt>The&nbsp;Method&nbsp;getRequest&nbsp;is&nbsp;a&nbsp;get&nbsp;for&nbsp;request&nbsp;table.&nbsp;You&nbsp;give&nbsp;the&nbsp;id&nbsp;or&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;request<br>
+:return:get_object</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-get_requests"><strong>get_requests</strong></a>(self, query_filter<font color="#909090">=None</font>, query_encoded<font color="#909090">=''</font>)</dt><dd><tt>The&nbsp;Method&nbsp;getRequets&nbsp;is&nbsp;a&nbsp;get&nbsp;for&nbsp;many&nbsp;request.<br>
+:return:get_object</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-inc_add_work_note"><strong>inc_add_work_note</strong></a>(self, sys_id<font color="#909090">=None</font>, number<font color="#909090">=None</font>, work_note<font color="#909090">=''</font>)</dt><dd><tt>This&nbsp;Method&nbsp;allow&nbsp;you&nbsp;to&nbsp;add&nbsp;a&nbsp;worknote&nbsp;on&nbsp;the&nbsp;incident&nbsp;ticket&nbsp;that&nbsp;you&nbsp;want<br>
+:sys_id:string<br>
+:number:string&nbsp;(RQF318....)<br>
+:work_note:string</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-incident_add_comment"><strong>incident_add_comment</strong></a>(self, sys_id<font color="#909090">=None</font>, number<font color="#909090">=None</font>, comment<font color="#909090">=None</font>)</dt><dd><tt>This&nbsp;Method&nbsp;allow&nbsp;you&nbsp;to&nbsp;comment&nbsp;the&nbsp;incident&nbsp;ticket&nbsp;that&nbsp;you&nbsp;want&nbsp;to&nbsp;comment<br>
+:sys_id:string<br>
+:number:string&nbsp;(RQF318....)<br>
+:comment:string</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-insert_incident"><strong>insert_incident</strong></a>(self, data)</dt><dd><tt>This&nbsp;Method&nbsp;create&nbsp;an&nbsp;incident&nbsp;with&nbsp;the&nbsp;data&nbsp;you&nbsp;give&nbsp;in&nbsp;parameter<br>
+:data:dict</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-insert_record"><strong>insert_record</strong></a>(self, table<font color="#909090">=None</font>, data<font color="#909090">=None</font>)</dt><dd><tt>This&nbsp;Method&nbsp;is&nbsp;using&nbsp;the&nbsp;post&nbsp;request&nbsp;to&nbsp;insert&nbsp;something&nbsp;in&nbsp;a&nbsp;table<br>
+:return:post_object</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-insert_request"><strong>insert_request</strong></a>(self, data)</dt><dd><tt>This&nbsp;Method&nbsp;create&nbsp;a&nbsp;request&nbsp;with&nbsp;the&nbsp;data&nbsp;you&nbsp;give&nbsp;in&nbsp;parameter<br>
+:data:dict</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-load_config_file"><strong>load_config_file</strong></a>(self, config_file_path)</dt><dd><tt>This&nbsp;Method&nbsp;load&nbsp;the&nbsp;config&nbsp;file&nbsp;and&nbsp;fill&nbsp;the&nbsp;variable&nbsp;in&nbsp;the&nbsp;class<br>
+:return:Nothing</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-post"><strong>post</strong></a>(self, url, headers<font color="#909090">=None</font>, data<font color="#909090">=None</font>)</dt><dd><tt>This&nbsp;method&nbsp;inserts&nbsp;one&nbsp;record&nbsp;in&nbsp;the&nbsp;specified&nbsp;table.<br>
+Multiple&nbsp;record&nbsp;insertion&nbsp;is&nbsp;not&nbsp;supported&nbsp;by&nbsp;this&nbsp;method.<br>
+:url:string<br>
+:headers:dict<br>
+:data:dict</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-put"><strong>put</strong></a>(self, url, headers<font color="#909090">=None</font>, data<font color="#909090">=None</font>)</dt><dd><tt>This&nbsp;method&nbsp;updates&nbsp;the&nbsp;specified&nbsp;record&nbsp;with&nbsp;the&nbsp;request&nbsp;body.<br>
+:url:string<br>
+:headers:dict<br>
+:data:dict</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-req_add_work_note"><strong>req_add_work_note</strong></a>(self, sys_id<font color="#909090">=None</font>, number<font color="#909090">=None</font>, work_note<font color="#909090">=''</font>)</dt><dd><tt>This&nbsp;Method&nbsp;allow&nbsp;you&nbsp;to&nbsp;add&nbsp;a&nbsp;worknote&nbsp;on&nbsp;the&nbsp;request&nbsp;ticket&nbsp;that&nbsp;you&nbsp;want<br>
+:sys_id:string<br>
+:number:string&nbsp;(RQF318....)<br>
+:work_note:string</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-request_add_comment"><strong>request_add_comment</strong></a>(self, sys_id<font color="#909090">=None</font>, number<font color="#909090">=None</font>, comment<font color="#909090">=None</font>)</dt><dd><tt>This&nbsp;Method&nbsp;allow&nbsp;you&nbsp;to&nbsp;comment&nbsp;the&nbsp;request&nbsp;ticket&nbsp;that&nbsp;you&nbsp;want&nbsp;to&nbsp;comment<br>
+:sys_id:string<br>
+:number:string&nbsp;(RQF318....)<br>
+:comment:string</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-set_auth_type"><strong>set_auth_type</strong></a>(self, auth_type)</dt></dl>
+
+<dl><dt><a name="SnowRestSession-set_basic_auth_password"><strong>set_basic_auth_password</strong></a>(self, basic_auth_password)</dt></dl>
+
+<dl><dt><a name="SnowRestSession-set_basic_auth_user"><strong>set_basic_auth_user</strong></a>(self, basic_auth_user)</dt></dl>
+
+<dl><dt><a name="SnowRestSession-set_instance"><strong>set_instance</strong></a>(self, instance)</dt></dl>
+
+<dl><dt><a name="SnowRestSession-set_log_file"><strong>set_log_file</strong></a>(self, log_file)</dt></dl>
+
+<dl><dt><a name="SnowRestSession-set_oauth_client_id"><strong>set_oauth_client_id</strong></a>(self, oauth_client_id)</dt></dl>
+
+<dl><dt><a name="SnowRestSession-set_oauth_client_secret"><strong>set_oauth_client_secret</strong></a>(self, oauth_client_secret)</dt></dl>
+
+<dl><dt><a name="SnowRestSession-set_oauth_token_file"><strong>set_oauth_token_file</strong></a>(self, oauth_token_file)</dt></dl>
+
+<dl><dt><a name="SnowRestSession-set_session_cookie_file"><strong>set_session_cookie_file</strong></a>(self, session_cookie_file)</dt></dl>
+
+<dl><dt><a name="SnowRestSession-set_sso_method"><strong>set_sso_method</strong></a>(self, sso_method)</dt></dl>
+
+<dl><dt><a name="SnowRestSession-update_incident"><strong>update_incident</strong></a>(self, sys_id<font color="#909090">=None</font>, number<font color="#909090">=None</font>, data<font color="#909090">=None</font>)</dt><dd><tt>This&nbsp;Method&nbsp;allow&nbsp;you&nbsp;to&nbsp;update&nbsp;the&nbsp;incident&nbsp;ticket&nbsp;that&nbsp;you&nbsp;want&nbsp;to&nbsp;update<br>
+:sys_id:string<br>
+:number:string&nbsp;(RQF318....)<br>
+:data:dict</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-update_record"><strong>update_record</strong></a>(self, table<font color="#909090">=None</font>, sys_id<font color="#909090">=None</font>, data<font color="#909090">=None</font>)</dt><dd><tt>This&nbsp;Method&nbsp;allow&nbsp;you&nbsp;to&nbsp;update&nbsp;any&nbsp;ticket<br>
+:table:string<br>
+:sys_id:string<br>
+:data:dict</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSession-update_request"><strong>update_request</strong></a>(self, sys_id<font color="#909090">=None</font>, number<font color="#909090">=None</font>, data<font color="#909090">=None</font>)</dt><dd><tt>This&nbsp;Method&nbsp;allow&nbsp;you&nbsp;to&nbsp;update&nbsp;the&nbsp;request&nbsp;ticket&nbsp;that&nbsp;you&nbsp;want&nbsp;to&nbsp;update<br>
+:sys_id:string<br>
+:number:string&nbsp;(RQF318....)<br>
+:data:dict</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SnowRestSessionException">class <strong>SnowRestSessionException</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="cern_snow_client.session.html#SnowRestSessionException">SnowRestSessionException</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="SnowRestSessionException-__init__"><strong>__init__</strong></a>(...)</dt><dd><tt>x.<a href="#SnowRestSessionException-__init__">__init__</a>(...)&nbsp;initializes&nbsp;x;&nbsp;see&nbsp;help(type(x))&nbsp;for&nbsp;signature</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#SnowRestSessionException-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="SnowRestSessionException-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#SnowRestSessionException-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSessionException-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#SnowRestSessionException-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSessionException-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#SnowRestSessionException-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSessionException-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#SnowRestSessionException-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSessionException-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="SnowRestSessionException-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#SnowRestSessionException-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSessionException-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#SnowRestSessionException-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSessionException-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="SnowRestSessionException-__str__"><strong>__str__</strong></a>(...)</dt><dd><tt>x.<a href="#SnowRestSessionException-__str__">__str__</a>()&nbsp;&lt;==&gt;&nbsp;str(x)</tt></dd></dl>
+
+<dl><dt><a name="SnowRestSessionException-__unicode__"><strong>__unicode__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+</dl>
+</td></tr></table></td></tr></table>
+</body></html>
