@@ -25,22 +25,22 @@ class SsoOAuthTest(unittest.TestCase, TestBase):
 
     def test_get_incident(self):
         s = SsoOAuthTest.make_good_session()
-        TestBase.test_get_incident(self, s)
+        TestBase.base_test_get_incident(self, s)
         SsoOAuthTest.remove_files()
 
     def test_insert_incident(self):
         s = SsoOAuthTest.make_good_session()
-        TestBase.test_insert_incident(self, s)
+        TestBase.base_test_insert_incident(self, s)
         SsoOAuthTest.remove_files()
 
     def test_update_incident(self):
         s = SsoOAuthTest.make_good_session()
-        TestBase.test_update_incident(self, s)
+        TestBase.base_test_update_incident(self, s)
         SsoOAuthTest.remove_files()
 
     def test_session_persistance(self):
         s = SsoOAuthTest.make_good_session()
-        TestBase.test_session_persistance(self, s)
+        TestBase.base_test_session_persistance(self, s)
         SsoOAuthTest.remove_files()
 
 

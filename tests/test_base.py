@@ -29,14 +29,14 @@ class TestBase(object):
                 return cookie.value
         return None
 
-    def test_get_incident(self, s):
+    def base_test_get_incident(self, s):
         result = s.get_incident(number='INC0426232')
         inc = json.loads(result.text)['result'][0]
 
         self.assertEquals(inc['number'], "INC0426232")
         self.assertEquals(inc['short_description'], "Test")
 
-    def test_insert_incident(self, s):
+    def base_test_insert_incident(self, s):
         sd = self.short_description_prefix + ": test_insert_incident"
         fe = '579fb3d90a0a8c08017ac8a1137c8ee6'
 
@@ -53,7 +53,7 @@ class TestBase(object):
         self.assertEquals(inc['u_functional_element']['value'], fe)
         self.assertEquals(inc['incident_state'], '2')
 
-    def test_update_incident(self, s):
+    def base_test_update_incident(self, s):
         sd = self.short_description_prefix + ": test_update_incident"
         fe = '579fb3d90a0a8c08017ac8a1137c8ee6'
 
@@ -88,7 +88,7 @@ class TestBase(object):
         self.assertEquals(inc4['watch_list'], 'noreply3@cern.ch')
         self.assertEquals(inc5['watch_list'], 'noreply3@cern.ch')
 
-    def test_session_persistance(self, s):
+    def base_test_session_persistance(self, s):
         result1 = s.get_incident(number='INC0426232')
         inc1 = json.loads(result1.text)['result'][0]
         session_id1 = TestBase.get_cookie_by_name(s.session.cookies, 'JSESSIONID')
