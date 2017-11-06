@@ -32,12 +32,14 @@ python
 
 ## Installation
 
-Inside your private folder on lxplus.cern.ch, do:
+You can clone this git repository:
 ``` bash
 git clone https://:@gitlab.cern.ch:8443/servicenow/snow-client.git
 ```
 
-You can then copy the package `cern_snow_client` into your Python project.
+You can then copy the package (folder) `cern_snow_client` into your Python project.
+
+You can also download a .zip or .tar.gz file from this project.
 
 ## Documentation
 
