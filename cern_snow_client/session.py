@@ -628,7 +628,7 @@ class SnowRestSession(object):
 
         return self.update_record(table=table, sys_id=sys_id, data={'comments': comment})
 
-    def req_add_work_note(self, sys_id=None, number=None, work_note=''):
+    def request_add_work_note(self, sys_id=None, number=None, work_note=''):
         """
         This Method allow you to add a worknote on the request ticket that you want
         :sys_id:string
@@ -637,7 +637,7 @@ class SnowRestSession(object):
         """
         return self.add_work_note(table='incident', sys_id=sys_id, number=number, work_note=work_note)
 
-    def inc_add_work_note(self, sys_id=None, number=None, work_note=''):
+    def incident_add_work_note(self, sys_id=None, number=None, work_note=''):
         """
         This Method allow you to add a worknote on the incident ticket that you want
         :sys_id:string
