@@ -39,6 +39,15 @@ git clone https://:@gitlab.cern.ch:8443/servicenow/snow-client.git
 
 You can then copy the package `cern_snow_client` into your Python project.
 
+## Documentation
+
+To see the current documentation, please open the file `docs/cern_snow_client.html`
+
+## Unit tests
+
+While in the root of the project, please run `tests/run.sh`.
+The SSO+OAuth tests will only work in an environment with the tool `cern-get-sso-cookie` (e.g. Scientific Linux CERN or CERN CentOS).
+Tested environments are lxplus.cern.ch (currently Python 2.6) and aiadm (currently Python 2.7).
 
 
 ## Contributors
