@@ -3,7 +3,7 @@ Welcome on the snow-client library. It facilitates usage of the ServiceNow REST 
 
 The library is compatible with Python 2.6+ but not Python 3 yet.
 
-The library code is in the package `cern_snow_client`, and example usage is in `examples/main.py`. You should modify the configuration file `examples/config.yaml` as well.
+The library code is in the package `cern_snow_client`, and example usage is in [`examples/main.py`](examples/main.py). You should modify the configuration file [`examples/config.yaml`](examples/config.yaml) as well.
 
 ## Motivation
 * Providing a common, reliable and documented Python client library for ServiceNow users, both in the IT Department and other CERN departments
