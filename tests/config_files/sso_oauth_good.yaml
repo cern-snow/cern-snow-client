@@ -1,0 +1,8 @@
+instance : cerntest.service-now.com
+auth:
+  type: sso_oauth
+  sso_method: kerberos
+  oauth_client_id: 1b606d966a008380d686014a4cc61e42
+session:
+  cookie_file: sso_oauth_cookie.txt
+  oauth_tokens_file: token_file

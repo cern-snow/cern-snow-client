@@ -3,3 +3,6 @@
 
 # Python byte code files
 *.pyc
+
+# File with passwords for tests
+tests/config_files/passwords.yaml
