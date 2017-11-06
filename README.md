@@ -15,7 +15,7 @@ The library code is in the package `cern_snow_client`, and example usage is in `
  
  * You can try the library interactively. Example below:
 
-```
+``` python
 python
 ...
 >>> from cern_snow_client.session import SnowRestSession
@@ -33,7 +33,7 @@ python
 ## Installation
 
 Inside your private folder on lxplus.cern.ch, do:
-```
+``` bash
 git clone https://:@gitlab.cern.ch:8443/servicenow/snow-client.git
 ```
 
