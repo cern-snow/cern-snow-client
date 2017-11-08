@@ -1,0 +1,614 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>cern_snow_client package &#8212; cern-snow-client 0.2 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="tests package" href="tests.html" />
+    <link rel="prev" title="Documentation for the cern-snow-client library" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tests.html" title="tests package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Documentation for the cern-snow-client library"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">cern-snow-client 0.2 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-cern_snow_client">
+<span id="cern-snow-client-package"></span><h1>cern_snow_client package<a class="headerlink" href="#module-cern_snow_client" title="Permalink to this headline">¶</a></h1>
+<p>The CERN ServiceNow Client library (CERN SNow Client) facilitates the usage of the ServiceNow REST API
+with a CERN account via Single Sign On authentication. Basic Authentication is also supported.</p>
+<p>Low level operations such as get, post and put are implemented.
+Also, other higher level operations have been implemented, such as querying/inserting/updating records,
+or querying/inserting/updating incidents and requests, including adding comments and work notes.</p>
+<div class="section" id="module-cern_snow_client.session">
+<span id="cern-snow-client-session-module"></span><h2>cern_snow_client.session module<a class="headerlink" href="#module-cern_snow_client.session" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cern_snow_client.session.SnowRestSession">
+<em class="property">class </em><code class="descclassname">cern_snow_client.session.</code><code class="descname">SnowRestSession</code><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class behaves very similarly to a requests.Session object.
+It can be configured by loading a .yaml config file,
+or by setting attributes.</p>
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.load_config_file">
+<code class="descname">load_config_file</code><span class="sig-paren">(</span><em>config_file_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.load_config_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.load_config_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a .yaml configuration file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>config_file_path</strong> (<em>str</em>) – the path to the configuration file</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if no file is found at the specified path, or some inconsistency is found
+in the file.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">Exception</span></code> – if some other error happens when opening or parsing the file</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.set_instance">
+<code class="descname">set_instance</code><span class="sig-paren">(</span><em>instance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.set_instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.set_instance" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>instance</strong> (<em>str</em>) – the ServiceNow instance to use. Example: ‘https://cern.service-now.com’</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.set_auth_type">
+<code class="descname">set_auth_type</code><span class="sig-paren">(</span><em>auth_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.set_auth_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.set_auth_type" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>auth_type</strong> (<em>str</em>) – the authentication type to use. Either ‘sso_auth’ or ‘basic’</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if auth_type is not ‘sso_auth’ or ‘basic’</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.set_sso_method">
+<code class="descname">set_sso_method</code><span class="sig-paren">(</span><em>sso_method</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.set_sso_method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.set_sso_method" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sso_method</strong> (<em>str</em>) – the Single Sign On method to use. Either ‘kerberos’ or ‘certificate’.</li>
+<li><strong>set_auth_type</strong> (<em>Needs</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if sso_method is not ‘kerberos’ or ‘certificate’</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note: certificate support needs to be implemented</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.set_oauth_client_id">
+<code class="descname">set_oauth_client_id</code><span class="sig-paren">(</span><em>oauth_client_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.set_oauth_client_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.set_oauth_client_id" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>oauth_client_id</strong> (<em>str</em>) – the OAuth client id provided to you by your instance’s ServiceNow administrator.</li>
+<li><strong>set_auth_type</strong> (<em>Needs</em>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.set_oauth_client_secret">
+<code class="descname">set_oauth_client_secret</code><span class="sig-paren">(</span><em>oauth_client_secret</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.set_oauth_client_secret"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.set_oauth_client_secret" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>oauth_client_secret</strong> (<em>str</em>) – the OAuth client secret provided to you by your instance’s</li>
+<li><strong>administrator.</strong> (<em>ServiceNow</em>) – </li>
+<li><strong>set_auth_type</strong> (<em>Needs</em>) – </li>
+<li><strong>OAuth client secret is sensitive information; please store it as securely as possible.</strong> (<em>An</em>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.set_session_cookie_file_path">
+<code class="descname">set_session_cookie_file_path</code><span class="sig-paren">(</span><em>session_cookie_file_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.set_session_cookie_file_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.set_session_cookie_file_path" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>session_cookie_file_path</strong> (<em>str</em>) – the path to the file where the session cookies will be persisted.</li>
+<li><strong>not provided</strong><strong>, </strong><strong>the cookies will not be persisted.</strong> (<em>If</em>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.set_oauth_token_file_path">
+<code class="descname">set_oauth_token_file_path</code><span class="sig-paren">(</span><em>oauth_token_file_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.set_oauth_token_file_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.set_oauth_token_file_path" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>oauth_token_file_path</strong> (<em>str</em>) – the path to the file where the OAuth refresh and access tokens</li>
+<li><strong>be persisted. If not provided</strong><strong>, </strong><strong>the OAuth tokens will not be persisted.</strong> (<em>will</em>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.set_log_file_path">
+<code class="descname">set_log_file_path</code><span class="sig-paren">(</span><em>log_file_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.set_log_file_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.set_log_file_path" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>log_file_path</strong> (<em>str</em>) – the path to the log file</td>
+</tr>
+</tbody>
+</table>
+<p>Note: logging to a file needs to be implemented</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.set_basic_auth_user">
+<code class="descname">set_basic_auth_user</code><span class="sig-paren">(</span><em>basic_auth_user</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.set_basic_auth_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.set_basic_auth_user" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>basic_auth_user</strong> (<em>str</em>) – the name of the local ServiceNow account that will be used for authentication.</li>
+<li><strong>set_auth_type</strong> (<em>Needs</em>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.set_basic_auth_password">
+<code class="descname">set_basic_auth_password</code><span class="sig-paren">(</span><em>basic_auth_password</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.set_basic_auth_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.set_basic_auth_password" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>basic_auth_password</strong> (<em>str</em>) – the password of the local ServiceNow account that will be used for</li>
+<li><strong>authentication.</strong> – </li>
+<li><strong>set_auth_type</strong> (<em>Needs</em>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>url</em>, <em>headers=None</em>, <em>params=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes a raw GET operation and returns the result.
+Used to read or retrieve information.
+The authentication method, and session cookie / OAuth tokens persistance will depend on how the session
+has been configured.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>url</strong> (<em>str</em>) – an absolute URL</li>
+<li><strong>headers</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – any additional headers to be be passed. If not set, the ‘Accept’ header will be set to
+‘application/json’</li>
+<li><strong>params</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – any additional URL parameters to be be passed</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.
+The structure of the result inside the ‘text’ attribute might vary depending on the REST endpoint
+called and the way that the query is configured. ServiceNow may also set various HTTP status codes
+or headers in the response.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if the operation could not be performed due to an authentication issue</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>url</em>, <em>headers=None</em>, <em>params=None</em>, <em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes a raw POST operation and returns the result.
+Used to insert records or other information.
+The authentication method, and session cookie / OAuth tokens persistance will depend on how the session
+has been configured.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>url</strong> (<em>str</em>) – an absolute URL</li>
+<li><strong>headers</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – any additional headers to be be passed. If not set, the ‘Accept’ header will be set to
+‘application/json’, and ‘Content’ will be set to ‘application/json’</li>
+<li><strong>params</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – any additional URL parameters to be be passed</li>
+<li><strong>data</strong> (<em>object</em>) – the data that will be submitted via POST. For example, a dictionary of keys and values.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.
+The structure of the result inside the ‘text’ attribute might vary depending on the REST endpoint
+called, but typically represents the record resulting from the insert. ServiceNow may also set various
+HTTP status codes or headers in the response.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if the operation could not be performed due to an authentication issue</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.put">
+<code class="descname">put</code><span class="sig-paren">(</span><em>url</em>, <em>headers=None</em>, <em>params=None</em>, <em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.put"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.put" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes a raw PUT operation and returns the result.
+Used to update records or other information.
+The authentication method, and session cookie / OAuth tokens persistance will depend on how the session
+has been configured.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>url</strong> (<em>str</em>) – an absolute URL</li>
+<li><strong>headers</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – any additional headers to be be passed. If not set, the ‘Accept’ header will be set to
+‘application/json’, and ‘Content’ will be set to ‘application/json’</li>
+<li><strong>params</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – any additional URL parameters to be be passed</li>
+<li><strong>data</strong> (<em>object</em>) – the data that will be submitted via PUT. For example, a dictionary of keys and values.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.
+The structure of the result inside the ‘text’ attribute might vary depending on the REST endpoint
+called, but typically represents the state of the record after the update.
+ServiceNow may also set various HTTP status codes or headers in the response.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if the operation could not be performed due to an authentication issue</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.get_record">
+<code class="descname">get_record</code><span class="sig-paren">(</span><em>table</em>, <em>sys_id=None</em>, <em>number=None</em>, <em>headers=None</em>, <em>params=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.get_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.get_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes a GET operation in order to read a single record from a ServiceNow table.
+The authentication method, and session cookie / OAuth tokens persistance will depend on how the session
+has been configured.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>table</strong> (<em>str</em>) – the name of a ServiceNow table, such as <code class="docutils literal"><span class="pre">incident</span></code>. Mandatory parameter.</li>
+<li><strong>sys_id</strong> (<em>str</em>) – the sys_id (ServiceNow unique identifier) of the record to be read.
+Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
+<li><strong>number</strong> (<em>str</em>) – the number of the record to be read. Can be used if the table has a Number field.
+Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
+<li><strong>headers</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – any additional headers to be be passed. If not set, the ‘Accept’ header will be set to
+‘application/json’.</li>
+<li><strong>params</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – any additional URL parameters to be be passed. For a complete list, please see:
+<a class="reference external" href="https://docs.servicenow.com/bundle/helsinki-application-development/page/integrate/inbound-rest/concept/c_TableAPI.html#ariaid-title3">https://docs.servicenow.com/bundle/helsinki-application-development/page/integrate/inbound-rest/concept/c_TableAPI.html#ariaid-title3</a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
+<dd><p class="first last">The ‘text’ will contain a JSON or XML representation of the record.
+The response will also contain headers. For a list of headers, please see:
+<a class="reference external" href="https://docs.servicenow.com/bundle/helsinki-application-development/page/integrate/inbound-rest/concept/c_TableAPI.html#d45069e608">https://docs.servicenow.com/bundle/helsinki-application-development/page/integrate/inbound-rest/concept/c_TableAPI.html#d45069e608</a></p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
+or if the operation could not be performed due to an authentication issue</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.get_records">
+<code class="descname">get_records</code><span class="sig-paren">(</span><em>table=None</em>, <em>query_filter=None</em>, <em>query_encoded=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.get_records"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.get_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Method get_records use the fonction get for many requests
+:param table:
+:param query_filter:
+:param query_encoded:
+:return:object_get</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.get_request">
+<code class="descname">get_request</code><span class="sig-paren">(</span><em>sys_id=None</em>, <em>number=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.get_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.get_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Method getRequest is a get for request table. You give the id or the number of the request
+:return:get_object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.get_requests">
+<code class="descname">get_requests</code><span class="sig-paren">(</span><em>query_filter=None</em>, <em>query_encoded=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.get_requests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.get_requests" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Method getRequets is a get for many request.
+:return:get_object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.get_incidents">
+<code class="descname">get_incidents</code><span class="sig-paren">(</span><em>query_filter=None</em>, <em>query_encoded=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.get_incidents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.get_incidents" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Method getIncidents is a get for many incident
+:return:get_object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.get_incident">
+<code class="descname">get_incident</code><span class="sig-paren">(</span><em>sys_id=None</em>, <em>number=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.get_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.get_incident" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Method get_incident is a get for an incident. You give the id or the number of the incident.
+:return:get_object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.insert_record">
+<code class="descname">insert_record</code><span class="sig-paren">(</span><em>table=None</em>, <em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.insert_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.insert_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>This Method is using the post request to insert something in a table
+:return:post_object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.insert_incident">
+<code class="descname">insert_incident</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.insert_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.insert_incident" title="Permalink to this definition">¶</a></dt>
+<dd><p>This Method create an incident with the data you give in parameter
+:<a class="reference external" href="data:dict">data:dict</a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.insert_request">
+<code class="descname">insert_request</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.insert_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.insert_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>This Method create a request with the data you give in parameter
+:<a class="reference external" href="data:dict">data:dict</a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.update_record">
+<code class="descname">update_record</code><span class="sig-paren">(</span><em>table=None</em>, <em>sys_id=None</em>, <em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.update_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.update_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>This Method allow you to update any ticket
+:table:string
+:sys_id:string
+:data:dict</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.update_request">
+<code class="descname">update_request</code><span class="sig-paren">(</span><em>sys_id=None</em>, <em>number=None</em>, <em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.update_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.update_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>This Method allow you to update the request ticket that you want to update
+:sys_id:string
+:number:string (RQF318….)
+:data:dict</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.update_incident">
+<code class="descname">update_incident</code><span class="sig-paren">(</span><em>sys_id=None</em>, <em>number=None</em>, <em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.update_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.update_incident" title="Permalink to this definition">¶</a></dt>
+<dd><p>This Method allow you to update the incident ticket that you want to update
+:sys_id:string
+:number:string (RQF318….)
+:data:dict</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.incident_add_comment">
+<code class="descname">incident_add_comment</code><span class="sig-paren">(</span><em>sys_id=None</em>, <em>number=None</em>, <em>comment=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.incident_add_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.incident_add_comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>This Method allow you to comment the incident ticket that you want to comment
+:sys_id:string
+:number:string (RQF318….)
+:comment:string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.request_add_comment">
+<code class="descname">request_add_comment</code><span class="sig-paren">(</span><em>sys_id=None</em>, <em>number=None</em>, <em>comment=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.request_add_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.request_add_comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>This Method allow you to comment the request ticket that you want to comment
+:sys_id:string
+:number:string (RQF318….)
+:comment:string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.add_comment">
+<code class="descname">add_comment</code><span class="sig-paren">(</span><em>table=None</em>, <em>sys_id=None</em>, <em>number=None</em>, <em>comment=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.add_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.add_comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>This Method allow you to commebt the ticket that you want to comment
+:table:string
+:sys_id:string
+:number:string (RQF318….)
+:comment:string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.request_add_work_note">
+<code class="descname">request_add_work_note</code><span class="sig-paren">(</span><em>sys_id=None</em>, <em>number=None</em>, <em>work_note=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.request_add_work_note"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.request_add_work_note" title="Permalink to this definition">¶</a></dt>
+<dd><p>This Method allow you to add a worknote on the request ticket that you want
+:sys_id:string
+:number:string (RQF318….)
+:work_note:string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.incident_add_work_note">
+<code class="descname">incident_add_work_note</code><span class="sig-paren">(</span><em>sys_id=None</em>, <em>number=None</em>, <em>work_note=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.incident_add_work_note"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.incident_add_work_note" title="Permalink to this definition">¶</a></dt>
+<dd><p>This Method allow you to add a worknote on the incident ticket that you want
+:sys_id:string
+:number:string (RQF318….)
+:work_note:string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.add_work_note">
+<code class="descname">add_work_note</code><span class="sig-paren">(</span><em>table=None</em>, <em>sys_id=None</em>, <em>number=None</em>, <em>work_note=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.add_work_note"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.add_work_note" title="Permalink to this definition">¶</a></dt>
+<dd><p>This Method allow you to add a worknote on the ticket that you want
+:table:string
+:sys_id:string
+:number:string (RQF318….)
+:work_note:string</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="cern_snow_client.session.SnowRestSessionException">
+<em class="property">exception </em><code class="descclassname">cern_snow_client.session.</code><code class="descname">SnowRestSessionException</code><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSessionException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSessionException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Documentation for the cern-snow-client library</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tests.html"
+                        title="next chapter">tests package</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tests.html" title="tests package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Documentation for the cern-snow-client library"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">cern-snow-client 0.2 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, James Clerc, David Martin Clavo.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

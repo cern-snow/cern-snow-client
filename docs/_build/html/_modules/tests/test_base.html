@@ -1,0 +1,190 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>tests.test_base &#8212; cern-snow-client 0.2 documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">cern-snow-client 0.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tests.test_base</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+
+<span class="kn">from</span> <span class="nn">cern_snow_client.session</span> <span class="k">import</span> <span class="n">SnowRestSession</span>
+
+
+<div class="viewcode-block" id="TestBase"><a class="viewcode-back" href="../../tests.html#tests.test_base.TestBase">[docs]</a><span class="k">class</span> <span class="nc">TestBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">short_description_prefix</span> <span class="o">=</span> <span class="s2">&quot;snow client unit test&quot;</span>
+
+<div class="viewcode-block" id="TestBase.make_session"><a class="viewcode-back" href="../../tests.html#tests.test_base.TestBase.make_session">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">make_session</span><span class="p">(</span><span class="n">config_file_path</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">SnowRestSession</span><span class="p">()</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">load_config_file</span><span class="p">(</span><span class="n">config_file_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s</span></div>
+
+<div class="viewcode-block" id="TestBase.get_password"><a class="viewcode-back" href="../../tests.html#tests.test_base.TestBase.get_password">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_password</span><span class="p">(</span><span class="n">password_name</span><span class="p">):</span>
+        <span class="n">passwords_file_path</span> <span class="o">=</span> <span class="s1">&#39;tests/config_files/passwords.yaml&#39;</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">passwords_file_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">passwords</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">passwords</span><span class="p">[</span><span class="n">password_name</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="TestBase.get_cookie_by_name"><a class="viewcode-back" href="../../tests.html#tests.test_base.TestBase.get_cookie_by_name">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_cookie_by_name</span><span class="p">(</span><span class="n">cookie_jar</span><span class="p">,</span> <span class="n">cookie_name</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">cookie</span> <span class="ow">in</span> <span class="n">cookie_jar</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cookie</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">cookie_name</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">cookie</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="TestBase.base_test_get_incident"><a class="viewcode-back" href="../../tests.html#tests.test_base.TestBase.base_test_get_incident">[docs]</a>    <span class="k">def</span> <span class="nf">base_test_get_incident</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get_incident</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="s1">&#39;INC0426232&#39;</span><span class="p">)</span>
+        <span class="n">inc</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">)[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">inc</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">],</span> <span class="s2">&quot;INC0426232&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">inc</span><span class="p">[</span><span class="s1">&#39;short_description&#39;</span><span class="p">],</span> <span class="s2">&quot;Test&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestBase.base_test_insert_incident"><a class="viewcode-back" href="../../tests.html#tests.test_base.TestBase.base_test_insert_incident">[docs]</a>    <span class="k">def</span> <span class="nf">base_test_insert_incident</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="n">sd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s2">&quot;: test_insert_incident&quot;</span>
+        <span class="n">fe</span> <span class="o">=</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">insert_incident</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;short_description&#39;</span><span class="p">:</span> <span class="n">sd</span><span class="p">,</span>
+            <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="n">fe</span><span class="p">,</span>
+            <span class="s1">&#39;incident_state&#39;</span><span class="p">:</span> <span class="s1">&#39;2&#39;</span>
+        <span class="p">})</span>
+        <span class="n">inc</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">)[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>
+
+        <span class="nb">print</span> <span class="s1">&#39;INC created: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">inc</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">inc</span><span class="p">[</span><span class="s1">&#39;short_description&#39;</span><span class="p">],</span> <span class="n">sd</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">inc</span><span class="p">[</span><span class="s1">&#39;u_functional_element&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">],</span> <span class="n">fe</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">inc</span><span class="p">[</span><span class="s1">&#39;incident_state&#39;</span><span class="p">],</span> <span class="s1">&#39;2&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestBase.base_test_update_incident"><a class="viewcode-back" href="../../tests.html#tests.test_base.TestBase.base_test_update_incident">[docs]</a>    <span class="k">def</span> <span class="nf">base_test_update_incident</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="n">sd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s2">&quot;: test_update_incident&quot;</span>
+        <span class="n">fe</span> <span class="o">=</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">insert_incident</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;short_description&#39;</span><span class="p">:</span> <span class="n">sd</span><span class="p">,</span>
+            <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="n">fe</span><span class="p">,</span>
+            <span class="s1">&#39;incident_state&#39;</span><span class="p">:</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;watch_list&#39;</span><span class="p">:</span> <span class="s1">&#39;noreply@cern.ch&#39;</span>
+        <span class="p">})</span>
+        <span class="n">inc</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">)[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>
+
+        <span class="n">result2</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">update_incident</span><span class="p">(</span><span class="n">sys_id</span><span class="o">=</span><span class="n">inc</span><span class="p">[</span><span class="s1">&#39;sys_id&#39;</span><span class="p">],</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;watch_list&#39;</span><span class="p">:</span> <span class="s1">&#39;noreply2@cern.ch&#39;</span>
+        <span class="p">})</span>
+        <span class="n">inc2</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result2</span><span class="o">.</span><span class="n">text</span><span class="p">)[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>
+
+        <span class="n">result3</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get_incident</span><span class="p">(</span><span class="n">sys_id</span><span class="o">=</span><span class="n">inc</span><span class="p">[</span><span class="s1">&#39;sys_id&#39;</span><span class="p">])</span>
+        <span class="n">inc3</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result3</span><span class="o">.</span><span class="n">text</span><span class="p">)[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>
+
+        <span class="n">result4</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">update_incident</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="n">inc</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">],</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;watch_list&#39;</span><span class="p">:</span> <span class="s1">&#39;noreply3@cern.ch&#39;</span>
+        <span class="p">})</span>
+        <span class="n">inc4</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result4</span><span class="o">.</span><span class="n">text</span><span class="p">)[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>
+
+        <span class="n">result5</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get_incident</span><span class="p">(</span><span class="n">sys_id</span><span class="o">=</span><span class="n">inc</span><span class="p">[</span><span class="s1">&#39;sys_id&#39;</span><span class="p">])</span>
+        <span class="n">inc5</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result5</span><span class="o">.</span><span class="n">text</span><span class="p">)[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>
+
+        <span class="nb">print</span> <span class="s1">&#39;INC created: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">inc</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">inc2</span><span class="p">[</span><span class="s1">&#39;watch_list&#39;</span><span class="p">],</span> <span class="s1">&#39;noreply2@cern.ch&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">inc3</span><span class="p">[</span><span class="s1">&#39;watch_list&#39;</span><span class="p">],</span> <span class="s1">&#39;noreply2@cern.ch&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">inc4</span><span class="p">[</span><span class="s1">&#39;watch_list&#39;</span><span class="p">],</span> <span class="s1">&#39;noreply3@cern.ch&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">inc5</span><span class="p">[</span><span class="s1">&#39;watch_list&#39;</span><span class="p">],</span> <span class="s1">&#39;noreply3@cern.ch&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestBase.base_test_session_persistance"><a class="viewcode-back" href="../../tests.html#tests.test_base.TestBase.base_test_session_persistance">[docs]</a>    <span class="k">def</span> <span class="nf">base_test_session_persistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="n">result1</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get_incident</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="s1">&#39;INC0426232&#39;</span><span class="p">)</span>
+        <span class="n">inc1</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result1</span><span class="o">.</span><span class="n">text</span><span class="p">)[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">session_id1</span> <span class="o">=</span> <span class="n">TestBase</span><span class="o">.</span><span class="n">get_cookie_by_name</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">cookies</span><span class="p">,</span> <span class="s1">&#39;JSESSIONID&#39;</span><span class="p">)</span>
+
+        <span class="n">result2</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get_incident</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="s1">&#39;INC0426232&#39;</span><span class="p">)</span>
+        <span class="n">inc2</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result2</span><span class="o">.</span><span class="n">text</span><span class="p">)[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">session_id2</span> <span class="o">=</span> <span class="n">TestBase</span><span class="o">.</span><span class="n">get_cookie_by_name</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">cookies</span><span class="p">,</span> <span class="s1">&#39;JSESSIONID&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">inc1</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">],</span> <span class="n">inc2</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">inc1</span><span class="p">[</span><span class="s1">&#39;short_description&#39;</span><span class="p">],</span> <span class="n">inc2</span><span class="p">[</span><span class="s1">&#39;short_description&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">session_id1</span><span class="p">,</span> <span class="n">session_id2</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">cern-snow-client 0.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, James Clerc, David Martin Clavo.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>
