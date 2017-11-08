@@ -25,7 +25,7 @@ python
 >>> s.get_incident('<number>')
 ```
 
- * You can see more examples in the file [`examples/main.py`](examples/main.py).
+ * You can see more the documentation for the class `SnowRestSession` in the [snow-client documentation website](file:///Users/dmartinc/cernbox/PycharmProjects/snow-client/docs/_build/html/cern_snow_client.html) and more examples in the file [`examples/main.py`](examples/main.py).
 
  
 **Important** : with the included example `config.yaml`, a cookie file `mycookie.txt` and a token file `mytoken.npy` will be generated as a cache to avoid reauthenticating between requests. These files have to be stored securely, as anyone with access to them could impersonate your account in ServiceNow or even another SSO-enabled CERN system. If you are just testing, be sure to delete the files after running `main.py`.
@@ -43,7 +43,7 @@ You can also download a .zip or .tar.gz file from this project.
 
 ## Documentation
 
-To see the current documentation, please open the file `docs/cern_snow_client.html`
+Tthe current documentation is in the [snow-client documentation website](file:///Users/dmartinc/cernbox/PycharmProjects/snow-client/docs/_build/html/cern_snow_client.html)
 
 ## Unit tests
 
