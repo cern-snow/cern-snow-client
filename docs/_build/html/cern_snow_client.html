@@ -738,8 +738,7 @@ If this parameter is set, it will override the current sys_id of this record obj
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">SnowClientException</span></code> – if the current record is missing a session, or a table name, or the current
-record has no <code class="docutils literal"><span class="pre">sys_id</span></code></li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">SnowClientException</span></code> – if no key is provided and the current record has no <code class="docutils literal"><span class="pre">sys_id</span></code></li>
 <li><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code> – if there is any authentication problem</li>
 </ul>
 </td>
@@ -1103,22 +1102,165 @@ All the records contained inside this RecordSet might belong to this table, or t
 <span id="cern-snow-client-task-module"></span><h2>cern_snow_client.task module<a class="headerlink" href="#module-cern_snow_client.task" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="cern_snow_client.task.Task">
-<em class="property">class </em><code class="descclassname">cern_snow_client.task.</code><code class="descname">Task</code><span class="sig-paren">(</span><em>session</em>, <em>values={}</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/task.html#Task"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.task.Task" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">cern_snow_client.task.</code><code class="descname">Task</code><span class="sig-paren">(</span><em>session</em>, <em>table_name='task'</em>, <em>values=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/task.html#Task"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.task.Task" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cern_snow_client.record.Record" title="cern_snow_client.record.Record"><code class="xref py py-class docutils literal"><span class="pre">cern_snow_client.record.Record</span></code></a></p>
+<p>The class Task has all the methods of the Record class,
+plus some extra methods.</p>
+<p>It is not possible to insert a Task, unless you specify a table_name value with a subtable.
+Alternatively, you should instantiate a subclass, such as Incident.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>session</strong> (<a class="reference internal" href="#cern_snow_client.session.SnowRestSession" title="cern_snow_client.session.SnowRestSession"><em>SnowRestSession</em></a>) – a cern_snow_client.session.SnowRestSession object, which will be used
+to authenticate and communicate with ServiceNow</li>
+<li><strong>table_name</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>, optional) – the name of a ServiceNow table,
+e.g. ‘incident’, for this task</li>
+<li><strong>values</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – initial values for the record</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;c1c535ba85f45540adf94de5b835cd43&#39;</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">number</span>  <span class="c1"># &#39;INC0426232&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">sys_class_name</span>  <span class="c1"># &#39;incident&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">t</span><span class="o">.</span><span class="n">watch_list</span> <span class="o">=</span> <span class="s1">&#39;new_value@cern.ch&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">t</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>   <span class="c1"># updates the watch list</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">t</span><span class="o">.</span><span class="n">add_comment</span><span class="p">(</span><span class="s1">&#39;New comment&#39;</span><span class="p">)</span>  <span class="c1"># will immediately add a new comment in ServiceNow</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">t</span><span class="o">.</span><span class="n">add_work_note</span><span class="p">(</span><span class="s1">&#39;New work note&#39;</span><span class="p">)</span>  <span class="c1"># will immediately add a new work note in ServiceNow</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">t</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s1">&#39;Solution text&#39;</span><span class="p">)</span>  <span class="c1"># will immediately resolve the incident: Incident State=Resolved,</span>
+<span class="gp">&gt;&gt;&gt; </span>                                <span class="c1"># Close Code=Restored, and a new comment/solution will be added</span>
+</pre></div>
+</div>
 <dl class="method">
 <dt id="cern_snow_client.task.Task.add_comment">
-<code class="descname">add_comment</code><span class="sig-paren">(</span><em>comment</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/task.html#Task.add_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.task.Task.add_comment" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">add_comment</code><span class="sig-paren">(</span><em>comment</em>, <em>key=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/task.html#Task.add_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.task.Task.add_comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a comment in this Task in ServiceNow.
+The comment will be sent immediately, without a need to call .update()</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>comment</strong> (<em>str</em>) – the new comment to be added</li>
+<li><strong>key</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">tuple</span></code>, optional) – a str the sys_id (ServiceNow unique identifier)
+of the record to update, or a tuple (field_name, field_value), such as (‘number’, ‘INC987654’).
+If this parameter is set, it will override the current sys_id of this record object, if any.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the record was updated succesfully, False otherwise.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">bool</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">SnowClientException</span></code> – if no key is provided and the current record has no <code class="docutils literal"><span class="pre">sys_id</span></code></li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code> – if there is any authentication problem</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Adding a comment to a task after getting it:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;c1c535ba85f45540adf94de5b835cd43&#39;</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">t</span><span class="o">.</span><span class="n">add_comment</span><span class="p">(</span><span class="s1">&#39;New comment&#39;</span><span class="p">)</span>  <span class="c1"># will immediately add a new comment in ServiceNow</span>
+</pre></div>
+</div>
+<p>Adding a comment to a task for which we know the number:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">add_comment</span><span class="p">(</span><span class="s1">&#39;New comment&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;INC0426232&#39;</span><span class="p">))</span>  <span class="c1"># will immediately add a new comment in ServiceNow, and will download the resulting state of the task</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="cern_snow_client.task.Task.add_work_note">
-<code class="descname">add_work_note</code><span class="sig-paren">(</span><em>work_note</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/task.html#Task.add_work_note"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.task.Task.add_work_note" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">add_work_note</code><span class="sig-paren">(</span><em>work_note</em>, <em>key=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/task.html#Task.add_work_note"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.task.Task.add_work_note" title="Permalink to this definition">¶</a></dt>
+<dd><p>Similar to add_comment, but to add work notes.
+The work note will be sent immediately, without a need to call .update()</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>work_note</strong> (<em>str</em>) – the new comment to be added</li>
+<li><strong>key</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">tuple</span></code>, optional) – a str the sys_id (ServiceNow unique identifier)
+of the record to update, or a tuple (field_name, field_value), such as (‘number’, ‘INC987654’).
+If this parameter is set, it will override the current sys_id of this record object, if any.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the record was updated succesfully, False otherwise.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">bool</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">SnowClientException</span></code> – if no key is provided and the current record has no <code class="docutils literal"><span class="pre">sys_id</span></code></li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code> – if there is any authentication problem</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="cern_snow_client.task.Task.resolve">
-<code class="descname">resolve</code><span class="sig-paren">(</span><em>comment</em>, <em>close_code</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/task.html#Task.resolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.task.Task.resolve" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">resolve</code><span class="sig-paren">(</span><em>solution</em>, <em>close_code=None</em>, <em>key=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/task.html#Task.resolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.task.Task.resolve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolves a Task in ServiceNow.
+The Task will be resolved immediately, without a need to call .update()</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>solution</strong> (<em>str</em>) – the text that will be added to the comments and which will be stored as the Solution
+of this Task</li>
+<li><strong>close_code</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>, optional) – the Close Code to use. If not set, the default Close Code will be
+selected : “Restored” for Incidents and “Fulfilled” for Requests.</li>
+<li><strong>key</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">tuple</span></code>, optional) – a str the sys_id (ServiceNow unique identifier)
+of the record to update, or a tuple (field_name, field_value), such as (‘number’, ‘INC987654’).
+If this parameter is set, it will override the current sys_id of this record object, if any.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the record was updated succesfully, False otherwise.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">bool</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">SnowClientException</span></code> – if no key is provided and the current record has no <code class="docutils literal"><span class="pre">sys_id</span></code></li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code> – if there is any authentication problem</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Resolving a Task after getting it:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;c1c535ba85f45540adf94de5b835cd43&#39;</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">t</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s1">&#39;Solution text&#39;</span><span class="p">)</span>  <span class="c1"># will immediately resolve in ServiceNow</span>
+</pre></div>
+</div>
+<p>Resolving a Task for which we know the number, with close code ‘Rejected’:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s1">&#39;New comment&#39;</span><span class="p">,</span> <span class="n">close_code</span><span class="o">=</span><span class="s1">&#39;Works as designed&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;INC0426232&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
 
 </dd></dl>
 
@@ -1133,8 +1275,45 @@ All the records contained inside this RecordSet might belong to this table, or t
 <span id="cern-snow-client-incident-module"></span><h2>cern_snow_client.incident module<a class="headerlink" href="#module-cern_snow_client.incident" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="cern_snow_client.incident.Incident">
-<em class="property">class </em><code class="descclassname">cern_snow_client.incident.</code><code class="descname">Incident</code><span class="sig-paren">(</span><em>session</em>, <em>values={}</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/incident.html#Incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.incident.Incident" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">cern_snow_client.incident.</code><code class="descname">Incident</code><span class="sig-paren">(</span><em>session</em>, <em>values=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/incident.html#Incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.incident.Incident" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cern_snow_client.task.Task" title="cern_snow_client.task.Task"><code class="xref py py-class docutils literal"><span class="pre">cern_snow_client.task.Task</span></code></a></p>
+<p>The class Task has all the methods of the Record and Task classes,
+plus some extra methods.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>session</strong> (<a class="reference internal" href="#cern_snow_client.session.SnowRestSession" title="cern_snow_client.session.SnowRestSession"><em>SnowRestSession</em></a>) – a cern_snow_client.session.SnowRestSession object, which will be used
+to authenticate and communicate with ServiceNow</li>
+<li><strong>values</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – initial values for the record</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Inserting a new incident:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inc</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inc</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s2">&quot;New incident&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inc</span><span class="o">.</span><span class="n">u_business_service</span> <span class="o">=</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inc</span><span class="o">.</span><span class="n">u_functional_element</span> <span class="o">=</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span>  <span class="c1"># Functional ELement &quot;ServiceNow&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inc</span><span class="o">.</span><span class="n">comments</span> <span class="o">=</span> <span class="s2">&quot;Initial description&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inc</span><span class="o">.</span><span class="n">incident_state</span> <span class="o">=</span> <span class="s1">&#39;2&#39;</span>   <span class="c1"># request state = Assigned</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inc</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Adding a comment to an incident after getting it:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inc</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">inc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;c1c535ba85f45540adf94de5b835cd43&#39;</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">inc</span><span class="o">.</span><span class="n">add_comment</span><span class="p">(</span><span class="s1">&#39;New comment&#39;</span><span class="p">)</span>  <span class="c1"># will immediately add a new comment in ServiceNow</span>
+</pre></div>
+</div>
+<p>Resolving an Incident for which we know the number:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inc</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">inc</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s1">&#39;New comment&#39;</span><span class="p">,</span> <span class="n">close_code</span><span class="o">=</span><span class="s1">&#39;Not Reproducible&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;INC0426232&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="class">

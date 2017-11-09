@@ -56,20 +56,129 @@
 
 
 <div class="viewcode-block" id="Task"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.task.Task">[docs]</a><span class="k">class</span> <span class="nc">Task</span><span class="p">(</span><span class="n">Record</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The class Task has all the methods of the Record class,</span>
+<span class="sd">    plus some extra methods.</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">{}):</span>
-        <span class="n">Record</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">package_table</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">)</span>
+<span class="sd">    It is not possible to insert a Task, unless you specify a table_name value with a subtable.</span>
+<span class="sd">    Alternatively, you should instantiate a subclass, such as Incident.</span>
 
-<div class="viewcode-block" id="Task.add_comment"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.task.Task.add_comment">[docs]</a>    <span class="k">def</span> <span class="nf">add_comment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comment</span><span class="p">):</span>
+<span class="sd">    Args:</span>
+<span class="sd">        session (SnowRestSession): a cern_snow_client.session.SnowRestSession object, which will be used</span>
+<span class="sd">            to authenticate and communicate with ServiceNow</span>
+<span class="sd">        table_name (:obj:`str`, optional): the name of a ServiceNow table,</span>
+<span class="sd">            e.g. &#39;incident&#39;, for this task</span>
+<span class="sd">        values (:obj:`dict`, optional): initial values for the record</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; t = Task(s)  # s is a SnowRestSession object</span>
+<span class="sd">        &gt;&gt;&gt; if t.get(&#39;c1c535ba85f45540adf94de5b835cd43&#39;):</span>
+<span class="sd">        &gt;&gt;&gt;     print t.number  # &#39;INC0426232&#39;</span>
+<span class="sd">        &gt;&gt;&gt;     print t.sys_class_name  # &#39;incident&#39;</span>
+<span class="sd">        &gt;&gt;&gt;     t.watch_list = &#39;new_value@cern.ch&#39;</span>
+<span class="sd">        &gt;&gt;&gt;     t.update()   # updates the watch list</span>
+<span class="sd">        &gt;&gt;&gt;     t.add_comment(&#39;New comment&#39;)  # will immediately add a new comment in ServiceNow</span>
+<span class="sd">        &gt;&gt;&gt;     t.add_work_note(&#39;New work note&#39;)  # will immediately add a new work note in ServiceNow</span>
+<span class="sd">        &gt;&gt;&gt;     t.resolve(&#39;Solution text&#39;)  # will immediately resolve the incident: Incident State=Resolved,</span>
+<span class="sd">        &gt;&gt;&gt;                                 # Close Code=Restored, and a new comment/solution will be added</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="n">package_table</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">Record</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">table_name</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Task.add_comment"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.task.Task.add_comment">[docs]</a>    <span class="k">def</span> <span class="nf">add_comment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a comment in this Task in ServiceNow.</span>
+<span class="sd">        The comment will be sent immediately, without a need to call .update()</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            comment (str): the new comment to be added</span>
+<span class="sd">            key (:obj:`str` or :obj:`tuple`, optional): a str the sys_id (ServiceNow unique identifier)</span>
+<span class="sd">                of the record to update, or a tuple (field_name, field_value), such as (&#39;number&#39;, &#39;INC987654&#39;).</span>
+<span class="sd">                If this parameter is set, it will override the current sys_id of this record object, if any.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the record was updated succesfully, False otherwise.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowClientException: if no key is provided and the current record has no ``sys_id``</span>
+<span class="sd">            SnowRestSessionException : if there is any authentication problem</span>
+
+<span class="sd">        Examples:</span>
+
+<span class="sd">            Adding a comment to a task after getting it:</span>
+
+<span class="sd">            &gt;&gt;&gt; t = Task(s)  # s is a SnowRestSession object</span>
+<span class="sd">            &gt;&gt;&gt; if t.get(&#39;c1c535ba85f45540adf94de5b835cd43&#39;):</span>
+<span class="sd">            &gt;&gt;&gt;     t.add_comment(&#39;New comment&#39;)  # will immediately add a new comment in ServiceNow</span>
+
+<span class="sd">            Adding a comment to a task for which we know the number:</span>
+
+<span class="sd">            &gt;&gt;&gt; t = Task(s)  # s is a SnowRestSession object</span>
+<span class="sd">            &gt;&gt;&gt; t.add_comment(&#39;New comment&#39;, key=(&#39;number&#39;, &#39;INC0426232&#39;))  # will immediately add a new comment in ServiceNow, and will download the resulting state of the task</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># TODO: Finish this method</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Task.add_work_note"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.task.Task.add_work_note">[docs]</a>    <span class="k">def</span> <span class="nf">add_work_note</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">work_note</span><span class="p">):</span>
+<div class="viewcode-block" id="Task.add_work_note"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.task.Task.add_work_note">[docs]</a>    <span class="k">def</span> <span class="nf">add_work_note</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">work_note</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Similar to add_comment, but to add work notes.</span>
+<span class="sd">        The work note will be sent immediately, without a need to call .update()</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            work_note (str): the new comment to be added</span>
+<span class="sd">            key (:obj:`str` or :obj:`tuple`, optional): a str the sys_id (ServiceNow unique identifier)</span>
+<span class="sd">                of the record to update, or a tuple (field_name, field_value), such as (&#39;number&#39;, &#39;INC987654&#39;).</span>
+<span class="sd">                If this parameter is set, it will override the current sys_id of this record object, if any.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the record was updated succesfully, False otherwise.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowClientException: if no key is provided and the current record has no ``sys_id``</span>
+<span class="sd">            SnowRestSessionException : if there is any authentication problem</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># TODO: Finish this method</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Task.resolve"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.task.Task.resolve">[docs]</a>    <span class="k">def</span> <span class="nf">resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">close_code</span><span class="p">):</span>
+<div class="viewcode-block" id="Task.resolve"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.task.Task.resolve">[docs]</a>    <span class="k">def</span> <span class="nf">resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">,</span> <span class="n">close_code</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resolves a Task in ServiceNow.</span>
+<span class="sd">        The Task will be resolved immediately, without a need to call .update()</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            solution (str): the text that will be added to the comments and which will be stored as the Solution</span>
+<span class="sd">                of this Task</span>
+<span class="sd">            close_code (:obj:`str`, optional): the Close Code to use. If not set, the default Close Code will be</span>
+<span class="sd">                selected : &quot;Restored&quot; for Incidents and &quot;Fulfilled&quot; for Requests.</span>
+<span class="sd">            key (:obj:`str` or :obj:`tuple`, optional): a str the sys_id (ServiceNow unique identifier)</span>
+<span class="sd">                of the record to update, or a tuple (field_name, field_value), such as (&#39;number&#39;, &#39;INC987654&#39;).</span>
+<span class="sd">                If this parameter is set, it will override the current sys_id of this record object, if any.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the record was updated succesfully, False otherwise.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowClientException: if no key is provided and the current record has no ``sys_id``</span>
+<span class="sd">            SnowRestSessionException : if there is any authentication problem</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            Resolving a Task after getting it:</span>
+
+<span class="sd">            &gt;&gt;&gt; t = Task(s)  # s is a SnowRestSession object</span>
+<span class="sd">            &gt;&gt;&gt; if t.get(&#39;c1c535ba85f45540adf94de5b835cd43&#39;):</span>
+<span class="sd">            &gt;&gt;&gt;     t.resolve(&#39;Solution text&#39;)  # will immediately resolve in ServiceNow</span>
+
+<span class="sd">            Resolving a Task for which we know the number, with close code &#39;Rejected&#39;:</span>
+
+<span class="sd">            &gt;&gt;&gt; t = Task(s)  # s is a SnowRestSession object</span>
+<span class="sd">            &gt;&gt;&gt; t.resolve(&#39;New comment&#39;, close_code=&#39;Works as designed&#39;, key=(&#39;number&#39;, &#39;INC0426232&#39;))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="c1"># TODO: Finish this method</span>
+        <span class="c1"># if an incident, make : incident_state=6, comments=solution, u_close_code=close_code</span>
+        <span class="c1"># if a request, make : u_current_task_state=9, comments=solution, u_close_code=close_code</span>
+        <span class="c1"># if no close_code is provided, choose &#39;Restored&#39; for incident and &#39;Fulfilled&#39; for request</span>
         <span class="k">pass</span></div></div>
 
 
