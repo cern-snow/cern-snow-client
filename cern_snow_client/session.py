@@ -13,6 +13,9 @@ import yaml
 from . import __version__
 
 
+from common import SnowClientException
+
+
 class SnowRestSession(object):
     """
     This class behaves very similarly to a requests.Session object.
@@ -1202,5 +1205,5 @@ class SnowRestSession(object):
         return False
 
 
-class SnowRestSessionException(Exception):
+class SnowRestSessionException(SnowClientException):
     pass
