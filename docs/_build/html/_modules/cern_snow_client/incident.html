@@ -56,8 +56,40 @@
 
 
 <div class="viewcode-block" id="Incident"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.incident.Incident">[docs]</a><span class="k">class</span> <span class="nc">Incident</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The class Task has all the methods of the Record and Task classes,</span>
+<span class="sd">        plus some extra methods.</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">{}):</span>
+<span class="sd">        Args:</span>
+<span class="sd">            session (SnowRestSession): a cern_snow_client.session.SnowRestSession object, which will be used</span>
+<span class="sd">                to authenticate and communicate with ServiceNow</span>
+<span class="sd">            values (:obj:`dict`, optional): initial values for the record</span>
+
+<span class="sd">        Examples:</span>
+
+<span class="sd">            Inserting a new incident:</span>
+
+<span class="sd">            &gt;&gt;&gt; inc = Incident(s)  # s is a SnowRestSession object</span>
+<span class="sd">            &gt;&gt;&gt; inc.short_description = &quot;New incident&quot;</span>
+<span class="sd">            &gt;&gt;&gt; inc.u_business_service = &#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;  # Service Element &quot;ServiceNow&quot;</span>
+<span class="sd">            &gt;&gt;&gt; inc.u_functional_element = &#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;  # Functional ELement &quot;ServiceNow&quot;</span>
+<span class="sd">            &gt;&gt;&gt; inc.comments = &quot;Initial description&quot;</span>
+<span class="sd">            &gt;&gt;&gt; inc.incident_state = &#39;2&#39;   # request state = Assigned</span>
+<span class="sd">            &gt;&gt;&gt; inc.insert()</span>
+
+<span class="sd">            Adding a comment to an incident after getting it:</span>
+
+<span class="sd">            &gt;&gt;&gt; inc = Incident(s)  # s is a SnowRestSession object</span>
+<span class="sd">            &gt;&gt;&gt; if inc.get(&#39;c1c535ba85f45540adf94de5b835cd43&#39;):</span>
+<span class="sd">            &gt;&gt;&gt;     inc.add_comment(&#39;New comment&#39;)  # will immediately add a new comment in ServiceNow</span>
+
+<span class="sd">            Resolving an Incident for which we know the number:</span>
+
+<span class="sd">            &gt;&gt;&gt; inc = Incident(s)  # s is a SnowRestSession object</span>
+<span class="sd">            &gt;&gt;&gt; inc.resolve(&#39;New comment&#39;, close_code=&#39;Not Reproducible&#39;, key=(&#39;number&#39;, &#39;INC0426232&#39;))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">Record</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">package_table</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">)</span></div>
 
 

@@ -282,8 +282,7 @@
 <span class="sd">            bool: True if the record was updated succesfully, False otherwise.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            SnowClientException: if the current record is missing a session, or a table name, or the current</span>
-<span class="sd">                record has no ``sys_id``</span>
+<span class="sd">            SnowClientException: if no key is provided and the current record has no ``sys_id``</span>
 <span class="sd">            SnowRestSessionException : if there is any authentication problem</span>
 
 <span class="sd">        Examples:</span>
@@ -307,17 +306,9 @@
 <span class="sd">            &gt;&gt;&gt; print r.short_description  # will print the incident&#39;s short description, since all fields are returned</span>
 <span class="sd">            &gt;&gt;&gt;                            # by ServiceNow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__session</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s1">&#39;Record.update: The current Record instance does not have a session. &#39;</span>
-                                      <span class="s1">&#39;It cannot communicate with the ServiceNow instance.&#39;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s1">&#39;Record.update: The current Record instance does not have a __table_name. &#39;</span>
-                                      <span class="s1">&#39;Please specify one when building it.&#39;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sys_id</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sys_id</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s1">&#39;Record.update: The current Record instance does not have a sys_id. &#39;</span>
-                                      <span class="s1">&#39;This means that it has not yet been read, or inserted.&#39;</span><span class="p">)</span>
+                                      <span class="s1">&#39;Please provide a key to specify which record to update.&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sys_class_name</span><span class="p">:</span>
             <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;sys_class_name&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span><span class="p">)</span></div>
@@ -363,6 +354,7 @@
 <span class="sd">            Might be different from self.sys_class_name.</span>
 
 <span class="sd">        Examples:</span>
+
 <span class="sd">            &gt;&gt;&gt; r = Record(s, &#39;task&#39;), {  # s is a SnowRestSession object</span>
 <span class="sd">            &gt;&gt;&gt; if r.get((&#39;number&#39;, &#39;INC0426232&#39;)):</span>
 <span class="sd">            &gt;&gt;&gt;     print r.get_table_name  # will print &#39;task&#39;</span>
@@ -390,6 +382,7 @@
 <span class="sd">    of ``ServiceNow`` but a value of ``579fb3d90a0a8c08017ac8a1137c8ee6`` : the `sys_id` of that Functional Element.</span>
 
 <span class="sd">    Examples:</span>
+
 <span class="sd">        &gt;&gt;&gt; r = Record(s, &#39;incident&#39;)  # s is a SnowRestSession object</span>
 <span class="sd">        &gt;&gt;&gt; if r.get(&#39;c1c535ba85f45540adf94de5b835cd43&#39;):</span>
 <span class="sd">        &gt;&gt;&gt;</span>
