@@ -1,0 +1,645 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>cern_snow_client.record &#8212; cern-snow-client 0.2 documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">cern-snow-client 0.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for cern_snow_client.record</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding: utf-8</span>
+
+<span class="kn">from</span> <span class="nn">common</span> <span class="k">import</span> <span class="n">SnowClientException</span><span class="p">,</span> <span class="n">TableClassMapping</span>
+
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+
+<div class="viewcode-block" id="Record"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.Record">[docs]</a><span class="k">class</span> <span class="nc">Record</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a record in a ServiceNow table.</span>
+<span class="sd">    Attributes of the record can be set with str values.</span>
+<span class="sd">    When getting values of the attributes, they will be of the RecordField class. See the ``get``</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        session (SnowRestSession): a cern_snow_client.session.SnowRestSession object, which will be used</span>
+<span class="sd">            to authenticate and communicate with ServiceNow</span>
+<span class="sd">        table_name (str): the name of a ServiceNow table, e.g. &#39;incident&#39;, that this object will represent</span>
+<span class="sd">        values (:obj:`dict`, optional): initial values for the record</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        SnowClientException : if any of the parameters is set incorrectly</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        Building a new Record for the table &#39;incident&#39;:</span>
+
+<span class="sd">        &gt;&gt;&gt; r = Record(s, &#39;incident&#39;)  # s is a SnowRestSession object</span>
+
+<span class="sd">        Building and initializing a new Record for the table &#39;u_request_fulfillment&#39;:</span>
+
+<span class="sd">        &gt;&gt;&gt; values = {</span>
+<span class="sd">        &gt;&gt;&gt;    &#39;short_description&#39; : &quot;New request&quot;,</span>
+<span class="sd">        &gt;&gt;&gt;    &#39;u_business_service&#39; : &#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;, #  Service Element &quot;ServiceNow&quot;</span>
+<span class="sd">        &gt;&gt;&gt;    &#39;u_functional_element&#39; : &#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;,  # Functional Element &quot;ServiceNow&quot;</span>
+<span class="sd">        &gt;&gt;&gt;    &#39;comments&#39; : &quot;Initial description&quot;,</span>
+<span class="sd">        &gt;&gt;&gt;    &#39;u_current_task_state&#39; : &#39;2&#39;  # initial state : Assigned</span>
+<span class="sd">        &gt;&gt;&gt; }</span>
+<span class="sd">        &gt;&gt;&gt; r = Record(s, &#39;u_request_fulfillment&#39;, values)  # record is created and ready for insert</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">session</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s1">&#39;Record.__init__: To create a Record instance&#39;</span>
+                                      <span class="s1">&#39;you need to provide a non-empty SnowRestSession object.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">table_name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s1">&#39;Record.__init__: To create a Record instance&#39;</span>
+                                      <span class="s1">&#39;you need to provide a table_name value.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">values</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">dict</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s1">&#39;Record.__init__: the values parameter needs to be a dict.&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__session</span> <span class="o">=</span> <span class="n">session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span> <span class="o">=</span> <span class="n">table_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__changes</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">table_class_mapping</span> <span class="o">=</span> <span class="n">TableClassMapping</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">table_name</span> <span class="ow">in</span> <span class="n">table_class_mapping</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__can_insert</span> <span class="o">=</span> <span class="n">table_class_mapping</span><span class="p">[</span><span class="n">table_name</span><span class="p">][</span><span class="s1">&#39;can_be_inserted&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__can_insert</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sys_id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sys_class_name</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">values</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__set_values</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__initialized</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;sys_id&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">sys_id</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s2">&quot;Record.__setattr__: the field ``sys_id`` is read-only if it already has a value&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;sys_class_name&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s2">&quot;Record.__setattr__: the field ``sys_class_name`` is read-only&quot;</span><span class="p">)</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="n">RecordField</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__initialized</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__changes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__set_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">initializing</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="c1"># protect private attributes</span>
+            <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="c1"># protect methods</span>
+            <span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">and</span> <span class="n">inspect</span><span class="o">.</span><span class="n">ismethod</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]):</span>
+                <span class="k">continue</span>
+
+            <span class="n">value</span> <span class="o">=</span> <span class="n">RecordField</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Record.get"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.Record.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fetches from ServiceNow a record from the table specified in the constructor via the argument ``table_name``.</span>
+<span class="sd">        The record may be fetched by its ``sys_id`` (ServiceNow unique identifier), or with a (field_name, field_value)</span>
+<span class="sd">        pair.</span>
+<span class="sd">        The attributes of the Record will be of the RecordField class, which implements the __str__ method.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key (str or tuple): a str the sys_id (ServiceNow unique identifier) of the record to fetch,</span>
+<span class="sd">                or a tuple (field_name, field_value), such as (&#39;number&#39;, &#39;INC987654&#39;)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if a record was fetched succesfully, False if the record did not exist</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowClientException: if the ``key`` argument is invalid.</span>
+<span class="sd">            SnowRestSessionException : if there is any authentication problem</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            Getting an incident by sys_id:</span>
+
+<span class="sd">            &gt;&gt;&gt; r = Record(s, &#39;incident&#39;)  # s is a SnowRestSession object</span>
+<span class="sd">            &gt;&gt;&gt; if r.get(&#39;c1c535ba85f45540adf94de5b835cd43&#39;):</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt;     # short_description is a String field in ServiceNow</span>
+<span class="sd">            &gt;&gt;&gt;     print r.short_description  # &#39;Test&#39;</span>
+<span class="sd">            &gt;&gt;&gt;     print r.short_description.get_value()  # &#39;Test&#39;</span>
+<span class="sd">            &gt;&gt;&gt;     print r.short_description.get_display_value()  # &#39;Test&#39;</span>
+<span class="sd">            &gt;&gt;&gt;     print r.short_description.is_reference()  # False</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt;     # u_functional_element is a Reference field in ServiceNow</span>
+<span class="sd">            &gt;&gt;&gt;     print r.u_functional_element  # &#39;ea56fb210a0a8c0a015a591ddbed3676&#39;, the sys_id of the Functional Element &quot;IT Service Management Support&quot;</span>
+<span class="sd">            &gt;&gt;&gt;     print r.u_functional_element.get_value()  # &#39;ea56fb210a0a8c0a015a591ddbed3676&#39;</span>
+<span class="sd">            &gt;&gt;&gt;     print r.u_functional_element.get_display_value()  # &#39;IT Service Management Support&#39;</span>
+<span class="sd">            &gt;&gt;&gt;     print r.u_functional_element.is_reference()  # True</span>
+<span class="sd">            &gt;&gt;&gt;     print r.u_functional_element.get_referenced_table()  # &#39;u_cmdb_ci_functional_services&#39;</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt;     # incident_state is a Choice field in ServiceNow</span>
+<span class="sd">            &gt;&gt;&gt;     print r.incident_status  # 7</span>
+<span class="sd">            &gt;&gt;&gt;     print r.incident_status.get_value()  # 7</span>
+<span class="sd">            &gt;&gt;&gt;     print r.incident_status.get_display_value()  # &#39;Closed&#39;</span>
+<span class="sd">            &gt;&gt;&gt;     print r.incident_status.is_reference()  # False</span>
+
+<span class="sd">            Getting a request by number:</span>
+
+<span class="sd">            &gt;&gt;&gt; r = Record(s, &#39;u_request_fulfillment&#39;)  # s is a SnowRestSession object</span>
+<span class="sd">            &gt;&gt;&gt; if r.get((&#39;number&#39;, &#39;RQF0746626&#39;)):</span>
+<span class="sd">            &gt;&gt;&gt;     print r.short_description</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span> <span class="ow">or</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">tuple</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s2">&quot;Record.get: the </span><span class="se">\&quot;</span><span class="s2">key</span><span class="se">\&quot;</span><span class="s2"> parameter should be a non empty string, &quot;</span>
+                                      <span class="s2">&quot;or a tuple (field_name, field_value) where field_name is a str&quot;</span><span class="p">)</span></div>
+        <span class="c1"># TODO: Finish this method</span>
+        <span class="c1">#  build the URL</span>
+
+        <span class="c1">#  execute a get</span>
+
+        <span class="c1">#  parse the JSON result</span>
+
+        <span class="c1">#  set the values inside the current object : __set_values()</span>
+
+        <span class="c1">#  return True or False</span>
+
+<div class="viewcode-block" id="Record.insert"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.Record.insert">[docs]</a>    <span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inserts in ServiceNow a record into the table specified in the constructor via the argument ``table_name``.</span>
+<span class="sd">        After inserting, the attributes of the Record object will be updated with the resulting values from ServiceNow.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the record was inserted succesfully, False otherwise.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowClientException: if the current record is of a table where records cannot be inserted</span>
+<span class="sd">                Example: the ``task`` table is a `supertable` of ``incident`` and ``u_request_fulfillment``.</span>
+<span class="sd">                Incidents and requests can be inserted, but not tasks who are neither an incident nor a request.</span>
+
+<span class="sd">            SnowRestSessionException : if there is any authentication problem</span>
+
+<span class="sd">        Examples:</span>
+
+<span class="sd">            Passing the values in the constructor:</span>
+
+<span class="sd">            &gt;&gt;&gt; r = Record(s, &#39;incident&#39;, {  # s is a SnowRestSession object</span>
+<span class="sd">            &gt;&gt;&gt;    &#39;short_description&#39; : &quot;New incident&quot;,</span>
+<span class="sd">            &gt;&gt;&gt;    &#39;u_business_service&#39; : &#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;,  # Service Element &quot;ServiceNow&quot;</span>
+<span class="sd">            &gt;&gt;&gt;    &#39;u_functional_element&#39; : &#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;,  # Functional Element &quot;ServiceNow&quot;</span>
+<span class="sd">            &gt;&gt;&gt;    &#39;comments&#39; : &quot;Initial description&quot;,</span>
+<span class="sd">            &gt;&gt;&gt;    &#39;incident_state&#39; : &#39;2&#39;  # initial state : Assigned</span>
+<span class="sd">            &gt;&gt;&gt; })</span>
+<span class="sd">            &gt;&gt;&gt; r.insert()</span>
+<span class="sd">            &gt;&gt;&gt; print r.number  # will print the number of the new incident</span>
+
+<span class="sd">            Setting values in the fields after instantiating the class:</span>
+
+<span class="sd">            &gt;&gt;&gt; r = Record(s, &#39;u_request_fulfillment&#39;)  # s is a SnowRestSession object</span>
+<span class="sd">            &gt;&gt;&gt; r.short_description = &quot;New request&quot;</span>
+<span class="sd">            &gt;&gt;&gt; r.u_business_service = &#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;  # Service Element &quot;ServiceNow&quot;</span>
+<span class="sd">            &gt;&gt;&gt; r.u_functional_element = &#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;  # Functional ELement &quot;ServiceNow&quot;</span>
+<span class="sd">            &gt;&gt;&gt; r.comments = &quot;Initial description&quot;</span>
+<span class="sd">            &gt;&gt;&gt; r.u_current_task_state = &#39;2&#39;   # request state = Assigned</span>
+<span class="sd">            &gt;&gt;&gt; r.insert()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__can_insert</span><span class="p">:</span>
+            <span class="n">class_name</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s1">&#39;Record.insert: The current Record is of class &#39;</span> <span class="o">+</span> <span class="n">class_name</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span>
+                                      <span class="s1">&#39;which cannot be inserted. &#39;</span>
+                                      <span class="s1">&#39;You need to instantiate a subclass of &#39;</span> <span class="o">+</span> <span class="n">class_name</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span></div>
+        <span class="c1"># TODO: Finish this method</span>
+        <span class="c1">#  build the URL</span>
+
+        <span class="c1">#  execute a post using the changed data : get_changed_fields()</span>
+
+        <span class="c1">#  parse the JSON result</span>
+
+        <span class="c1">#  reset the changed data : reset_changed_values()</span>
+
+        <span class="c1">#  set the values inside the current object: __set_values()</span>
+
+        <span class="c1">#  return True or False</span>
+
+<div class="viewcode-block" id="Record.update"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.Record.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates a record in ServiceNow.</span>
+<span class="sd">        This can be done in a record previously obtained with a get operation, or previously inserted,</span>
+<span class="sd">        or also on a record where its table and sys_id (or key) are previously known.</span>
+<span class="sd">        Only the changes in the fields since the last ``.insert()`` or ``.update()`` will be sent.</span>
+<span class="sd">        After updating, the attributes of the Record object will be updated with the resulting values from ServiceNow.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key (:obj:`str` or :obj:`tuple`, optional): a str the sys_id (ServiceNow unique identifier)</span>
+<span class="sd">                of the record to update, or a tuple (field_name, field_value), such as (&#39;number&#39;, &#39;INC987654&#39;).</span>
+<span class="sd">                If this parameter is set, it will override the current sys_id of this record object, if any.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the record was updated succesfully, False otherwise.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowClientException: if the current record is missing a session, or a table name, or the current</span>
+<span class="sd">                record has no ``sys_id``</span>
+<span class="sd">            SnowRestSessionException : if there is any authentication problem</span>
+
+<span class="sd">        Examples:</span>
+
+<span class="sd">            Getting an incident and then updating it:</span>
+
+<span class="sd">            &gt;&gt;&gt; r = Record(s, &#39;incident&#39;), {  # s is a SnowRestSession object</span>
+<span class="sd">            &gt;&gt;&gt; if r.get((&#39;number&#39;, &#39;INC0426232&#39;)):</span>
+<span class="sd">            &gt;&gt;&gt;    if r.watch_list:</span>
+<span class="sd">            &gt;&gt;&gt;        r.watch_list = r.watch_list + &#39;,&#39;</span>
+<span class="sd">            &gt;&gt;&gt;    r.watch_list = r.watch_list + &#39;david.martin.clavo@cern.ch&#39;</span>
+<span class="sd">            &gt;&gt;&gt;    r.update()</span>
+<span class="sd">            &gt;&gt;&gt;    print r.watch_list  # will print the new value of the watchlist, where the above address might</span>
+<span class="sd">            &gt;&gt;&gt;                        # have been replaced by the user&#39;s sys_id</span>
+
+<span class="sd">            Updating a previously known incident:</span>
+
+<span class="sd">            &gt;&gt;&gt; r = Record(s, &#39;incident&#39;)  # s is a SnowRestSession object</span>
+<span class="sd">            &gt;&gt;&gt; r.watch_list = &#39;david.martin.clavo@cern.ch&#39;  # will completely replace the previous value</span>
+<span class="sd">            &gt;&gt;&gt; r.update((&#39;number&#39;, &#39;INC0426232&#39;))</span>
+<span class="sd">            &gt;&gt;&gt; print r.short_description  # will print the incident&#39;s short description, since all fields are returned</span>
+<span class="sd">            &gt;&gt;&gt;                            # by ServiceNow</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__session</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s1">&#39;Record.update: The current Record instance does not have a session. &#39;</span>
+                                      <span class="s1">&#39;It cannot communicate with the ServiceNow instance.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s1">&#39;Record.update: The current Record instance does not have a __table_name. &#39;</span>
+                                      <span class="s1">&#39;Please specify one when building it.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sys_id</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s1">&#39;Record.update: The current Record instance does not have a sys_id. &#39;</span>
+                                      <span class="s1">&#39;This means that it has not yet been read, or inserted.&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sys_class_name</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;sys_class_name&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span><span class="p">)</span></div>
+
+        <span class="c1"># TODO: Finish this method</span>
+        <span class="c1">#  build the URL (using self.sys_class_name as table)</span>
+
+        <span class="c1">#  execute a put using the changed data : get_changed_fields()</span>
+
+        <span class="c1">#  parse the JSON result</span>
+
+        <span class="c1">#  reset the changed data : reset_changed_values()</span>
+
+        <span class="c1">#  set the values inside the current object: __set_values()</span>
+
+        <span class="c1">#  return True or False</span>
+
+<div class="viewcode-block" id="Record.get_changed_fields"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.Record.get_changed_fields">[docs]</a>    <span class="k">def</span> <span class="nf">get_changed_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary ``{&#39;field_name&#39; : &#39;field_value&#39;}`` with the record fields which have changed</span>
+<span class="sd">            since the last ``.insert()`` or ``.update()``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__changes</span></div>
+
+<div class="viewcode-block" id="Record.reset_changed_values"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.Record.reset_changed_values">[docs]</a>    <span class="k">def</span> <span class="nf">reset_changed_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets the changes in the record fields since the last ``.insert()`` or ``.update()``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_Record__changes&#39;</span><span class="p">,</span> <span class="p">{})</span></div>
+
+<div class="viewcode-block" id="Record.get_session"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.Record.get_session">[docs]</a>    <span class="k">def</span> <span class="nf">get_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            SnowRestSession : The session that this Record object uses to communicate with ServiceNow</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__session</span></div>
+
+<div class="viewcode-block" id="Record.get_table_name"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.Record.get_table_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_table_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str : The table_name argument that was used to build this Record object.</span>
+<span class="sd">            Might be different from self.sys_class_name.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; r = Record(s, &#39;task&#39;), {  # s is a SnowRestSession object</span>
+<span class="sd">            &gt;&gt;&gt; if r.get((&#39;number&#39;, &#39;INC0426232&#39;)):</span>
+<span class="sd">            &gt;&gt;&gt;     print r.get_table_name  # will print &#39;task&#39;</span>
+<span class="sd">            &gt;&gt;&gt;     print r.sys_class_name   # will print &#39;incident&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span></div>
+
+<div class="viewcode-block" id="Record.get_can_insert"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.Record.get_can_insert">[docs]</a>    <span class="k">def</span> <span class="nf">get_can_insert</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: If the current record is of a table where records cannot be inserted</span>
+<span class="sd">            Example: the ``task`` table is a `abstract supertable` of ``incident`` and ``u_request_fulfillment``.</span>
+<span class="sd">            Records can be inserted in the ``incident`` and ``u_request_fulfillment`` tables, but not in ``task``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__can_insert</span></div></div>
+
+
+<div class="viewcode-block" id="RecordField"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordField">[docs]</a><span class="k">class</span> <span class="nc">RecordField</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a ServiceNow table field.</span>
+<span class="sd">    While a String field only has a value, other fields may have a different value and display value.</span>
+<span class="sd">    For example, in an incident which is in state &quot;In progress&quot;, the ``incident_state`` field has a display value</span>
+<span class="sd">    of ``In Progress`` but a value of ``3``.</span>
+<span class="sd">    Similarly, in an incident with Functional Element=ServiceNow, the Functional Element field will have a display value</span>
+<span class="sd">    of ``ServiceNow`` but a value of ``579fb3d90a0a8c08017ac8a1137c8ee6`` : the `sys_id` of that Functional Element.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; r = Record(s, &#39;incident&#39;)  # s is a SnowRestSession object</span>
+<span class="sd">        &gt;&gt;&gt; if r.get(&#39;c1c535ba85f45540adf94de5b835cd43&#39;):</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt;     # short_description is a String field in ServiceNow</span>
+<span class="sd">        &gt;&gt;&gt;     print r.short_description  # &#39;Test&#39;</span>
+<span class="sd">        &gt;&gt;&gt;     print r.short_description.get_value()  # &#39;Test&#39;</span>
+<span class="sd">        &gt;&gt;&gt;     print r.short_description.get_display_value()  # &#39;Test&#39;</span>
+<span class="sd">        &gt;&gt;&gt;     print r.short_description.is_reference()  # False</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt;     # u_functional_element is a Reference field in ServiceNow</span>
+<span class="sd">        &gt;&gt;&gt;     print r.u_functional_element  # &#39;ea56fb210a0a8c0a015a591ddbed3676&#39;, the sys_id of the Functional Element &quot;IT Service Management Support&quot;</span>
+<span class="sd">        &gt;&gt;&gt;     print r.u_functional_element.get_value()  # &#39;ea56fb210a0a8c0a015a591ddbed3676&#39;</span>
+<span class="sd">        &gt;&gt;&gt;     print r.u_functional_element.get_display_value()  # &#39;IT Service Management Support&#39;</span>
+<span class="sd">        &gt;&gt;&gt;     print r.u_functional_element.is_reference()  # True</span>
+<span class="sd">        &gt;&gt;&gt;     print r.u_functional_element.get_referenced_table()  # &#39;u_cmdb_ci_functional_services&#39;</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt;     # incident_state is a Choice field in ServiceNow</span>
+<span class="sd">        &gt;&gt;&gt;     print r.incident_status  # 7</span>
+<span class="sd">        &gt;&gt;&gt;     print r.incident_status.get_value()  # 7</span>
+<span class="sd">        &gt;&gt;&gt;     print r.incident_status.get_display_value()  # &#39;Closed&#39;</span>
+<span class="sd">        &gt;&gt;&gt;     print r.incident_status.is_reference()  # False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">table_in_link_pattern</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__display_value</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__is_reference</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__referenced_table</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;value&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;display_value&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__display_value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="s1">&#39;display_value&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;link&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__is_reference</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">link</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="s1">&#39;link&#39;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__link</span> <span class="o">=</span> <span class="n">link</span>
+
+                <span class="n">pattern</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_table_in_link_re</span><span class="p">()</span>
+                <span class="n">match</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__referenced_table</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__value</span>
+
+    <span class="k">def</span> <span class="nf">__int__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RecordField.get_value"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordField.get_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str : The internal value of the field. For choice or reference fields, such as Incident State or</span>
+<span class="sd">            Functional Element, the internal value might be different from the display value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__value</span></div>
+
+<div class="viewcode-block" id="RecordField.get_display_value"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordField.get_display_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_display_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The display value of the field, i.e. what a user sees in the ServiceNow web UI.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__display_value</span></div>
+
+<div class="viewcode-block" id="RecordField.is_reference"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordField.is_reference">[docs]</a>    <span class="k">def</span> <span class="nf">is_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if this field is a reference field (reference to another table), False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__is_reference</span></div>
+
+<div class="viewcode-block" id="RecordField.get_referenced_table"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordField.get_referenced_table">[docs]</a>    <span class="k">def</span> <span class="nf">get_referenced_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str: If this field is a reference field, the internal name of the table referenced by it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__referenced_table</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">__get_table_in_link_re</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">cls</span><span class="o">.</span><span class="n">table_in_link_pattern</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">table_in_link_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;/table/([\w_]+)/&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">table_in_link_pattern</span></div>
+
+
+<div class="viewcode-block" id="RecordQuery"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordQuery">[docs]</a><span class="k">class</span> <span class="nc">RecordQuery</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to perform get queries that returns one or more records.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        session (SnowRestSession): a cern_snow_client.session.SnowRestSession object, which will be used</span>
+<span class="sd">            to authenticate and communicate with ServiceNow</span>
+<span class="sd">        table_name (str): the name of a ServiceNow table, e.g. &#39;incident&#39;, from which to query from</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        SnowClientException : if any of the parameters is set incorrectly</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">session</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s1">&#39;RecordQuery.__init__: To create a RecordQuery instance&#39;</span>
+                                      <span class="s1">&#39;you need to provide a non-empty SnowRestSession object.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">table_name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s1">&#39;RecordQuery.__init__: To create a RecordQuery instance&#39;</span>
+                                      <span class="s1">&#39;you need to provide table_name value.&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__session</span> <span class="o">=</span> <span class="n">session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span> <span class="o">=</span> <span class="n">table_name</span>
+
+<div class="viewcode-block" id="RecordQuery.query"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordQuery.query">[docs]</a>    <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">query_encoded</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Executes the query.</span>
+<span class="sd">        At least a `query_filter` or `query_encoded` parameter need to be provided.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            query_filter (dict): a dictionary with field names and values. Only records where the fields have</span>
+<span class="sd">                the corresponding values will be returned</span>
+<span class="sd">            query_encoded (str): a ServiceNow encoded query.</span>
+<span class="sd">                See https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            RecordSet : A RecordSet object, which is an iterable, and which will return in each iteration</span>
+<span class="sd">            an instance of the class corresponding to the ``table_name`` provided in the constructor, if available;</span>
+<span class="sd">            otherwise, an instance of the Record class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">query_filter</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">query_encoded</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s2">&quot;RecordQuery.query: &quot;</span>
+                                      <span class="s2">&quot;needs either a value in the query_filter or the query_encoded parameters&quot;</span><span class="p">)</span></div>
+        <span class="c1"># TODO: Finish this method</span>
+        <span class="c1">#  build the URL</span>
+
+        <span class="c1">#  execute a get</span>
+
+        <span class="c1">#  build an array of objects where each object represents a record</span>
+
+        <span class="c1">#  build a RecordSet passing the array</span>
+
+        <span class="c1">#  return the RecordSet</span>
+
+<div class="viewcode-block" id="RecordQuery.get_session"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordQuery.get_session">[docs]</a>    <span class="k">def</span> <span class="nf">get_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            SnowRestSession : The session that this RecordQuery object uses to communicate with ServiceNow</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__session</span></div>
+
+<div class="viewcode-block" id="RecordQuery.get_table_name"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordQuery.get_table_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_table_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str : The table_name argument that was used to build this RecordQuery object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span></div></div>
+
+
+<div class="viewcode-block" id="RecordSet"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordSet">[docs]</a><span class="k">class</span> <span class="nc">RecordSet</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">result_array</span><span class="p">,</span> <span class="n">table_name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__session</span> <span class="o">=</span> <span class="n">session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__result_array</span> <span class="o">=</span> <span class="n">result_array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span> <span class="o">=</span> <span class="n">table_name</span>
+
+        <span class="n">table_class_mapping</span> <span class="o">=</span> <span class="n">TableClassMapping</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">table_name</span> <span class="ow">in</span> <span class="n">table_class_mapping</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__record_class</span> <span class="o">=</span> <span class="n">table_class_mapping</span><span class="p">[</span><span class="n">table_name</span><span class="p">][</span><span class="s1">&#39;class&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__record_class</span> <span class="o">=</span> <span class="n">Record</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+<div class="viewcode-block" id="RecordSet.next"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordSet.next">[docs]</a>    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            Record : An instance of Record or of a subclass of Record.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__result_array</span><span class="p">):</span>
+            <span class="n">record_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__result_array</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">]</span>
+            <span class="n">record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__record_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__session</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">record_dict</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">return</span> <span class="n">record</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">StopIteration</span></div>
+
+<div class="viewcode-block" id="RecordSet.get_session"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordSet.get_session">[docs]</a>    <span class="k">def</span> <span class="nf">get_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            SnowRestSession : The session that this RecordSet object uses to communicate with ServiceNow</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__session</span></div>
+
+<div class="viewcode-block" id="RecordSet.get_table_name"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordSet.get_table_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_table_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            str : The table_name argument that was used to build this RecordSet object.</span>
+<span class="sd">            All the records contained inside this RecordSet might belong to this table, or to a child table.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span></div>
+
+<div class="viewcode-block" id="RecordSet.get_record_class"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordSet.get_record_class">[docs]</a>    <span class="k">def</span> <span class="nf">get_record_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            type : The Python class (Task, Incident...) that is used to build the objects returned by ``next()``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__record_class</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">cern-snow-client 0.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, James Clerc, David Martin Clavo.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Overview: module code &#8212; cern-snow-client 0.2 documentation</title>
+    <title>cern_snow_client &#8212; cern-snow-client 0.2 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -35,7 +35,8 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">cern-snow-client 0.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">cern-snow-client 0.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -44,22 +45,32 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="cern_snow_client/common.html">cern_snow_client.common</a></li>
-<li><a href="cern_snow_client/exceptions.html">cern_snow_client.exceptions</a></li>
-<li><a href="cern_snow_client/incident.html">cern_snow_client.incident</a></li>
-<li><a href="cern_snow_client/record.html">cern_snow_client.record</a></li>
-<li><a href="cern_snow_client/session.html">cern_snow_client.session</a></li>
-<li><a href="cern_snow_client/task.html">cern_snow_client.task</a></li>
-<li><a href="tests/basic_auth_test.html">tests.basic_auth_test</a></li>
-<li><a href="tests/sso_oauth_test.html">tests.sso_oauth_test</a></li>
-<li><a href="tests/test_base.html">tests.test_base</a></li>
-<li><a href="tests/test_record_base.html">tests.test_record_base</a></li>
-<li><a href="tests/test_record_basic_auth.html">tests.test_record_basic_auth</a></li>
-<li><a href="tests/test_session_base.html">tests.test_session_base</a></li>
-<li><a href="tests/test_session_basic_auth.html">tests.test_session_basic_auth</a></li>
-<li><a href="tests/test_session_sso_oauth.html">tests.test_session_sso_oauth</a></li>
-</ul>
+  <h1>Source code for cern_snow_client</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding: utf-8</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The CERN ServiceNow Client library (CERN SNow Client) facilitates the usage of the ServiceNow REST API</span>
+<span class="sd">with a CERN account via Single Sign On authentication. Basic Authentication is also supported.</span>
+
+<span class="sd">Low level operations such as get, post and put are implemented.</span>
+<span class="sd">Also, other higher level operations have been implemented, such as querying/inserting/updating records,</span>
+<span class="sd">or querying/inserting/updating incidents and requests, including adding comments and work notes.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.2&quot;</span>
+
+<span class="c1">#from task import Task</span>
+<span class="c1">#from incident import Incident</span>
+
+<span class="n">table_class_mapping</span> <span class="o">=</span> <span class="p">{</span>
+<span class="c1">#    &#39;task&#39;: {&#39;class&#39;: Task, &#39;can_be_inserted&#39;: False},</span>
+<span class="c1">#    &#39;incident&#39;: {&#39;class&#39;: Incident, &#39;can_be_inserted&#39;: True}</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="SnowClientException"><a class="viewcode-back" href="../cern_snow_client.html#cern_snow_client.SnowClientException">[docs]</a><span class="k">class</span> <span class="nc">SnowClientException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+</pre></div>
 
           </div>
         </div>
@@ -89,7 +100,8 @@
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">cern-snow-client 0.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">cern-snow-client 0.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

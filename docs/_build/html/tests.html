@@ -50,89 +50,184 @@
             
   <div class="section" id="module-tests">
 <span id="tests-package"></span><h1>tests package<a class="headerlink" href="#module-tests" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-tests.basic_auth_test">
-<span id="tests-basic-auth-test-module"></span><h2>tests.basic_auth_test module<a class="headerlink" href="#module-tests.basic_auth_test" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-tests.test_session_basic_auth">
+<span id="tests-test-session-basic-auth-module"></span><h2>tests.test_session_basic_auth module<a class="headerlink" href="#module-tests.test_session_basic_auth" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="tests.basic_auth_test.BasicAuthenticationTest">
-<em class="property">class </em><code class="descclassname">tests.basic_auth_test.</code><code class="descname">BasicAuthenticationTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/basic_auth_test.html#BasicAuthenticationTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.basic_auth_test.BasicAuthenticationTest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code>, <a class="reference internal" href="#tests.test_base.TestBase" title="tests.test_base.TestBase"><code class="xref py py-class docutils literal"><span class="pre">tests.test_base.TestBase</span></code></a></p>
+<dt id="tests.test_session_basic_auth.TestSessionBasicAuthentication">
+<em class="property">class </em><code class="descclassname">tests.test_session_basic_auth.</code><code class="descname">TestSessionBasicAuthentication</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_session_basic_auth.html#TestSessionBasicAuthentication"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_basic_auth.TestSessionBasicAuthentication" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code>, <a class="reference internal" href="#tests.test_session_base.TestSessionBase" title="tests.test_session_base.TestSessionBase"><code class="xref py py-class docutils literal"><span class="pre">tests.test_session_base.TestSessionBase</span></code></a></p>
 <dl class="attribute">
-<dt id="tests.basic_auth_test.BasicAuthenticationTest.short_description_prefix">
-<code class="descname">short_description_prefix</code><em class="property"> = 'snow client basic auth unit test'</em><a class="headerlink" href="#tests.basic_auth_test.BasicAuthenticationTest.short_description_prefix" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_session_basic_auth.TestSessionBasicAuthentication.short_description_prefix">
+<code class="descname">short_description_prefix</code><em class="property"> = 'snow client - session unit test - basic auth'</em><a class="headerlink" href="#tests.test_session_basic_auth.TestSessionBasicAuthentication.short_description_prefix" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="staticmethod">
-<dt id="tests.basic_auth_test.BasicAuthenticationTest.make_good_session">
-<em class="property">static </em><code class="descname">make_good_session</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/basic_auth_test.html#BasicAuthenticationTest.make_good_session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.basic_auth_test.BasicAuthenticationTest.make_good_session" title="Permalink to this definition">¶</a></dt>
+<dl class="classmethod">
+<dt id="tests.test_session_basic_auth.TestSessionBasicAuthentication.make_good_session">
+<em class="property">classmethod </em><code class="descname">make_good_session</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_session_basic_auth.html#TestSessionBasicAuthentication.make_good_session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_basic_auth.TestSessionBasicAuthentication.make_good_session" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="staticmethod">
-<dt id="tests.basic_auth_test.BasicAuthenticationTest.remove_cookie">
-<em class="property">static </em><code class="descname">remove_cookie</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/basic_auth_test.html#BasicAuthenticationTest.remove_cookie"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.basic_auth_test.BasicAuthenticationTest.remove_cookie" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.basic_auth_test.BasicAuthenticationTest.test_get_incident">
-<code class="descname">test_get_incident</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/basic_auth_test.html#BasicAuthenticationTest.test_get_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.basic_auth_test.BasicAuthenticationTest.test_get_incident" title="Permalink to this definition">¶</a></dt>
+<dl class="classmethod">
+<dt id="tests.test_session_basic_auth.TestSessionBasicAuthentication.remove_cookie">
+<em class="property">classmethod </em><code class="descname">remove_cookie</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_session_basic_auth.html#TestSessionBasicAuthentication.remove_cookie"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_basic_auth.TestSessionBasicAuthentication.remove_cookie" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.basic_auth_test.BasicAuthenticationTest.test_insert_incident">
-<code class="descname">test_insert_incident</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/basic_auth_test.html#BasicAuthenticationTest.test_insert_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.basic_auth_test.BasicAuthenticationTest.test_insert_incident" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_session_basic_auth.TestSessionBasicAuthentication.test_get_incident">
+<code class="descname">test_get_incident</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_session_basic_auth.html#TestSessionBasicAuthentication.test_get_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_basic_auth.TestSessionBasicAuthentication.test_get_incident" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.basic_auth_test.BasicAuthenticationTest.test_update_incident">
-<code class="descname">test_update_incident</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/basic_auth_test.html#BasicAuthenticationTest.test_update_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.basic_auth_test.BasicAuthenticationTest.test_update_incident" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_session_basic_auth.TestSessionBasicAuthentication.test_insert_incident">
+<code class="descname">test_insert_incident</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_session_basic_auth.html#TestSessionBasicAuthentication.test_insert_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_basic_auth.TestSessionBasicAuthentication.test_insert_incident" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.basic_auth_test.BasicAuthenticationTest.test_session_persistance">
-<code class="descname">test_session_persistance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/basic_auth_test.html#BasicAuthenticationTest.test_session_persistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.basic_auth_test.BasicAuthenticationTest.test_session_persistance" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_session_basic_auth.TestSessionBasicAuthentication.test_update_incident">
+<code class="descname">test_update_incident</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_session_basic_auth.html#TestSessionBasicAuthentication.test_update_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_basic_auth.TestSessionBasicAuthentication.test_update_incident" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_session_basic_auth.TestSessionBasicAuthentication.test_session_persistance">
+<code class="descname">test_session_persistance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_session_basic_auth.html#TestSessionBasicAuthentication.test_session_persistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_basic_auth.TestSessionBasicAuthentication.test_session_persistance" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 </div>
-<div class="section" id="module-tests.sso_oauth_test">
-<span id="tests-sso-oauth-test-module"></span><h2>tests.sso_oauth_test module<a class="headerlink" href="#module-tests.sso_oauth_test" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-tests.test_session_sso_oauth">
+<span id="tests-test-session-sso-oauth-module"></span><h2>tests.test_session_sso_oauth module<a class="headerlink" href="#module-tests.test_session_sso_oauth" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="tests.sso_oauth_test.SsoOAuthTest">
-<em class="property">class </em><code class="descclassname">tests.sso_oauth_test.</code><code class="descname">SsoOAuthTest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/sso_oauth_test.html#SsoOAuthTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.sso_oauth_test.SsoOAuthTest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code>, <a class="reference internal" href="#tests.test_base.TestBase" title="tests.test_base.TestBase"><code class="xref py py-class docutils literal"><span class="pre">tests.test_base.TestBase</span></code></a></p>
+<dt id="tests.test_session_sso_oauth.TestSessionSsoOauth">
+<em class="property">class </em><code class="descclassname">tests.test_session_sso_oauth.</code><code class="descname">TestSessionSsoOauth</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_session_sso_oauth.html#TestSessionSsoOauth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_sso_oauth.TestSessionSsoOauth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code>, <a class="reference internal" href="#tests.test_session_base.TestSessionBase" title="tests.test_session_base.TestSessionBase"><code class="xref py py-class docutils literal"><span class="pre">tests.test_session_base.TestSessionBase</span></code></a></p>
 <dl class="attribute">
-<dt id="tests.sso_oauth_test.SsoOAuthTest.short_description_prefix">
-<code class="descname">short_description_prefix</code><em class="property"> = 'snow client sso oauth unit test'</em><a class="headerlink" href="#tests.sso_oauth_test.SsoOAuthTest.short_description_prefix" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_session_sso_oauth.TestSessionSsoOauth.short_description_prefix">
+<code class="descname">short_description_prefix</code><em class="property"> = 'snow client - session unit test - sso oauth'</em><a class="headerlink" href="#tests.test_session_sso_oauth.TestSessionSsoOauth.short_description_prefix" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="staticmethod">
-<dt id="tests.sso_oauth_test.SsoOAuthTest.make_good_session">
-<em class="property">static </em><code class="descname">make_good_session</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/sso_oauth_test.html#SsoOAuthTest.make_good_session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.sso_oauth_test.SsoOAuthTest.make_good_session" title="Permalink to this definition">¶</a></dt>
+<dl class="classmethod">
+<dt id="tests.test_session_sso_oauth.TestSessionSsoOauth.make_good_session">
+<em class="property">classmethod </em><code class="descname">make_good_session</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_session_sso_oauth.html#TestSessionSsoOauth.make_good_session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_sso_oauth.TestSessionSsoOauth.make_good_session" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="staticmethod">
-<dt id="tests.sso_oauth_test.SsoOAuthTest.remove_files">
-<em class="property">static </em><code class="descname">remove_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/sso_oauth_test.html#SsoOAuthTest.remove_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.sso_oauth_test.SsoOAuthTest.remove_files" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.sso_oauth_test.SsoOAuthTest.test_get_incident">
-<code class="descname">test_get_incident</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/sso_oauth_test.html#SsoOAuthTest.test_get_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.sso_oauth_test.SsoOAuthTest.test_get_incident" title="Permalink to this definition">¶</a></dt>
+<dl class="classmethod">
+<dt id="tests.test_session_sso_oauth.TestSessionSsoOauth.remove_files">
+<em class="property">classmethod </em><code class="descname">remove_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_session_sso_oauth.html#TestSessionSsoOauth.remove_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_sso_oauth.TestSessionSsoOauth.remove_files" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.sso_oauth_test.SsoOAuthTest.test_insert_incident">
-<code class="descname">test_insert_incident</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/sso_oauth_test.html#SsoOAuthTest.test_insert_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.sso_oauth_test.SsoOAuthTest.test_insert_incident" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_session_sso_oauth.TestSessionSsoOauth.test_get_incident">
+<code class="descname">test_get_incident</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_session_sso_oauth.html#TestSessionSsoOauth.test_get_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_sso_oauth.TestSessionSsoOauth.test_get_incident" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.sso_oauth_test.SsoOAuthTest.test_update_incident">
-<code class="descname">test_update_incident</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/sso_oauth_test.html#SsoOAuthTest.test_update_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.sso_oauth_test.SsoOAuthTest.test_update_incident" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_session_sso_oauth.TestSessionSsoOauth.test_insert_incident">
+<code class="descname">test_insert_incident</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_session_sso_oauth.html#TestSessionSsoOauth.test_insert_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_sso_oauth.TestSessionSsoOauth.test_insert_incident" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.sso_oauth_test.SsoOAuthTest.test_session_persistance">
-<code class="descname">test_session_persistance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/sso_oauth_test.html#SsoOAuthTest.test_session_persistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.sso_oauth_test.SsoOAuthTest.test_session_persistance" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_session_sso_oauth.TestSessionSsoOauth.test_update_incident">
+<code class="descname">test_update_incident</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_session_sso_oauth.html#TestSessionSsoOauth.test_update_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_sso_oauth.TestSessionSsoOauth.test_update_incident" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_session_sso_oauth.TestSessionSsoOauth.test_session_persistance">
+<code class="descname">test_session_persistance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_session_sso_oauth.html#TestSessionSsoOauth.test_session_persistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_sso_oauth.TestSessionSsoOauth.test_session_persistance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-tests.test_session_base">
+<span id="tests-test-session-base-module"></span><h2>tests.test_session_base module<a class="headerlink" href="#module-tests.test_session_base" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="tests.test_session_base.TestSessionBase">
+<em class="property">class </em><code class="descclassname">tests.test_session_base.</code><code class="descname">TestSessionBase</code><a class="reference internal" href="_modules/tests/test_session_base.html#TestSessionBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_base.TestSessionBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tests.test_base.TestBase" title="tests.test_base.TestBase"><code class="xref py py-class docutils literal"><span class="pre">tests.test_base.TestBase</span></code></a></p>
+<dl class="method">
+<dt id="tests.test_session_base.TestSessionBase.base_test_get">
+<code class="descname">base_test_get</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_session_base.html#TestSessionBase.base_test_get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_base.TestSessionBase.base_test_get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_session_base.TestSessionBase.base_test_post">
+<code class="descname">base_test_post</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_session_base.html#TestSessionBase.base_test_post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_base.TestSessionBase.base_test_post" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_session_base.TestSessionBase.base_test_put">
+<code class="descname">base_test_put</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_session_base.html#TestSessionBase.base_test_put"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_base.TestSessionBase.base_test_put" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_session_base.TestSessionBase.base_test_session_persistance">
+<code class="descname">base_test_session_persistance</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_session_base.html#TestSessionBase.base_test_session_persistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_session_base.TestSessionBase.base_test_session_persistance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-tests.test_record_basic_auth">
+<span id="tests-test-record-basic-auth-module"></span><h2>tests.test_record_basic_auth module<a class="headerlink" href="#module-tests.test_record_basic_auth" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="tests.test_record_basic_auth.TestRecordBasicAuthentication">
+<em class="property">class </em><code class="descclassname">tests.test_record_basic_auth.</code><code class="descname">TestRecordBasicAuthentication</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_record_basic_auth.html#TestRecordBasicAuthentication"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_record_basic_auth.TestRecordBasicAuthentication" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code>, <a class="reference internal" href="#tests.test_record_base.TestRecordBase" title="tests.test_record_base.TestRecordBase"><code class="xref py py-class docutils literal"><span class="pre">tests.test_record_base.TestRecordBase</span></code></a></p>
+<dl class="attribute">
+<dt id="tests.test_record_basic_auth.TestRecordBasicAuthentication.short_description_prefix">
+<code class="descname">short_description_prefix</code><em class="property"> = 'snow client - record unit test - basic auth'</em><a class="headerlink" href="#tests.test_record_basic_auth.TestRecordBasicAuthentication.short_description_prefix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="tests.test_record_basic_auth.TestRecordBasicAuthentication.make_good_session">
+<em class="property">classmethod </em><code class="descname">make_good_session</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_record_basic_auth.html#TestRecordBasicAuthentication.make_good_session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_record_basic_auth.TestRecordBasicAuthentication.make_good_session" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="tests.test_record_basic_auth.TestRecordBasicAuthentication.remove_cookie">
+<em class="property">classmethod </em><code class="descname">remove_cookie</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_record_basic_auth.html#TestRecordBasicAuthentication.remove_cookie"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_record_basic_auth.TestRecordBasicAuthentication.remove_cookie" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_record_basic_auth.TestRecordBasicAuthentication.test_get_record">
+<code class="descname">test_get_record</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_record_basic_auth.html#TestRecordBasicAuthentication.test_get_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_record_basic_auth.TestRecordBasicAuthentication.test_get_record" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_record_basic_auth.TestRecordBasicAuthentication.test_insert_record">
+<code class="descname">test_insert_record</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_record_basic_auth.html#TestRecordBasicAuthentication.test_insert_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_record_basic_auth.TestRecordBasicAuthentication.test_insert_record" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_record_basic_auth.TestRecordBasicAuthentication.test_update_record">
+<code class="descname">test_update_record</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_record_basic_auth.html#TestRecordBasicAuthentication.test_update_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_record_basic_auth.TestRecordBasicAuthentication.test_update_record" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-tests.test_record_sso_oauth">
+<span id="tests-test-record-sso-oauth-module"></span><h2>tests.test_record_sso_oauth module<a class="headerlink" href="#module-tests.test_record_sso_oauth" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-tests.test_record_base">
+<span id="tests-test-record-base-module"></span><h2>tests.test_record_base module<a class="headerlink" href="#module-tests.test_record_base" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="tests.test_record_base.TestRecordBase">
+<em class="property">class </em><code class="descclassname">tests.test_record_base.</code><code class="descname">TestRecordBase</code><a class="reference internal" href="_modules/tests/test_record_base.html#TestRecordBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_record_base.TestRecordBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tests.test_base.TestBase" title="tests.test_base.TestBase"><code class="xref py py-class docutils literal"><span class="pre">tests.test_base.TestBase</span></code></a></p>
+<dl class="method">
+<dt id="tests.test_record_base.TestRecordBase.base_test_get_record">
+<code class="descname">base_test_get_record</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_record_base.html#TestRecordBase.base_test_get_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_record_base.TestRecordBase.base_test_get_record" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_record_base.TestRecordBase.base_test_insert_record">
+<code class="descname">base_test_insert_record</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_record_base.html#TestRecordBase.base_test_insert_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_record_base.TestRecordBase.base_test_insert_record" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_record_base.TestRecordBase.base_test_update_record">
+<code class="descname">base_test_update_record</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_record_base.html#TestRecordBase.base_test_update_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_record_base.TestRecordBase.base_test_update_record" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -149,39 +244,19 @@
 <code class="descname">short_description_prefix</code><em class="property"> = 'snow client unit test'</em><a class="headerlink" href="#tests.test_base.TestBase.short_description_prefix" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="staticmethod">
+<dl class="classmethod">
 <dt id="tests.test_base.TestBase.make_session">
-<em class="property">static </em><code class="descname">make_session</code><span class="sig-paren">(</span><em>config_file_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_base.html#TestBase.make_session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_base.TestBase.make_session" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">make_session</code><span class="sig-paren">(</span><em>config_file_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_base.html#TestBase.make_session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_base.TestBase.make_session" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="staticmethod">
+<dl class="classmethod">
 <dt id="tests.test_base.TestBase.get_password">
-<em class="property">static </em><code class="descname">get_password</code><span class="sig-paren">(</span><em>password_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_base.html#TestBase.get_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_base.TestBase.get_password" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">get_password</code><span class="sig-paren">(</span><em>password_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_base.html#TestBase.get_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_base.TestBase.get_password" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="staticmethod">
+<dl class="classmethod">
 <dt id="tests.test_base.TestBase.get_cookie_by_name">
-<em class="property">static </em><code class="descname">get_cookie_by_name</code><span class="sig-paren">(</span><em>cookie_jar</em>, <em>cookie_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_base.html#TestBase.get_cookie_by_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_base.TestBase.get_cookie_by_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_base.TestBase.base_test_get_incident">
-<code class="descname">base_test_get_incident</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_base.html#TestBase.base_test_get_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_base.TestBase.base_test_get_incident" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_base.TestBase.base_test_insert_incident">
-<code class="descname">base_test_insert_incident</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_base.html#TestBase.base_test_insert_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_base.TestBase.base_test_insert_incident" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_base.TestBase.base_test_update_incident">
-<code class="descname">base_test_update_incident</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_base.html#TestBase.base_test_update_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_base.TestBase.base_test_update_incident" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="tests.test_base.TestBase.base_test_session_persistance">
-<code class="descname">base_test_session_persistance</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_base.html#TestBase.base_test_session_persistance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_base.TestBase.base_test_session_persistance" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">get_cookie_by_name</code><span class="sig-paren">(</span><em>cookie_jar</em>, <em>cookie_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_base.html#TestBase.get_cookie_by_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_base.TestBase.get_cookie_by_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

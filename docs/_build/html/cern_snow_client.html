@@ -1098,7 +1098,614 @@ or if the operation could not be performed due to an authentication issue</p>
 <dl class="exception">
 <dt id="cern_snow_client.session.SnowRestSessionException">
 <em class="property">exception </em><code class="descclassname">cern_snow_client.session.</code><code class="descname">SnowRestSessionException</code><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSessionException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSessionException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cern_snow_client.common.SnowClientException" title="cern_snow_client.common.SnowClientException"><code class="xref py py-class docutils literal"><span class="pre">cern_snow_client.common.SnowClientException</span></code></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-cern_snow_client.record">
+<span id="cern-snow-client-record-module"></span><h2>cern_snow_client.record module<a class="headerlink" href="#module-cern_snow_client.record" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cern_snow_client.record.Record">
+<em class="property">class </em><code class="descclassname">cern_snow_client.record.</code><code class="descname">Record</code><span class="sig-paren">(</span><em>session</em>, <em>table_name=None</em>, <em>values=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#Record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.Record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a record in a ServiceNow table.
+Attributes of the record can be set with str values.
+When getting values of the attributes, they will be of the RecordField class. See the <code class="docutils literal"><span class="pre">get</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>session</strong> (<a class="reference internal" href="#cern_snow_client.session.SnowRestSession" title="cern_snow_client.session.SnowRestSession"><em>SnowRestSession</em></a>) – a cern_snow_client.session.SnowRestSession object, which will be used
+to authenticate and communicate with ServiceNow</li>
+<li><strong>table_name</strong> (<em>str</em>) – the name of a ServiceNow table, e.g. ‘incident’, that this object will represent</li>
+<li><strong>values</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – initial values for the record</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">SnowClientException</span></code> – if any of the parameters is set incorrectly</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Building a new Record for the table ‘incident’:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+</pre></div>
+</div>
+<p>Building and initializing a new Record for the table ‘u_request_fulfillment’:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">values</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;short_description&#39;</span> <span class="p">:</span> <span class="s2">&quot;New request&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;u_business_service&#39;</span> <span class="p">:</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">,</span> <span class="c1">#  Service Element &quot;ServiceNow&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;u_functional_element&#39;</span> <span class="p">:</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">,</span>  <span class="c1"># Functional Element &quot;ServiceNow&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;comments&#39;</span> <span class="p">:</span> <span class="s2">&quot;Initial description&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;u_current_task_state&#39;</span> <span class="p">:</span> <span class="s1">&#39;2&#39;</span>  <span class="c1"># initial state : Assigned</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>  <span class="c1"># record is created and ready for insert</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="cern_snow_client.record.Record.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#Record.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.Record.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches from ServiceNow a record from the table specified in the constructor via the argument <code class="docutils literal"><span class="pre">table_name</span></code>.
+The record may be fetched by its <code class="docutils literal"><span class="pre">sys_id</span></code> (ServiceNow unique identifier), or with a (field_name, field_value)
+pair.
+The attributes of the Record will be of the RecordField class, which implements the __str__ method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>key</strong> (<em>str</em><em> or </em><em>tuple</em>) – a str the sys_id (ServiceNow unique identifier) of the record to fetch,
+or a tuple (field_name, field_value), such as (‘number’, ‘INC987654’)</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if a record was fetched succesfully, False if the record did not exist</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">bool</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">SnowClientException</span></code> – if the <code class="docutils literal"><span class="pre">key</span></code> argument is invalid.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code> – if there is any authentication problem</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Getting an incident by sys_id:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;c1c535ba85f45540adf94de5b835cd43&#39;</span><span class="p">):</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># short_description is a String field in ServiceNow</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">short_description</span>  <span class="c1"># &#39;Test&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">short_description</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>  <span class="c1"># &#39;Test&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">short_description</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">()</span>  <span class="c1"># &#39;Test&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">short_description</span><span class="o">.</span><span class="n">is_reference</span><span class="p">()</span>  <span class="c1"># False</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># u_functional_element is a Reference field in ServiceNow</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">u_functional_element</span>  <span class="c1"># &#39;ea56fb210a0a8c0a015a591ddbed3676&#39;, the sys_id of the Functional Element &quot;IT Service Management Support&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">u_functional_element</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>  <span class="c1"># &#39;ea56fb210a0a8c0a015a591ddbed3676&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">u_functional_element</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">()</span>  <span class="c1"># &#39;IT Service Management Support&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">u_functional_element</span><span class="o">.</span><span class="n">is_reference</span><span class="p">()</span>  <span class="c1"># True</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">u_functional_element</span><span class="o">.</span><span class="n">get_referenced_table</span><span class="p">()</span>  <span class="c1"># &#39;u_cmdb_ci_functional_services&#39;</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># incident_state is a Choice field in ServiceNow</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">incident_status</span>  <span class="c1"># 7</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">incident_status</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>  <span class="c1"># 7</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">incident_status</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">()</span>  <span class="c1"># &#39;Closed&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">incident_status</span><span class="o">.</span><span class="n">is_reference</span><span class="p">()</span>  <span class="c1"># False</span>
+</pre></div>
+</div>
+<p>Getting a request by number:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;RQF0746626&#39;</span><span class="p">)):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">short_description</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.record.Record.insert">
+<code class="descname">insert</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#Record.insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.Record.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inserts in ServiceNow a record into the table specified in the constructor via the argument <code class="docutils literal"><span class="pre">table_name</span></code>.
+After inserting, the attributes of the Record object will be updated with the resulting values from ServiceNow.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the record was inserted succesfully, False otherwise.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">bool</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">SnowClientException</span></code> – if the current record is of a table where records cannot be inserted
+Example: the <code class="docutils literal"><span class="pre">task</span></code> table is a <cite>supertable</cite> of <code class="docutils literal"><span class="pre">incident</span></code> and <code class="docutils literal"><span class="pre">u_request_fulfillment</span></code>.
+Incidents and requests can be inserted, but not tasks who are neither an incident nor a request.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code> – if there is any authentication problem</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Passing the values in the constructor:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">,</span> <span class="p">{</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;short_description&#39;</span> <span class="p">:</span> <span class="s2">&quot;New incident&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;u_business_service&#39;</span> <span class="p">:</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">,</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;u_functional_element&#39;</span> <span class="p">:</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">,</span>  <span class="c1"># Functional Element &quot;ServiceNow&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;comments&#39;</span> <span class="p">:</span> <span class="s2">&quot;Initial description&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;incident_state&#39;</span> <span class="p">:</span> <span class="s1">&#39;2&#39;</span>  <span class="c1"># initial state : Assigned</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">number</span>  <span class="c1"># will print the number of the new incident</span>
+</pre></div>
+</div>
+<p>Setting values in the fields after instantiating the class:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s2">&quot;New request&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">u_business_service</span> <span class="o">=</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">u_functional_element</span> <span class="o">=</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span>  <span class="c1"># Functional ELement &quot;ServiceNow&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">comments</span> <span class="o">=</span> <span class="s2">&quot;Initial description&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">u_current_task_state</span> <span class="o">=</span> <span class="s1">&#39;2&#39;</span>   <span class="c1"># request state = Assigned</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.record.Record.update">
+<code class="descname">update</code><span class="sig-paren">(</span><em>key=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#Record.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.Record.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates a record in ServiceNow.
+This can be done in a record previously obtained with a get operation, or previously inserted,
+or also on a record where its table and sys_id (or key) are previously known.
+Only the changes in the fields since the last <code class="docutils literal"><span class="pre">.insert()</span></code> or <code class="docutils literal"><span class="pre">.update()</span></code> will be sent.
+After updating, the attributes of the Record object will be updated with the resulting values from ServiceNow.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>key</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">tuple</span></code>, optional) – a str the sys_id (ServiceNow unique identifier)
+of the record to update, or a tuple (field_name, field_value), such as (‘number’, ‘INC987654’).
+If this parameter is set, it will override the current sys_id of this record object, if any.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if the record was updated succesfully, False otherwise.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">bool</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">SnowClientException</span></code> – if the current record is missing a session, or a table name, or the current
+record has no <code class="docutils literal"><span class="pre">sys_id</span></code></li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code> – if there is any authentication problem</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Getting an incident and then updating it:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">),</span> <span class="p">{</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;INC0426232&#39;</span><span class="p">)):</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">watch_list</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="n">r</span><span class="o">.</span><span class="n">watch_list</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">watch_list</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">r</span><span class="o">.</span><span class="n">watch_list</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">watch_list</span> <span class="o">+</span> <span class="s1">&#39;david.martin.clavo@cern.ch&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">r</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">watch_list</span>  <span class="c1"># will print the new value of the watchlist, where the above address might</span>
+<span class="gp">&gt;&gt;&gt; </span>                       <span class="c1"># have been replaced by the user&#39;s sys_id</span>
+</pre></div>
+</div>
+<p>Updating a previously known incident:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">watch_list</span> <span class="o">=</span> <span class="s1">&#39;david.martin.clavo@cern.ch&#39;</span>  <span class="c1"># will completely replace the previous value</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">update</span><span class="p">((</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;INC0426232&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">short_description</span>  <span class="c1"># will print the incident&#39;s short description, since all fields are returned</span>
+<span class="gp">&gt;&gt;&gt; </span>                           <span class="c1"># by ServiceNow</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.record.Record.get_changed_fields">
+<code class="descname">get_changed_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#Record.get_changed_fields"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.Record.get_changed_fields" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A dictionary <code class="docutils literal"><span class="pre">{'field_name'</span> <span class="pre">:</span> <span class="pre">'field_value'}</span></code> with the record fields which have changed
+since the last <code class="docutils literal"><span class="pre">.insert()</span></code> or <code class="docutils literal"><span class="pre">.update()</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.record.Record.reset_changed_values">
+<code class="descname">reset_changed_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#Record.reset_changed_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.Record.reset_changed_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the changes in the record fields since the last <code class="docutils literal"><span class="pre">.insert()</span></code> or <code class="docutils literal"><span class="pre">.update()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.record.Record.get_session">
+<code class="descname">get_session</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#Record.get_session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.Record.get_session" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The session that this Record object uses to communicate with ServiceNow</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#cern_snow_client.session.SnowRestSession" title="cern_snow_client.session.SnowRestSession">SnowRestSession</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.record.Record.get_table_name">
+<code class="descname">get_table_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#Record.get_table_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.Record.get_table_name" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The table_name argument that was used to build this Record object.
+Might be different from self.sys_class_name.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;task&#39;</span><span class="p">),</span> <span class="p">{</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;INC0426232&#39;</span><span class="p">)):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">get_table_name</span>  <span class="c1"># will print &#39;task&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">sys_class_name</span>   <span class="c1"># will print &#39;incident&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.record.Record.get_can_insert">
+<code class="descname">get_can_insert</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#Record.get_can_insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.Record.get_can_insert" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">If the current record is of a table where records cannot be inserted
+Example: the <code class="docutils literal"><span class="pre">task</span></code> table is a <cite>abstract supertable</cite> of <code class="docutils literal"><span class="pre">incident</span></code> and <code class="docutils literal"><span class="pre">u_request_fulfillment</span></code>.
+Records can be inserted in the <code class="docutils literal"><span class="pre">incident</span></code> and <code class="docutils literal"><span class="pre">u_request_fulfillment</span></code> tables, but not in <code class="docutils literal"><span class="pre">task</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="cern_snow_client.record.RecordField">
+<em class="property">class </em><code class="descclassname">cern_snow_client.record.</code><code class="descname">RecordField</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a ServiceNow table field.
+While a String field only has a value, other fields may have a different value and display value.
+For example, in an incident which is in state “In progress”, the <code class="docutils literal"><span class="pre">incident_state</span></code> field has a display value
+of <code class="docutils literal"><span class="pre">In</span> <span class="pre">Progress</span></code> but a value of <code class="docutils literal"><span class="pre">3</span></code>.
+Similarly, in an incident with Functional Element=ServiceNow, the Functional Element field will have a display value
+of <code class="docutils literal"><span class="pre">ServiceNow</span></code> but a value of <code class="docutils literal"><span class="pre">579fb3d90a0a8c08017ac8a1137c8ee6</span></code> : the <cite>sys_id</cite> of that Functional Element.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;c1c535ba85f45540adf94de5b835cd43&#39;</span><span class="p">):</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># short_description is a String field in ServiceNow</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">short_description</span>  <span class="c1"># &#39;Test&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">short_description</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>  <span class="c1"># &#39;Test&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">short_description</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">()</span>  <span class="c1"># &#39;Test&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">short_description</span><span class="o">.</span><span class="n">is_reference</span><span class="p">()</span>  <span class="c1"># False</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># u_functional_element is a Reference field in ServiceNow</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">u_functional_element</span>  <span class="c1"># &#39;ea56fb210a0a8c0a015a591ddbed3676&#39;, the sys_id of the Functional Element &quot;IT Service Management Support&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">u_functional_element</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>  <span class="c1"># &#39;ea56fb210a0a8c0a015a591ddbed3676&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">u_functional_element</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">()</span>  <span class="c1"># &#39;IT Service Management Support&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">u_functional_element</span><span class="o">.</span><span class="n">is_reference</span><span class="p">()</span>  <span class="c1"># True</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">u_functional_element</span><span class="o">.</span><span class="n">get_referenced_table</span><span class="p">()</span>  <span class="c1"># &#39;u_cmdb_ci_functional_services&#39;</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># incident_state is a Choice field in ServiceNow</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">incident_status</span>  <span class="c1"># 7</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">incident_status</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>  <span class="c1"># 7</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">incident_status</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">()</span>  <span class="c1"># &#39;Closed&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">r</span><span class="o">.</span><span class="n">incident_status</span><span class="o">.</span><span class="n">is_reference</span><span class="p">()</span>  <span class="c1"># False</span>
+</pre></div>
+</div>
+<dl class="attribute">
+<dt id="cern_snow_client.record.RecordField.table_in_link_pattern">
+<code class="descname">table_in_link_pattern</code><em class="property"> = None</em><a class="headerlink" href="#cern_snow_client.record.RecordField.table_in_link_pattern" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.record.RecordField.get_value">
+<code class="descname">get_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordField.get_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordField.get_value" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal value of the field. For choice or reference fields, such as Incident State or
+Functional Element, the internal value might be different from the display value.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.record.RecordField.get_display_value">
+<code class="descname">get_display_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordField.get_display_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordField.get_display_value" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The display value of the field, i.e. what a user sees in the ServiceNow web UI.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.record.RecordField.is_reference">
+<code class="descname">is_reference</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordField.is_reference"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordField.is_reference" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this field is a reference field (reference to another table), False otherwise.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.record.RecordField.get_referenced_table">
+<code class="descname">get_referenced_table</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordField.get_referenced_table"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordField.get_referenced_table" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">If this field is a reference field, the internal name of the table referenced by it.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="cern_snow_client.record.RecordQuery">
+<em class="property">class </em><code class="descclassname">cern_snow_client.record.</code><code class="descname">RecordQuery</code><span class="sig-paren">(</span><em>session</em>, <em>table_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordQuery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A class to perform get queries that returns one or more records.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>session</strong> (<a class="reference internal" href="#cern_snow_client.session.SnowRestSession" title="cern_snow_client.session.SnowRestSession"><em>SnowRestSession</em></a>) – a cern_snow_client.session.SnowRestSession object, which will be used
+to authenticate and communicate with ServiceNow</li>
+<li><strong>table_name</strong> (<em>str</em>) – the name of a ServiceNow table, e.g. ‘incident’, from which to query from</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">SnowClientException</span></code> – if any of the parameters is set incorrectly</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="cern_snow_client.record.RecordQuery.query">
+<code class="descname">query</code><span class="sig-paren">(</span><em>query_filter=None</em>, <em>query_encoded=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordQuery.query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordQuery.query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes the query.
+At least a <cite>query_filter</cite> or <cite>query_encoded</cite> parameter need to be provided.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query_filter</strong> (<em>dict</em>) – a dictionary with field names and values. Only records where the fields have
+the corresponding values will be returned</li>
+<li><strong>query_encoded</strong> (<em>str</em>) – a ServiceNow encoded query.
+See <a class="reference external" href="https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html">https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html</a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A RecordSet object, which is an iterable, and which will return in each iteration
+an instance of the class corresponding to the <code class="docutils literal"><span class="pre">table_name</span></code> provided in the constructor, if available;
+otherwise, an instance of the Record class.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.record.RecordSet" title="cern_snow_client.record.RecordSet">RecordSet</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.record.RecordQuery.get_session">
+<code class="descname">get_session</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordQuery.get_session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordQuery.get_session" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The session that this RecordQuery object uses to communicate with ServiceNow</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#cern_snow_client.session.SnowRestSession" title="cern_snow_client.session.SnowRestSession">SnowRestSession</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.record.RecordQuery.get_table_name">
+<code class="descname">get_table_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordQuery.get_table_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordQuery.get_table_name" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The table_name argument that was used to build this RecordQuery object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="cern_snow_client.record.RecordSet">
+<em class="property">class </em><code class="descclassname">cern_snow_client.record.</code><code class="descname">RecordSet</code><span class="sig-paren">(</span><em>session</em>, <em>result_array</em>, <em>table_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="cern_snow_client.record.RecordSet.next">
+<code class="descname">next</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordSet.next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordSet.next" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">An instance of Record or of a subclass of Record.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#cern_snow_client.record.Record" title="cern_snow_client.record.Record">Record</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.record.RecordSet.get_session">
+<code class="descname">get_session</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordSet.get_session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordSet.get_session" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The session that this RecordSet object uses to communicate with ServiceNow</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#cern_snow_client.session.SnowRestSession" title="cern_snow_client.session.SnowRestSession">SnowRestSession</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.record.RecordSet.get_table_name">
+<code class="descname">get_table_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordSet.get_table_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordSet.get_table_name" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The table_name argument that was used to build this RecordSet object.
+All the records contained inside this RecordSet might belong to this table, or to a child table.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.record.RecordSet.get_record_class">
+<code class="descname">get_record_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordSet.get_record_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordSet.get_record_class" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The Python class (Task, Incident…) that is used to build the objects returned by <code class="docutils literal"><span class="pre">next()</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">type</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cern_snow_client.task">
+<span id="cern-snow-client-task-module"></span><h2>cern_snow_client.task module<a class="headerlink" href="#module-cern_snow_client.task" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cern_snow_client.task.Task">
+<em class="property">class </em><code class="descclassname">cern_snow_client.task.</code><code class="descname">Task</code><span class="sig-paren">(</span><em>session</em>, <em>values={}</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/task.html#Task"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.task.Task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cern_snow_client.record.Record" title="cern_snow_client.record.Record"><code class="xref py py-class docutils literal"><span class="pre">cern_snow_client.record.Record</span></code></a></p>
+<dl class="method">
+<dt id="cern_snow_client.task.Task.add_comment">
+<code class="descname">add_comment</code><span class="sig-paren">(</span><em>comment</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/task.html#Task.add_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.task.Task.add_comment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.task.Task.add_work_note">
+<code class="descname">add_work_note</code><span class="sig-paren">(</span><em>work_note</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/task.html#Task.add_work_note"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.task.Task.add_work_note" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.task.Task.resolve">
+<code class="descname">resolve</code><span class="sig-paren">(</span><em>comment</em>, <em>close_code</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/task.html#Task.resolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.task.Task.resolve" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="cern_snow_client.task.TaskQuery">
+<em class="property">class </em><code class="descclassname">cern_snow_client.task.</code><code class="descname">TaskQuery</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/task.html#TaskQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.task.TaskQuery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cern_snow_client.record.RecordQuery" title="cern_snow_client.record.RecordQuery"><code class="xref py py-class docutils literal"><span class="pre">cern_snow_client.record.RecordQuery</span></code></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-cern_snow_client.incident">
+<span id="cern-snow-client-incident-module"></span><h2>cern_snow_client.incident module<a class="headerlink" href="#module-cern_snow_client.incident" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cern_snow_client.incident.Incident">
+<em class="property">class </em><code class="descclassname">cern_snow_client.incident.</code><code class="descname">Incident</code><span class="sig-paren">(</span><em>session</em>, <em>values={}</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/incident.html#Incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.incident.Incident" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cern_snow_client.task.Task" title="cern_snow_client.task.Task"><code class="xref py py-class docutils literal"><span class="pre">cern_snow_client.task.Task</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="cern_snow_client.incident.IncidentQuery">
+<em class="property">class </em><code class="descclassname">cern_snow_client.incident.</code><code class="descname">IncidentQuery</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/incident.html#IncidentQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.incident.IncidentQuery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cern_snow_client.record.RecordQuery" title="cern_snow_client.record.RecordQuery"><code class="xref py py-class docutils literal"><span class="pre">cern_snow_client.record.RecordQuery</span></code></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-cern_snow_client.request">
+<span id="cern-snow-client-request-module"></span><h2>cern_snow_client.request module<a class="headerlink" href="#module-cern_snow_client.request" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-cern_snow_client.common">
+<span id="cern-snow-client-common-module"></span><h2>cern_snow_client.common module<a class="headerlink" href="#module-cern_snow_client.common" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="cern_snow_client.common.SnowClientException">
+<em class="property">exception </em><code class="descclassname">cern_snow_client.common.</code><code class="descname">SnowClientException</code><a class="reference internal" href="_modules/cern_snow_client/common.html#SnowClientException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.common.SnowClientException" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="cern_snow_client.common.TableClassMapping">
+<em class="property">class </em><code class="descclassname">cern_snow_client.common.</code><code class="descname">TableClassMapping</code><a class="reference internal" href="_modules/cern_snow_client/common.html#TableClassMapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.common.TableClassMapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="classmethod">
+<dt id="cern_snow_client.common.TableClassMapping.get">
+<em class="property">classmethod </em><code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/common.html#TableClassMapping.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.common.TableClassMapping.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
