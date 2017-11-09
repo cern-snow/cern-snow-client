@@ -234,8 +234,7 @@ class Record(object):
             bool: True if the record was updated succesfully, False otherwise.
 
         Raises:
-            SnowClientException: if the current record is missing a session, or a table name, or the current
-                record has no ``sys_id``
+            SnowClientException: if no key is provided and the current record has no ``sys_id``
             SnowRestSessionException : if there is any authentication problem
 
         Examples:
@@ -259,17 +258,9 @@ class Record(object):
             >>> print r.short_description  # will print the incident's short description, since all fields are returned
             >>>                            # by ServiceNow
         """
-        if not self.__session:
-            raise SnowClientException('Record.update: The current Record instance does not have a session. '
-                                      'It cannot communicate with the ServiceNow instance.')
-
-        if not self.__table_name:
-            raise SnowClientException('Record.update: The current Record instance does not have a __table_name. '
-                                      'Please specify one when building it.')
-
-        if not self.sys_id:
+        if not key and not self.sys_id:
             raise SnowClientException('Record.update: The current Record instance does not have a sys_id. '
-                                      'This means that it has not yet been read, or inserted.')
+                                      'Please provide a key to specify which record to update.')
 
         if not self.sys_class_name:
             object.__setattr__(self, 'sys_class_name', self.__table_name)
@@ -315,6 +306,7 @@ class Record(object):
             Might be different from self.sys_class_name.
 
         Examples:
+
             >>> r = Record(s, 'task'), {  # s is a SnowRestSession object
             >>> if r.get(('number', 'INC0426232')):
             >>>     print r.get_table_name  # will print 'task'
@@ -342,6 +334,7 @@ class RecordField(object):
     of ``ServiceNow`` but a value of ``579fb3d90a0a8c08017ac8a1137c8ee6`` : the `sys_id` of that Functional Element.
 
     Examples:
+
         >>> r = Record(s, 'incident')  # s is a SnowRestSession object
         >>> if r.get('c1c535ba85f45540adf94de5b835cd43'):
         >>>
