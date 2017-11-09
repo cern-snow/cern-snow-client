@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>cern_snow_client.exceptions &#8212; cern-snow-client 0.2 documentation</title>
+    <title>cern_snow_client.incident &#8212; cern-snow-client 0.2 documentation</title>
     <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -46,12 +46,26 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <h1>Source code for cern_snow_client.exceptions</h1><div class="highlight"><pre>
+  <h1>Source code for cern_snow_client.incident</h1><div class="highlight"><pre>
 <span></span><span class="c1"># coding: utf-8</span>
 
+<span class="kn">from</span> <span class="nn">record</span> <span class="k">import</span> <span class="n">Record</span>
+<span class="kn">from</span> <span class="nn">record</span> <span class="k">import</span> <span class="n">RecordQuery</span>
+<span class="kn">from</span> <span class="nn">task</span> <span class="k">import</span> <span class="n">Task</span>
 
-<div class="viewcode-block" id="SnowRestSessionException"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.exceptions.SnowRestSessionException">[docs]</a><span class="k">class</span> <span class="nc">SnowRestSessionException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">pass</span></div>
+<span class="n">package_table</span> <span class="o">=</span> <span class="s1">&#39;incident&#39;</span>
+
+
+<div class="viewcode-block" id="Incident"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.incident.Incident">[docs]</a><span class="k">class</span> <span class="nc">Incident</span><span class="p">(</span><span class="n">Task</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="n">Record</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">package_table</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IncidentQuery"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.incident.IncidentQuery">[docs]</a><span class="k">class</span> <span class="nc">IncidentQuery</span><span class="p">(</span><span class="n">RecordQuery</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
+        <span class="n">RecordQuery</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">package_table</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
