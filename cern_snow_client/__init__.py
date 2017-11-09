@@ -9,4 +9,4 @@ Also, other higher level operations have been implemented, such as querying/inse
 or querying/inserting/updating incidents and requests, including adding comments and work notes.
 """
 
-__version__ = "0.2"
+__version__ = "0.3"
