@@ -362,21 +362,23 @@ class RecordField(object):
 
     def __init__(self, value):
 
+        self.__is_reference = False
+        self.__referenced_table = None
+
         if type(value) is str:
             self.__value = value
             self.__display_value = value
-            self.__is_reference = False
-            self.__referenced_table = None
 
         if type(value) is dict:
             if 'value' in value:
                 self.__value = value['value']
             if 'display_value' in value:
                 self.__display_value = value['display_value']
+            else:
+                self.__display_value = value['value']
             if 'link' in value:
                 self.__is_reference = True
                 link = value['link']
-                self.__link = link
 
                 pattern = self.__get_table_in_link_re()
                 match = pattern.search(link)
