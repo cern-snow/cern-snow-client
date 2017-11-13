@@ -145,19 +145,33 @@ class Record(object):
             >>>     print r.short_description
         """
 
-        if not key or not type(key) is str or not (type(key) is tuple and len(key) == 2 and type(key[0] is str)):
+        if not key or (not type(key) is str and not (type(key) is tuple and len(key) == 2 and type(key[0] is str))):
             raise SnowClientException("Record.get: the \"key\" parameter should be a non empty string, "
                                       "or a tuple (field_name, field_value) where field_name is a str")
         # TODO: Finish this method
+        url = '/api/now/v2/table/' + self.__table_name
+        if type(key) is str:
+            url = url + '/' + key
+        elif type(key) is tuple:
+            url = url + '?sysparm_query=' + key[0] + '=' + key[1]
+
         #  build the URL
-
+        result = self.__session.get(url=url, params={'sysparm_display_value' : 'all'})
         #  execute a get
-
+        result = json.loads(result.text)
         #  parse the JSON result
-
+        if type(key) is str:
+            if not 'result' in result:
+                return False
+            result = result['result']
+        elif type(key) is tuple:
+            if not result['result']:
+                return False
+            result = result['result'][0]
         #  set the values inside the current object : __set_values()
-
+        self.__set_values(result)
         #  return True or False
+        return True
 
     def insert(self):
         """
