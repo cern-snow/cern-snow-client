@@ -21,7 +21,10 @@ class TestRecordBasicAuthentication(unittest.TestCase, TestRecordBase):
 
     @classmethod
     def remove_cookie(cls):
-        os.remove('basic_cookie.txt')
+        try:
+            os.remove('basic_cookie.txt')
+        except OSError:
+            pass
 
     def test_get_record(self):
         s = self.make_good_session()

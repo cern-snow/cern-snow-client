@@ -419,6 +419,8 @@ class SnowRestSession(object):
             raise SnowRestSessionException("SnowRestSession.__execute: the operation paramater is mandatory")
         if not url:
             raise SnowRestSessionException("SnowRestSession.__execute: the url paramater is mandatory")
+        if not url.startswith('https://'):
+            url = self.instance + url
 
         if not url.startswith('https://'):
             url = self.instance + url
