@@ -1,6 +1,6 @@
-instance : cerntest.service-now.com
+instance : cerndev.service-now.com
 auth:
   type: basic
-  user: snow_client_basic_tests
+  user: rtat
 session:
   cookie_file: basic_cookie.txt

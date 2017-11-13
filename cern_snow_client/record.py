@@ -53,7 +53,7 @@ class Record(object):
 
         self.__session = session
         self.__table_name = table_name
-        self.__changes = {}
+        self.__changes = values
 
         table_class_mapping = TableClassMapping.get()
         if table_name in table_class_mapping:
@@ -70,14 +70,17 @@ class Record(object):
         self.__initialized = True
 
     def __setattr__(self, key, value):
-        if key == 'sys_id' and self.sys_id:
+        initialized = hasattr(self, '_Record__initialized') and self.__initialized
+
+        if key == 'sys_id' and hasattr(self, 'sys_id') and self.sys_id:
             raise SnowClientException("Record.__setattr__: the field ``sys_id`` is read-only if it already has a value")
-        if key == 'sys_class_name':
+        if initialized and key == 'sys_class_name':
             raise SnowClientException("Record.__setattr__: the field ``sys_class_name`` is read-only")
 
-        value = RecordField(value)
+        if not key.startswith('_Record__'):
+            value = RecordField(value)
 
-        if self.__initialized and not key.startswith('__'):
+        if initialized and not key.startswith('_Record__'):
             self.__changes[key] = value
 
         object.__setattr__(self, key, value)
@@ -85,10 +88,10 @@ class Record(object):
     def __set_values(self, values, initializing=False):
         for key in values:
             # protect private attributes
-            if key.startswith('__'):
+            if key.startswith('_Record__'):
                 continue
             # protect methods
-            elif key in dir(self) and inspect.ismethod(self[key]):
+            elif key in dir(self) and inspect.ismethod(self.__getattribute__(key)):
                 continue
 
             value = RecordField(values[key])
@@ -154,7 +157,7 @@ class Record(object):
             url = url + '/' + key
         elif type(key) is tuple:
             url = url + '?sysparm_query=' + key[0] + '=' + key[1]
-
+        
         #  build the URL
         result = self.__session.get(url=url, params={'sysparm_display_value' : 'all'})
         #  execute a get
@@ -220,16 +223,17 @@ class Record(object):
                                       'You need to instantiate a subclass of ' + class_name + '.')
         # TODO: Finish this method
         #  build the URL
-
+        
         #  execute a post using the changed data : get_changed_fields()
-
+        
         #  parse the JSON result
-
+        
         #  reset the changed data : reset_changed_values()
-
+        
         #  set the values inside the current object: __set_values()
-
+        
         #  return True or False
+        
 
     def update(self, key=None):
         """
@@ -378,11 +382,11 @@ class RecordField(object):
 
         self.__is_reference = False
         self.__referenced_table = None
-
+        
         if type(value) is str:
             self.__value = value
             self.__display_value = value
-
+            
         if type(value) is dict:
             if 'value' in value:
                 self.__value = value['value']
@@ -393,7 +397,7 @@ class RecordField(object):
             if 'link' in value:
                 self.__is_reference = True
                 link = value['link']
-
+                            
                 pattern = self.__get_table_in_link_re()
                 match = pattern.search(link)
                 if match:

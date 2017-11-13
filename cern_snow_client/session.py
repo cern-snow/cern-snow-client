@@ -67,7 +67,7 @@ class SnowRestSession(object):
             raise e
 
         if 'instance' in config_file:
-            self.instance = 'https://' + config_file['instance']
+            self.set_instance(config_file['instance'])
 
         if 'auth' in config_file:
             if 'type' in config_file['auth']:
@@ -113,7 +113,10 @@ class SnowRestSession(object):
         Args:
             instance (str): the ServiceNow instance to use. Example: '\https://cern.service-now.com'
         """
-        self.instance = instance
+        if not instance.startswith('https://'):
+            self.instance = 'https://' + instance
+        else:
+            self.instance = instance
 
     def set_auth_type(self, auth_type):
         """
@@ -397,6 +400,8 @@ class SnowRestSession(object):
             raise SnowRestSessionException("SnowRestSession.__execute: the operation paramater is mandatory")
         if not url:
             raise SnowRestSessionException("SnowRestSession.__execute: the url paramater is mandatory")
+        if not url.startswith('https://'):
+            url = self.instance + url
 
         if not headers:
             headers = {}
