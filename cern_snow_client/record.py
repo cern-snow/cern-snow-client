@@ -346,10 +346,10 @@ class Record(object):
         return self.__can_insert
 
 
-class RecordField(object):
+class RecordField(unicode):
     """
     Represents a ServiceNow table field.
-    While a String field only has a value, other fields may have a different value and display value.
+    While a ServiceNow String field only has a value, other fields may have a different value and display value.
     For example, in an incident which is in state "In progress", the ``incident_state`` field has a display value
     of ``In Progress`` but a value of ``3``.
     Similarly, in an incident with Functional Element=ServiceNow, the Functional Element field will have a display value
@@ -382,41 +382,91 @@ class RecordField(object):
 
     table_in_link_pattern = None
 
-    def __init__(self, value):
+    def __new__(cls, value, encoding='utf-8', errors='strict'):
 
+        if isinstance(value, dict):
+            if 'value' in value:
+                return cls.__build_unicode_from_value(value['value'], encoding, errors)
+            elif 'display_value' in value:
+                return cls.__build_unicode_from_value(value['display_value'], encoding, errors)
+            else:
+                return super(RecordField, cls).__new__(cls)
+        else:
+            return cls.__build_unicode_from_value(value, encoding, errors)
+
+    @classmethod
+    def __build_unicode_from_value(cls, value, encoding, errors):
+        if isinstance(value, unicode):
+            return super(RecordField, cls).__new__(cls, value)
+
+        elif isinstance(value, str):
+            return super(RecordField, cls).__new__(cls, value, encoding, errors)
+
+        else:
+            return super(RecordField, cls).__new__(cls, value)
+
+    def __init__(self, value, encoding='utf-8', errors='strict'):
+
+        self.__value = u''
+        self.__display_value = u''
         self.__is_reference = False
         self.__referenced_table = None
-        
-        if type(value) is str:
+
+        if isinstance(value, unicode):
             self.__value = value
-            self.__display_value = value
-            
-        if type(value) is dict:
+            self.__display_value = self.__value
+
+        elif isinstance(value, str):
+            self.__value = unicode(value, encoding, errors)
+            self.__display_value = self.__value
+
+        elif type(value) is dict:
+
             if 'value' in value:
-                self.__value = value['value']
+                inner_value = value['value']
+                if isinstance(inner_value, unicode):
+                    self.__value = inner_value
+                elif isinstance(inner_value, str):
+                    self.__value = unicode(inner_value, encoding, errors)
+                else:
+                    self.__value = unicode(inner_value)
+
             if 'display_value' in value:
-                self.__display_value = value['display_value']
-            else:
-                self.__display_value = value['value']
+                display_value = value['display_value']
+                if isinstance(display_value, unicode):
+                    self.__display_value = display_value
+                elif isinstance(display_value, str):
+                    self.__display_value = unicode(display_value, encoding, errors)
+                else:
+                    self.__display_value = unicode(display_value)
+
+            if 'value' in value and 'display_value' not in value:
+                self.__display_value = self.__value
+            elif 'display_value' in value and 'value' not in value:
+                self.__value = self.__display_value
+
             if 'link' in value:
-                self.__is_reference = True
                 link = value['link']
-                            
                 pattern = self.__get_table_in_link_re()
                 match = pattern.search(link)
                 if match:
-                    self.__referenced_table = match.group(1)
+                    matched_value = match.group(1)
+                    if matched_value:
+                        if isinstance(matched_value, unicode):
+                            self.__is_reference = True
+                            self.__referenced_table = matched_value
+                        elif isinstance(matched_value, str):
+                            self.__is_reference = True
+                            self.__referenced_table = unicode(matched_value, encoding, errors)
 
-    def __str__(self):
-        return self.__value
-
-    def __int__(self):
-        return int(self.__value)
+        else:
+            self.__value = unicode(value)
+            self.__display_value = self.__value
 
     def get_value(self):
         """
         Returns:
-            str : The internal value of the field. For choice or reference fields, such as Incident State or
+            unicode : The internal value of the field. For choice or reference fields, such as Incident State or
             Functional Element, the internal value might be different from the display value.
         """
         return self.__value
@@ -424,7 +474,7 @@ class RecordField(object):
     def get_display_value(self):
         """
         Returns:
-            str: The display value of the field, i.e. what a user sees in the ServiceNow web UI.
+            unicode: The display value of the field, i.e. what a user sees in the ServiceNow web UI.
         """
         return self.__display_value
 
@@ -438,7 +488,7 @@ class RecordField(object):
     def get_referenced_table(self):
         """
         Returns:
-            str: If this field is a reference field, the internal name of the table referenced by it.
+            unicode: If this field is a reference field, the internal name of the table referenced by it.
         """
         return self.__referenced_table
 
