@@ -53,7 +53,6 @@ class Record(object):
 
         self.__session = session
         self.__table_name = table_name
-        self.__changes = values
 
         table_class_mapping = TableClassMapping.get()
         if table_name in table_class_mapping:
@@ -65,7 +64,10 @@ class Record(object):
         self.sys_class_name = None
 
         if values:
+            self.__changes = values
             self.__set_values(values)
+        else:
+            self.__changes = {}
 
         self.__initialized = True
 
@@ -223,17 +225,19 @@ class Record(object):
                                       'You need to instantiate a subclass of ' + class_name + '.')
         # TODO: Finish this method
         #  build the URL
-        
+        url = '/api/now/v2/table/' + self.__table_name
         #  execute a post using the changed data : get_changed_fields()
-        
+        result = self.__session.post(url=url, data=self.__changes, params={'sysparm_display_value' : 'all'})
         #  parse the JSON result
-        
+        result = json.loads(result.text)
+        self.reset_changed_values()        
+        if not 'result' in result:
+            return False
         #  reset the changed data : reset_changed_values()
-        
         #  set the values inside the current object: __set_values()
-        
+        self.__set_values(result['result'])
         #  return True or False
-        
+        return True
 
     def update(self, key=None):
         """

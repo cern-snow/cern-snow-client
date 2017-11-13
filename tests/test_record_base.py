@@ -15,7 +15,7 @@ class TestRecordBase(TestBase):
         self.assertEquals(str(r.number), 'INC0426232')
         self.assertEquals(str(r.sys_id), 'c1c535ba85f45540adf94de5b835cd43')
         self.assertEquals(str(r.sys_class_name), 'incident')
-
+        
         self.assertEquals(str(r.short_description), 'Test')
         self.assertEquals(r.short_description.get_value(), 'Test')
         self.assertEquals(r.short_description.get_display_value(), 'Test')
@@ -34,8 +34,18 @@ class TestRecordBase(TestBase):
 
     def base_test_insert_record(self, s):
         # TODO: implement this test
-        pass
+        r = Record(s, 'incident', {'short_description' : "New incident", 'u_business_service' : 'e85a3f3b0a0a8c0a006a2912f2f352d1', 'u_functional_element' : '579fb3d90a0a8c08017ac8a1137c8ee6','comments' : "Initial description", 'incident_state'})
+        inserted = r.insert()
+        
+        r2 = Record(s, 'incident')
+        found = r2.get(r.sys_id)
 
+        self.assertTrue(inserted)
+        self.assertTrue(found)
+        
+        
+                
+    
     def base_test_update_record(self, s):
         # TODO: implement this test
         pass
