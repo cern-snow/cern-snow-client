@@ -37,8 +37,7 @@ class TestRecordBase(TestBase):
         inserted = r.insert()
         
         r2 = Record(s, 'incident')
-        found = r2.get(str(r.sys_id))
-        #we need to look at the r.sys_id is not a string
+        found = r2.get(r.sys_id)
 
         self.assertTrue(inserted)
         self.assertTrue(found)
@@ -48,8 +47,6 @@ class TestRecordBase(TestBase):
         self.assertEquals(r.u_business_service, r2.u_business_service)
         self.assertEquals(r.u_functional_element, r2.u_functional_element)
         self.assertEquals(r.comments, r2.comments)
-        
-                
     
     def base_test_update_record(self, s):
         # TODO: implement this test

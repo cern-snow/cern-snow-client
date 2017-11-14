@@ -108,8 +108,8 @@ class Record(object):
         The attributes of the Record will be of the RecordField class, which implements the __str__ method.
 
         Args:
-            key (str or tuple): a str the sys_id (ServiceNow unique identifier) of the record to fetch,
-                or a tuple (field_name, field_value), such as ('number', 'INC987654')
+            key (:obj:`str`, :obj:`unicode` or :obj:`tuple`): a str/unicode value with the sys_id (ServiceNow unique identifier)
+                of the record to fetch; or a tuple (field_name, field_value), such as ('number', 'INC987654')
 
         Returns:
             bool: True if a record was fetched succesfully, False if the record did not exist
@@ -150,26 +150,29 @@ class Record(object):
             >>>     print r.short_description
         """
 
-        if not key or (not type(key) is str and not (type(key) is tuple and len(key) == 2 and type(key[0] is str))):
-            raise SnowClientException("Record.get: the \"key\" parameter should be a non empty string, "
+        is_key_text = isinstance(key, str) or isinstance(key, unicode)
+        is_key_tuple = isinstance(key, tuple) and len(key) == 2 and isinstance(key[0], str)
+
+        if not key or (not is_key_text and not is_key_tuple):
+            raise SnowClientException("Record.get: the \"key\" parameter should be a non empty str/unicode value, "
                                       "or a tuple (field_name, field_value) where field_name is a str")
         # TODO: Finish this method
         url = '/api/now/v2/table/' + self.__table_name
-        if type(key) is str:
+        if is_key_text:
             url = url + '/' + key
-        elif type(key) is tuple:
+        elif is_key_tuple:
             url = url + '?sysparm_query=' + key[0] + '=' + key[1]
         
         #  build the URL
-        result = self.__session.get(url=url, params={'sysparm_display_value' : 'all'})
+        result = self.__session.get(url=url, params={'sysparm_display_value': 'all'})
         #  execute a get
         result = json.loads(result.text)
         #  parse the JSON result
-        if type(key) is str:
+        if is_key_text:
             if 'result' not in result:
                 return False
             result = result['result']
-        elif type(key) is tuple:
+        elif is_key_tuple:
             if not result['result']:
                 return False
             result = result['result'][0]
@@ -228,7 +231,7 @@ class Record(object):
         url = '/api/now/v2/table/' + self.__table_name
         #  execute a post using the changed data : get_changed_fields()
         data = json.dumps(self.__changes)
-        result = self.__session.post(url=url, data=data, params={'sysparm_display_value' : 'all'})
+        result = self.__session.post(url=url, data=data, params={'sysparm_display_value': 'all'})
         #  parse the JSON result
         result = json.loads(result.text)
         self.reset_changed_values()
@@ -249,8 +252,9 @@ class Record(object):
         After updating, the attributes of the Record object will be updated with the resulting values from ServiceNow.
 
         Args:
-            key (:obj:`str` or :obj:`tuple`, optional): a str the sys_id (ServiceNow unique identifier)
-                of the record to update, or a tuple (field_name, field_value), such as ('number', 'INC987654').
+            key (:obj:`str`, :obj:`unicode` or :obj:`tuple`, optional): a str/unicode value with the sys_id
+                (ServiceNow unique identifier) of the record to update; or a tuple (field_name, field_value),
+                such as ('number', 'INC987654').
                 If this parameter is set, it will override the current sys_id of this record object, if any.
 
         Returns:
@@ -281,9 +285,17 @@ class Record(object):
             >>> print r.short_description  # will print the incident's short description, since all fields are returned
             >>>                            # by ServiceNow
         """
+
+        is_key_text = isinstance(key, str) or isinstance(key, unicode)
+        is_key_tuple = isinstance(key, tuple) and len(key) == 2 and isinstance(key[0], str)
+
         if not key and not self.sys_id:
             raise SnowClientException('Record.update: The current Record instance does not have a sys_id. '
                                       'Please provide a key to specify which record to update.')
+
+        elif not self.sys_id and not is_key_text and not is_key_tuple:
+            raise SnowClientException("Record.get: the \"key\" parameter should be a non empty str/unicode value, "
+                                      "or a tuple (field_name, field_value) where field_name is a str")
 
         if not self.sys_class_name:
             object.__setattr__(self, 'sys_class_name', self.__table_name)
