@@ -69,7 +69,10 @@
 
 <div class="viewcode-block" id="TestRecordBasicAuthentication.remove_cookie"><a class="viewcode-back" href="../../tests.html#tests.test_record_basic_auth.TestRecordBasicAuthentication.remove_cookie">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">remove_cookie</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;basic_cookie.txt&#39;</span><span class="p">)</span></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;basic_cookie.txt&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="TestRecordBasicAuthentication.test_get_record"><a class="viewcode-back" href="../../tests.html#tests.test_record_basic_auth.TestRecordBasicAuthentication.test_get_record">[docs]</a>    <span class="k">def</span> <span class="nf">test_get_record</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_good_session</span><span class="p">()</span>

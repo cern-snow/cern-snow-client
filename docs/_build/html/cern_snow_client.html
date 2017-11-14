@@ -1155,8 +1155,8 @@ The attributes of the Record will be of the RecordField class, which implements 
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>key</strong> (<em>str</em><em> or </em><em>tuple</em>) – a str the sys_id (ServiceNow unique identifier) of the record to fetch,
-or a tuple (field_name, field_value), such as (‘number’, ‘INC987654’)</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>key</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>, <code class="xref py py-obj docutils literal"><span class="pre">unicode</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">tuple</span></code>) – a str/unicode value with the sys_id (ServiceNow unique identifier)
+of the record to fetch; or a tuple (field_name, field_value), such as (‘number’, ‘INC987654’)</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">True if a record was fetched succesfully, False if the record did not exist</p>
@@ -1268,8 +1268,9 @@ After updating, the attributes of the Record object will be updated with the res
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>key</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">tuple</span></code>, optional) – a str the sys_id (ServiceNow unique identifier)
-of the record to update, or a tuple (field_name, field_value), such as (‘number’, ‘INC987654’).
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>key</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code>, <code class="xref py py-obj docutils literal"><span class="pre">unicode</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">tuple</span></code>, optional) – a str/unicode value with the sys_id
+(ServiceNow unique identifier) of the record to update; or a tuple (field_name, field_value),
+such as (‘number’, ‘INC987654’).
 If this parameter is set, it will override the current sys_id of this record object, if any.</p>
 </td>
 </tr>
@@ -1390,10 +1391,10 @@ Records can be inserted in the <code class="docutils literal"><span class="pre">
 
 <dl class="class">
 <dt id="cern_snow_client.record.RecordField">
-<em class="property">class </em><code class="descclassname">cern_snow_client.record.</code><code class="descname">RecordField</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordField" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<em class="property">class </em><code class="descclassname">cern_snow_client.record.</code><code class="descname">RecordField</code><span class="sig-paren">(</span><em>value</em>, <em>encoding='utf-8'</em>, <em>errors='strict'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unicode</span></code></p>
 <p>Represents a ServiceNow table field.
-While a String field only has a value, other fields may have a different value and display value.
+While a ServiceNow String field only has a value, other fields may have a different value and display value.
 For example, in an incident which is in state “In progress”, the <code class="docutils literal"><span class="pre">incident_state</span></code> field has a display value
 of <code class="docutils literal"><span class="pre">In</span> <span class="pre">Progress</span></code> but a value of <code class="docutils literal"><span class="pre">3</span></code>.
 Similarly, in an incident with Functional Element=ServiceNow, the Functional Element field will have a display value
@@ -1437,7 +1438,7 @@ of <code class="docutils literal"><span class="pre">ServiceNow</span></code> but
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal value of the field. For choice or reference fields, such as Incident State or
 Functional Element, the internal value might be different from the display value.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">unicode</td>
 </tr>
 </tbody>
 </table>
@@ -1452,7 +1453,7 @@ Functional Element, the internal value might be different from the display value
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The display value of the field, i.e. what a user sees in the ServiceNow web UI.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">unicode</td>
 </tr>
 </tbody>
 </table>
@@ -1482,7 +1483,7 @@ Functional Element, the internal value might be different from the display value
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">If this field is a reference field, the internal name of the table referenced by it.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">unicode</td>
 </tr>
 </tbody>
 </table>

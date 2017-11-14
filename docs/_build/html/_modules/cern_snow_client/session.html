@@ -467,6 +467,8 @@
             <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.__execute: the operation paramater is mandatory&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.__execute: the url paramater is mandatory&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;https://&#39;</span><span class="p">):</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="n">url</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;https://&#39;</span><span class="p">):</span>
             <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="n">url</span>
