@@ -227,7 +227,8 @@ class Record(object):
         #  build the URL
         url = '/api/now/v2/table/' + self.__table_name
         #  execute a post using the changed data : get_changed_fields()
-        result = self.__session.post(url=url, data=self.__changes, params={'sysparm_display_value' : 'all'})
+        data = json.dumps(self.__changes)
+        result = self.__session.post(url=url, data=data, params={'sysparm_display_value' : 'all'})
         #  parse the JSON result
         result = json.loads(result.text)
         self.reset_changed_values()
