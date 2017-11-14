@@ -5,14 +5,21 @@ The library is compatible with Python 2.6+ but not Python 3 yet.
 
 The library code is in the package [**cern_snow_client**](cern_snow_client), and example usage is in [`examples/main.py`](examples/main.py). You should modify the configuration file [`examples/config.yaml`](examples/config.yaml) as well.
 
+## Access to the ServiceNow web service APIs
+To have access to the ServiceNow APIs, please read first [KB0003644: Access to SNow APIs with a Service Account](https://cern.service-now.com/service-portal/article.do?n=KB0003644) and [KB0003521: Retrieving information from ServiceNow using REST and SOAP](https://cern.service-now.com/service-portal/article.do?n=KB0003521).
+
+To request access for your service account, please fill in the form [Request access to SNow API for a Service Account](https://cern.service-now.com/service-portal/report-ticket.do?name=snow-api-access&se=servicenow-application-support).
+
+If for some reason you cannot use a CERN Service Account, please read [KB0003645: Access to SNow APIs with a ServiceNow Local Account](https://cern.service-now.com/service-portal/article.do?n=KB0003645).
+
 ## Motivation
+The motivation for the development of this library is:
 * Providing a common, reliable and documented Python client library for ServiceNow users, both in the IT Department and other CERN departments
 * Reducing implementation and support costs of integrations with ServiceNow at CERN
 
-## How to use it
+## How to use
 
  * First, you need a config file. You can use the included example [`examples/config.yaml`](examples/config.yaml). The plan later on is to have a config file generation tool.
- 
  * You can try the library interactively. Example below:
 
 ``` python
@@ -20,9 +27,9 @@ python
 ...
 >>> from cern_snow_client.session import SnowRestSession
 >>> s = SnowRestSession()
->>> s.load_config_file('config.yaml')
->>> s.get('https://cerntraining.service-now.com/api/now/v2/table/incident?sysparm_query=number=<number>')
->>> s.get_incident('<number>')
+>>> s.load_config_file('config.yaml')  # points to cerntraining.service-now.com
+>>> result = s.get('/api/now/v2/table/incident?sysparm_query=number=<number>')
+>>> print result.text
 ```
 
  * You can see more the documentation for the class `SnowRestSession` in the [snow-client documentation website](https://snow-client-docs.web.cern.ch/snow-client-docs/cern_snow_client.html) and more examples in the file [`examples/main.py`](examples/main.py).
@@ -43,7 +50,7 @@ You can also download a .zip or .tar.gz file from this project.
 
 ## Documentation
 
-Tthe current documentation is in the [snow-client documentation website](https://snow-client-docs.web.cern.ch/snow-client-docs/cern_snow_client.html)
+Tthe current documentation is in the [snow-client documentation website](https://snow-client-docs.web.cern.ch/snow-client-docs/cern_snow_client.html).
 
 ## Unit tests
 
