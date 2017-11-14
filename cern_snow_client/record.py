@@ -230,7 +230,7 @@ class Record(object):
         result = self.__session.post(url=url, data=self.__changes, params={'sysparm_display_value' : 'all'})
         #  parse the JSON result
         result = json.loads(result.text)
-        self.reset_changed_values()        
+        self.reset_changed_values()
         if not 'result' in result:
             return False
         #  reset the changed data : reset_changed_values()

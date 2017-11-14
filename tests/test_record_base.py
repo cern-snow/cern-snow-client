@@ -23,7 +23,7 @@ class TestRecordBase(TestBase):
 
         self.assertEquals(r.u_functional_element, 'ea56fb210a0a8c0a015a591ddbed3676')
         self.assertEquals(r.u_functional_element.get_value(), 'ea56fb210a0a8c0a015a591ddbed3676')
-        self.assertEquals(r.u_functional_element.get_display_value(), u'IT Service Management Support')
+        self.assertEquals(r.u_functional_element.get_display_value(), 'IT Service Management Support')
         self.assertTrue(r.u_functional_element.is_reference())
         self.assertEquals(r.u_functional_element.get_referenced_table(), 'u_cmdb_ci_functional_services')
 
@@ -33,16 +33,21 @@ class TestRecordBase(TestBase):
         self.assertFalse(r.incident_state.is_reference())
 
     def base_test_insert_record(self, s):
-        # # TODO: implement this test
-        # r = Record(s, 'incident', {'short_description' : "New incident", 'u_business_service' : 'e85a3f3b0a0a8c0a006a2912f2f352d1', 'u_functional_element' : '579fb3d90a0a8c08017ac8a1137c8ee6','comments' : "Initial description", 'incident_state'})
-        # inserted = r.insert()
+        r = Record(s, 'incident', {"u_business_service" : "e85a376e0a0a8c0a004ca384c6043fe1", "u_functional_element" : "ea56f72a0a0a8c0a010f2fddfd8e0a68", "assignment_group" : "ea56f7310a0a8c0a001b376fe5aa9cc6", "short_description" : "Incident for presentation by JAMES", "comments" : "HELLO"})
+        inserted = r.insert()
         
-        # r2 = Record(s, 'incident')
-        # found = r2.get(r.sys_id)
+        r2 = Record(s, 'incident')
+        found = r2.get(str(r.sys_id))
+        #we need to look at the r.sys_id is not a string
 
-        # self.assertTrue(inserted)
-        # self.assertTrue(found)
-        pass
+        self.assertTrue(inserted)
+        self.assertTrue(found)
+
+        self.assertEquals(r.number, r2.number)
+        self.assertEquals(r.short_description,r2.short_description)
+        self.assertEquals(r.u_business_service, r2.u_business_service)
+        self.assertEquals(r.u_functional_element, r2.u_functional_element)
+        self.assertEquals(r.comments, r2.comments)
         
                 
     

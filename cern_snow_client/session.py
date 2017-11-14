@@ -657,6 +657,7 @@ class SnowRestSession(object):
             >>>         incident = result['result']
             >>>         print incident['number']  # will print the number of the newly created incident
         """
+        data = json.dumps(data)
         result = self.__operation(operation='post', url=url, headers=headers, params=params, data=data)
         return result
 
