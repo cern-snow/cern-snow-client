@@ -7,7 +7,7 @@ if __name__ == '__main__':
     s.load_config_file('example_config.yaml')
 
     result = s.get(
-        url='https://cerntest.service-now.com/api/now/v2/table/incident?sysparm_query=number=<number>',
+        url='/api/now/v2/table/incident?sysparm_query=number=<number>',
         headers={},
         params={}
     )
@@ -15,7 +15,7 @@ if __name__ == '__main__':
     print json.loads(result.text)
 
     result = s.post(
-        url='https://cerntest.service-now.com/api/now/v2/table/incident',
+        url='/api/now/v2/table/incident',
         headers={},
         data={'field_1': 'value_1', 'field_2': 'value_2'}
     )
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     print json.loads(result.text)
 
     result = s.put(
-        url='https://cerntest.service-now.com/api/now/v2/table/incident/<sys_id>',
+        url='/api/now/v2/table/incident/<sys_id>',
         headers={},
         data={'field_1': 'value_1', 'field_2': 'value_2'}
     )
