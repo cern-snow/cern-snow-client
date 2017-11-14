@@ -545,8 +545,8 @@ class SnowRestSession(object):
         has been configured.
 
         Args:
-            url (str): a relative URL, such as "/api/now/v2/table/incident".
-                An absolute URL such as "https://cerntest.service-now.com/api/now/v2/table/incident" can also
+            url (str): a relative URL, such as ``/api/now/v2/table/incident/c1c535ba85f45540adf94de5b835cd43``.
+                An absolute URL such as ``https://cerntest.service-now.com/api/now/v2/table/incident/c1c535ba85f45540adf94de5b835cd43`` can also
                 be used, but the instance should match with the "instance" parameter in the configuration file,
                 or the value set with the ``.set_instance()`` method.
             headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, the 'Accept' header will be set to
@@ -561,6 +561,33 @@ class SnowRestSession(object):
 
         Raises:
             SnowRestSessionException : if the operation could not be performed due to an authentication issue
+
+        Examples:
+            Getting an incident by sys_id with the ServiceNow REST Table API:
+
+            >>> s = SnowRestSession()
+            >>> s.load_config_file('config.yaml')
+            >>> response = s.get('/api/now/v2/table/incident/c1c535ba85f45540adf94de5b835cd43')
+            >>> if response.status_code == 200:
+            >>>     import json
+            >>>     result = json.loads(response.text)
+            >>>     if 'result' in result:
+            >>>         incident = result['result']  # querying by sys_id returns a single object
+            >>>         print incident['short_description']  # will print "Test" (as a unicode object)
+
+            Getting an incident by number with the ServiceNow REST Table API:
+
+            >>> s = SnowRestSession()
+            >>> s.load_config_file('config.yaml')
+            >>> response = s.get('/api/now/v2/table/incident?sysparm_query=number=INC0426232')
+            >>> if response.status_code == 200:
+            >>>     import json
+            >>>     result = json.loads(response.text)
+            >>>     if 'result' in result:
+            >>>         incident_array = result['result']  # querying via an encoded query returns an array of objects
+            >>>         if len(incident_array) > 0:
+            >>>             incident = incident_array[0]
+            >>>             print incident['short_description']  # will print "Test" (as a unicode object)
         """
         result = self.__operation(operation='get', url=url, headers=headers, params=params)
         return result
@@ -573,14 +600,15 @@ class SnowRestSession(object):
         has been configured.
 
         Args:
-            url (str): a relative URL, such as "/api/now/v2/table/incident".
-                An absolute URL such as "https://cerntest.service-now.com/api/now/v2/table/incident" can also
+            url (str): a relative URL, such as ``/api/now/v2/table/incident``.
+                An absolute URL such as ``https://cerntest.service-now.com/api/now/v2/table/incident`` can also
                 be used, but the instance should match with the "instance" parameter in the configuration file,
                 or the value set with the ``.set_instance()`` method.
-            headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, the 'Accept' header will be set to
-                'application/json', and 'Content' will be set to 'application/json'
+            headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, the 'Accept' header
+                will be set to 'application/json', and 'Content' will be set to 'application/json'
             params (:obj:`dict`, optional): any additional URL parameters to be be passed
-            data (object): the data that will be submitted via POST. For example, a dictionary of keys and values.
+            data (str): the data that will be submitted via POST. Typically, a dictionary
+                of keys and values, turned into a string with import json; json.dumps()
 
         Returns:
             requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
@@ -590,6 +618,27 @@ class SnowRestSession(object):
 
         Raises:
             SnowRestSessionException : if the operation could not be performed due to an authentication issue
+
+        Examples:
+            Inserting an incident with the ServiceNow REST Table API:
+
+            >>> s = SnowRestSession()
+            >>> s.load_config_file('config.yaml')
+            >>> incident_attributes = {
+            >>>    'short_description' : "New incident",
+            >>>    'u_business_service' : 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
+            >>>    'u_functional_element' : '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
+            >>>    'comments' : "Initial description",
+            >>>    'incident_state' : '2'  # initial state : Assigned
+            >>> }
+            >>> import json
+            >>> data = json.dumps(incident_attributes)
+            >>> response = s.post('/api/now/v2/table/incident', data=data)
+            >>> if response.status_code == 201:
+            >>>     result = json.loads(response.text)
+            >>>     if 'result' in result:
+            >>>         incident = result['result']
+            >>>         print incident['number']  # will print the number of the newly created incident
         """
         result = self.__operation(operation='post', url=url, headers=headers, params=params, data=data)
         return result
@@ -602,14 +651,15 @@ class SnowRestSession(object):
         has been configured.
 
         Args:
-            url (str): a relative URL, such as "/api/now/v2/table/incident".
-                An absolute URL such as "https://cerntest.service-now.com/api/now/v2/table/incident" can also
+            url (str): a relative URL, such as ``/api/now/v2/table/incident/c1c535ba85f45540adf94de5b835cd43``.
+                An absolute URL such as ``https://cerntest.service-now.com/api/now/v2/table/incident/c1c535ba85f45540adf94de5b835cd43`` can also
                 be used, but the instance should match with the "instance" parameter in the configuration file,
                 or the value set with the ``.set_instance()`` method.
             headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, the 'Accept' header will be set to
                 'application/json', and 'Content' will be set to 'application/json'
             params (:obj:`dict`, optional): any additional URL parameters to be be passed
-            data (object): the data that will be submitted via PUT. For example, a dictionary of keys and values.
+            data (str): the data that will be submitted via PUT. Typically, a dictionary
+                of keys and values, turned into a string with import json; json.dumps()
 
         Returns:
             requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
@@ -619,6 +669,24 @@ class SnowRestSession(object):
 
         Raises:
             SnowRestSessionException : if the operation could not be performed due to an authentication issue
+
+        Examples:
+            Updating an incident with the ServiceNow REST Table API:
+
+            >>> s = SnowRestSession()
+            >>> s.load_config_file('config.yaml')
+            >>> incident_attributes_to_update = {
+            >>>    'watch_list' : 'david.martin.clavo@cern.ch'  # will completely replace the previous value
+            >>> }
+            >>> import json
+            >>> data = json.dumps(incident_attributes_to_update)
+            >>> response = s.put('/api/now/v2/table/incident/ca37ed334f56830015d3bc511310c7a8', data=data)
+            >>> if response.status_code == 200:
+            >>>     result = json.loads(response.text)
+            >>>     if 'result' in result:
+            >>>         incident = result['result']
+            >>>         print incident['number']  # will print the number of the updated incident
+            >>>         print incident['watch_list']  # will print the new value of the watch_list field
         """
         result = self.__operation(operation='put', url=url, headers=headers, params=params, data=data)
         return result
