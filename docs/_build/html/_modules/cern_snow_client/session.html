@@ -112,7 +112,7 @@
             <span class="k">raise</span> <span class="n">e</span>
 
         <span class="k">if</span> <span class="s1">&#39;instance&#39;</span> <span class="ow">in</span> <span class="n">config_file</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="s1">&#39;https://&#39;</span> <span class="o">+</span> <span class="n">config_file</span><span class="p">[</span><span class="s1">&#39;instance&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_instance</span><span class="p">(</span><span class="n">config_file</span><span class="p">[</span><span class="s1">&#39;instance&#39;</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="s1">&#39;auth&#39;</span> <span class="ow">in</span> <span class="n">config_file</span><span class="p">:</span>
             <span class="k">if</span> <span class="s1">&#39;type&#39;</span> <span class="ow">in</span> <span class="n">config_file</span><span class="p">[</span><span class="s1">&#39;auth&#39;</span><span class="p">]:</span>
@@ -156,9 +156,18 @@
 <div class="viewcode-block" id="SnowRestSession.set_instance"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.set_instance">[docs]</a>    <span class="k">def</span> <span class="nf">set_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
-<span class="sd">            instance (str): the ServiceNow instance to use. Example: &#39;\https://cern.service-now.com&#39;</span>
+<span class="sd">            instance (str): the ServiceNow instance to use. It is optional to prefix with &quot;https://&quot;.</span>
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; s = SnowRestSession()</span>
+<span class="sd">            &gt;&gt;&gt; s.set_instance(&quot;cern.service-now.com&quot;)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; s2 = SnowRestSession()</span>
+<span class="sd">            &gt;&gt;&gt; s2.set_instance(&quot;https://cerntest.service-now.com&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="n">instance</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">instance</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;https://&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="s1">&#39;https://&#39;</span> <span class="o">+</span> <span class="n">instance</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="n">instance</span></div>
 
 <div class="viewcode-block" id="SnowRestSession.set_auth_type"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.set_auth_type">[docs]</a>    <span class="k">def</span> <span class="nf">set_auth_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auth_type</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -423,7 +432,10 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            operation (str): either &#39;get&#39;, &#39;post&#39; or &#39;put&#39;</span>
-<span class="sd">            url (str): an absolute URL</span>
+<span class="sd">            url (str): a relative URL, such as &quot;/api/now/v2/table/incident&quot;.</span>
+<span class="sd">                An absolute URL such as &quot;https://cerntest.service-now.com/api/now/v2/table/incident&quot; can also</span>
+<span class="sd">                be used, but the instance should match with the &quot;instance&quot; parameter in the configuration file,</span>
+<span class="sd">                or the value set with the ``.set_instance()`` method.</span>
 <span class="sd">            headers (:obj:`dict`, optional): any additional headers to be be passed. This method will add</span>
 <span class="sd">                Accept:application/json and Content-Type:application/json if not specified.</span>
 <span class="sd">                It will also add the Authorization header if the authentication type is &#39;sso_auth&#39;,</span>
@@ -442,6 +454,9 @@
             <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.__execute: the operation paramater is mandatory&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.__execute: the url paramater is mandatory&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;https://&#39;</span><span class="p">):</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="n">url</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">headers</span><span class="p">:</span>
             <span class="n">headers</span> <span class="o">=</span> <span class="p">{}</span>
@@ -470,7 +485,10 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            operation (str): either &#39;get&#39;, &#39;post&#39; or &#39;put&#39;</span>
-<span class="sd">            url (str): an absolute URL</span>
+<span class="sd">            url (str): a relative URL, such as &quot;/api/now/v2/table/incident&quot;.</span>
+<span class="sd">                An absolute URL such as &quot;https://cerntest.service-now.com/api/now/v2/table/incident&quot; can also</span>
+<span class="sd">                be used, but the instance should match with the &quot;instance&quot; parameter in the configuration file,</span>
+<span class="sd">                or the value set with the ``.set_instance()`` method.</span>
 <span class="sd">            headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, some headers will be set by</span>
 <span class="sd">                default (see __execute method)</span>
 <span class="sd">            params (:obj:`dict`, optional): any additional URL parameters to be be passed</span>
@@ -575,7 +593,10 @@
 <span class="sd">        has been configured.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            url (str): an absolute URL</span>
+<span class="sd">            url (str): a relative URL, such as ``/api/now/v2/table/incident/c1c535ba85f45540adf94de5b835cd43``.</span>
+<span class="sd">                An absolute URL such as ``https://cerntest.service-now.com/api/now/v2/table/incident/c1c535ba85f45540adf94de5b835cd43`` can also</span>
+<span class="sd">                be used, but the instance should match with the &quot;instance&quot; parameter in the configuration file,</span>
+<span class="sd">                or the value set with the ``.set_instance()`` method.</span>
 <span class="sd">            headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, the &#39;Accept&#39; header will be set to</span>
 <span class="sd">                &#39;application/json&#39;</span>
 <span class="sd">            params (:obj:`dict`, optional): any additional URL parameters to be be passed</span>
@@ -588,6 +609,33 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            SnowRestSessionException : if the operation could not be performed due to an authentication issue</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            Getting an incident by sys_id with the ServiceNow REST Table API:</span>
+
+<span class="sd">            &gt;&gt;&gt; s = SnowRestSession()</span>
+<span class="sd">            &gt;&gt;&gt; s.load_config_file(&#39;config.yaml&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; response = s.get(&#39;/api/now/v2/table/incident/c1c535ba85f45540adf94de5b835cd43&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; if response.status_code == 200:</span>
+<span class="sd">            &gt;&gt;&gt;     import json</span>
+<span class="sd">            &gt;&gt;&gt;     result = json.loads(response.text)</span>
+<span class="sd">            &gt;&gt;&gt;     if &#39;result&#39; in result:</span>
+<span class="sd">            &gt;&gt;&gt;         incident = result[&#39;result&#39;]  # querying by sys_id returns a single object</span>
+<span class="sd">            &gt;&gt;&gt;         print incident[&#39;short_description&#39;]  # will print &quot;Test&quot; (as a unicode object)</span>
+
+<span class="sd">            Getting an incident by number with the ServiceNow REST Table API:</span>
+
+<span class="sd">            &gt;&gt;&gt; s = SnowRestSession()</span>
+<span class="sd">            &gt;&gt;&gt; s.load_config_file(&#39;config.yaml&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; response = s.get(&#39;/api/now/v2/table/incident?sysparm_query=number=INC0426232&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; if response.status_code == 200:</span>
+<span class="sd">            &gt;&gt;&gt;     import json</span>
+<span class="sd">            &gt;&gt;&gt;     result = json.loads(response.text)</span>
+<span class="sd">            &gt;&gt;&gt;     if &#39;result&#39; in result:</span>
+<span class="sd">            &gt;&gt;&gt;         incident_array = result[&#39;result&#39;]  # querying via an encoded query returns an array of objects</span>
+<span class="sd">            &gt;&gt;&gt;         if len(incident_array) &gt; 0:</span>
+<span class="sd">            &gt;&gt;&gt;             incident = incident_array[0]</span>
+<span class="sd">            &gt;&gt;&gt;             print incident[&#39;short_description&#39;]  # will print &quot;Test&quot; (as a unicode object)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__operation</span><span class="p">(</span><span class="n">operation</span><span class="o">=</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span></div>
@@ -600,11 +648,15 @@
 <span class="sd">        has been configured.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            url (str): an absolute URL</span>
-<span class="sd">            headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, the &#39;Accept&#39; header will be set to</span>
-<span class="sd">                &#39;application/json&#39;, and &#39;Content&#39; will be set to &#39;application/json&#39;</span>
+<span class="sd">            url (str): a relative URL, such as ``/api/now/v2/table/incident``.</span>
+<span class="sd">                An absolute URL such as ``https://cerntest.service-now.com/api/now/v2/table/incident`` can also</span>
+<span class="sd">                be used, but the instance should match with the &quot;instance&quot; parameter in the configuration file,</span>
+<span class="sd">                or the value set with the ``.set_instance()`` method.</span>
+<span class="sd">            headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, the &#39;Accept&#39; header</span>
+<span class="sd">                will be set to &#39;application/json&#39;, and &#39;Content&#39; will be set to &#39;application/json&#39;</span>
 <span class="sd">            params (:obj:`dict`, optional): any additional URL parameters to be be passed</span>
-<span class="sd">            data (object): the data that will be submitted via POST. For example, a dictionary of keys and values.</span>
+<span class="sd">            data (str): the data that will be submitted via POST. Typically, a dictionary</span>
+<span class="sd">                of keys and values, turned into a string with import json; json.dumps()</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
@@ -614,6 +666,27 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            SnowRestSessionException : if the operation could not be performed due to an authentication issue</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            Inserting an incident with the ServiceNow REST Table API:</span>
+
+<span class="sd">            &gt;&gt;&gt; s = SnowRestSession()</span>
+<span class="sd">            &gt;&gt;&gt; s.load_config_file(&#39;config.yaml&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; incident_attributes = {</span>
+<span class="sd">            &gt;&gt;&gt;    &#39;short_description&#39; : &quot;New incident&quot;,</span>
+<span class="sd">            &gt;&gt;&gt;    &#39;u_business_service&#39; : &#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;,  # Service Element &quot;ServiceNow&quot;</span>
+<span class="sd">            &gt;&gt;&gt;    &#39;u_functional_element&#39; : &#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;,  # Functional Element &quot;ServiceNow&quot;</span>
+<span class="sd">            &gt;&gt;&gt;    &#39;comments&#39; : &quot;Initial description&quot;,</span>
+<span class="sd">            &gt;&gt;&gt;    &#39;incident_state&#39; : &#39;2&#39;  # initial state : Assigned</span>
+<span class="sd">            &gt;&gt;&gt; }</span>
+<span class="sd">            &gt;&gt;&gt; import json</span>
+<span class="sd">            &gt;&gt;&gt; data = json.dumps(incident_attributes)</span>
+<span class="sd">            &gt;&gt;&gt; response = s.post(&#39;/api/now/v2/table/incident&#39;, data=data)</span>
+<span class="sd">            &gt;&gt;&gt; if response.status_code == 201:</span>
+<span class="sd">            &gt;&gt;&gt;     result = json.loads(response.text)</span>
+<span class="sd">            &gt;&gt;&gt;     if &#39;result&#39; in result:</span>
+<span class="sd">            &gt;&gt;&gt;         incident = result[&#39;result&#39;]</span>
+<span class="sd">            &gt;&gt;&gt;         print incident[&#39;number&#39;]  # will print the number of the newly created incident</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__operation</span><span class="p">(</span><span class="n">operation</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span></div>
@@ -626,11 +699,15 @@
 <span class="sd">        has been configured.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            url (str): an absolute URL</span>
+<span class="sd">            url (str): a relative URL, such as ``/api/now/v2/table/incident/c1c535ba85f45540adf94de5b835cd43``.</span>
+<span class="sd">                An absolute URL such as ``https://cerntest.service-now.com/api/now/v2/table/incident/c1c535ba85f45540adf94de5b835cd43`` can also</span>
+<span class="sd">                be used, but the instance should match with the &quot;instance&quot; parameter in the configuration file,</span>
+<span class="sd">                or the value set with the ``.set_instance()`` method.</span>
 <span class="sd">            headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, the &#39;Accept&#39; header will be set to</span>
 <span class="sd">                &#39;application/json&#39;, and &#39;Content&#39; will be set to &#39;application/json&#39;</span>
 <span class="sd">            params (:obj:`dict`, optional): any additional URL parameters to be be passed</span>
-<span class="sd">            data (object): the data that will be submitted via PUT. For example, a dictionary of keys and values.</span>
+<span class="sd">            data (str): the data that will be submitted via PUT. Typically, a dictionary</span>
+<span class="sd">                of keys and values, turned into a string with import json; json.dumps()</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
@@ -640,6 +717,24 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            SnowRestSessionException : if the operation could not be performed due to an authentication issue</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            Updating an incident with the ServiceNow REST Table API:</span>
+
+<span class="sd">            &gt;&gt;&gt; s = SnowRestSession()</span>
+<span class="sd">            &gt;&gt;&gt; s.load_config_file(&#39;config.yaml&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; incident_attributes_to_update = {</span>
+<span class="sd">            &gt;&gt;&gt;    &#39;watch_list&#39; : &#39;david.martin.clavo@cern.ch&#39;  # will completely replace the previous value</span>
+<span class="sd">            &gt;&gt;&gt; }</span>
+<span class="sd">            &gt;&gt;&gt; import json</span>
+<span class="sd">            &gt;&gt;&gt; data = json.dumps(incident_attributes_to_update)</span>
+<span class="sd">            &gt;&gt;&gt; response = s.put(&#39;/api/now/v2/table/incident/ca37ed334f56830015d3bc511310c7a8&#39;, data=data)</span>
+<span class="sd">            &gt;&gt;&gt; if response.status_code == 200:</span>
+<span class="sd">            &gt;&gt;&gt;     result = json.loads(response.text)</span>
+<span class="sd">            &gt;&gt;&gt;     if &#39;result&#39; in result:</span>
+<span class="sd">            &gt;&gt;&gt;         incident = result[&#39;result&#39;]</span>
+<span class="sd">            &gt;&gt;&gt;         print incident[&#39;number&#39;]  # will print the number of the updated incident</span>
+<span class="sd">            &gt;&gt;&gt;         print incident[&#39;watch_list&#39;]  # will print the new value of the watch_list field</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__operation</span><span class="p">(</span><span class="n">operation</span><span class="o">=</span><span class="s1">&#39;put&#39;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span></div>

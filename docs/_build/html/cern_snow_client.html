@@ -97,10 +97,18 @@ in the file.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>instance</strong> (<em>str</em>) – the ServiceNow instance to use. Example: ‘https://cern.service-now.com’</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>instance</strong> (<em>str</em>) – the ServiceNow instance to use. It is optional to prefix with “<a class="reference external" href="https://">https://</a>”.</td>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">SnowRestSession</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">set_instance</span><span class="p">(</span><span class="s2">&quot;cern.service-now.com&quot;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s2</span> <span class="o">=</span> <span class="n">SnowRestSession</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s2</span><span class="o">.</span><span class="n">set_instance</span><span class="p">(</span><span class="s2">&quot;https://cerntest.service-now.com&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -270,7 +278,10 @@ has been configured.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>url</strong> (<em>str</em>) – an absolute URL</li>
+<li><strong>url</strong> (<em>str</em>) – a relative URL, such as <code class="docutils literal"><span class="pre">/api/now/v2/table/incident/c1c535ba85f45540adf94de5b835cd43</span></code>.
+An absolute URL such as <code class="docutils literal"><span class="pre">https://cerntest.service-now.com/api/now/v2/table/incident/c1c535ba85f45540adf94de5b835cd43</span></code> can also
+be used, but the instance should match with the “instance” parameter in the configuration file,
+or the value set with the <code class="docutils literal"><span class="pre">.set_instance()</span></code> method.</li>
 <li><strong>headers</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – any additional headers to be be passed. If not set, the ‘Accept’ header will be set to
 ‘application/json’</li>
 <li><strong>params</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – any additional URL parameters to be be passed</li>
@@ -291,6 +302,33 @@ or headers in the response.</p>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Examples</p>
+<p>Getting an incident by sys_id with the ServiceNow REST Table API:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">SnowRestSession</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">load_config_file</span><span class="p">(</span><span class="s1">&#39;config.yaml&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">response</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/api/now/v2/table/incident/c1c535ba85f45540adf94de5b835cd43&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="kn">import</span> <span class="nn">json</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">result</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="s1">&#39;result&#39;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">incident</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>  <span class="c1"># querying by sys_id returns a single object</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span> <span class="n">incident</span><span class="p">[</span><span class="s1">&#39;short_description&#39;</span><span class="p">]</span>  <span class="c1"># will print &quot;Test&quot; (as a unicode object)</span>
+</pre></div>
+</div>
+<p>Getting an incident by number with the ServiceNow REST Table API:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">SnowRestSession</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">load_config_file</span><span class="p">(</span><span class="s1">&#39;config.yaml&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">response</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;/api/now/v2/table/incident?sysparm_query=number=INC0426232&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="kn">import</span> <span class="nn">json</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">result</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="s1">&#39;result&#39;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">incident_array</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>  <span class="c1"># querying via an encoded query returns an array of objects</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">incident_array</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="n">incident</span> <span class="o">=</span> <span class="n">incident_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="nb">print</span> <span class="n">incident</span><span class="p">[</span><span class="s1">&#39;short_description&#39;</span><span class="p">]</span>  <span class="c1"># will print &quot;Test&quot; (as a unicode object)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -305,11 +343,15 @@ has been configured.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>url</strong> (<em>str</em>) – an absolute URL</li>
-<li><strong>headers</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – any additional headers to be be passed. If not set, the ‘Accept’ header will be set to
-‘application/json’, and ‘Content’ will be set to ‘application/json’</li>
+<li><strong>url</strong> (<em>str</em>) – a relative URL, such as <code class="docutils literal"><span class="pre">/api/now/v2/table/incident</span></code>.
+An absolute URL such as <code class="docutils literal"><span class="pre">https://cerntest.service-now.com/api/now/v2/table/incident</span></code> can also
+be used, but the instance should match with the “instance” parameter in the configuration file,
+or the value set with the <code class="docutils literal"><span class="pre">.set_instance()</span></code> method.</li>
+<li><strong>headers</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – any additional headers to be be passed. If not set, the ‘Accept’ header
+will be set to ‘application/json’, and ‘Content’ will be set to ‘application/json’</li>
 <li><strong>params</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – any additional URL parameters to be be passed</li>
-<li><strong>data</strong> (<em>object</em>) – the data that will be submitted via POST. For example, a dictionary of keys and values.</li>
+<li><strong>data</strong> (<em>str</em>) – the data that will be submitted via POST. Typically, a dictionary
+of keys and values, turned into a string with import json; json.dumps()</li>
 </ul>
 </td>
 </tr>
@@ -327,6 +369,27 @@ HTTP status codes or headers in the response.</p>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Examples</p>
+<p>Inserting an incident with the ServiceNow REST Table API:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">SnowRestSession</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">load_config_file</span><span class="p">(</span><span class="s1">&#39;config.yaml&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">incident_attributes</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;short_description&#39;</span> <span class="p">:</span> <span class="s2">&quot;New incident&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;u_business_service&#39;</span> <span class="p">:</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">,</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;u_functional_element&#39;</span> <span class="p">:</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">,</span>  <span class="c1"># Functional Element &quot;ServiceNow&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;comments&#39;</span> <span class="p">:</span> <span class="s2">&quot;Initial description&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;incident_state&#39;</span> <span class="p">:</span> <span class="s1">&#39;2&#39;</span>  <span class="c1"># initial state : Assigned</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">json</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">incident_attributes</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">response</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/api/now/v2/table/incident&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">201</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">result</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="s1">&#39;result&#39;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">incident</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span> <span class="n">incident</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">]</span>  <span class="c1"># will print the number of the newly created incident</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -341,11 +404,15 @@ has been configured.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>url</strong> (<em>str</em>) – an absolute URL</li>
+<li><strong>url</strong> (<em>str</em>) – a relative URL, such as <code class="docutils literal"><span class="pre">/api/now/v2/table/incident/c1c535ba85f45540adf94de5b835cd43</span></code>.
+An absolute URL such as <code class="docutils literal"><span class="pre">https://cerntest.service-now.com/api/now/v2/table/incident/c1c535ba85f45540adf94de5b835cd43</span></code> can also
+be used, but the instance should match with the “instance” parameter in the configuration file,
+or the value set with the <code class="docutils literal"><span class="pre">.set_instance()</span></code> method.</li>
 <li><strong>headers</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – any additional headers to be be passed. If not set, the ‘Accept’ header will be set to
 ‘application/json’, and ‘Content’ will be set to ‘application/json’</li>
 <li><strong>params</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – any additional URL parameters to be be passed</li>
-<li><strong>data</strong> (<em>object</em>) – the data that will be submitted via PUT. For example, a dictionary of keys and values.</li>
+<li><strong>data</strong> (<em>str</em>) – the data that will be submitted via PUT. Typically, a dictionary
+of keys and values, turned into a string with import json; json.dumps()</li>
 </ul>
 </td>
 </tr>
@@ -363,6 +430,24 @@ ServiceNow may also set various HTTP status codes or headers in the response.</p
 </tr>
 </tbody>
 </table>
+<p class="rubric">Examples</p>
+<p>Updating an incident with the ServiceNow REST Table API:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">SnowRestSession</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">load_config_file</span><span class="p">(</span><span class="s1">&#39;config.yaml&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">incident_attributes_to_update</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;watch_list&#39;</span> <span class="p">:</span> <span class="s1">&#39;david.martin.clavo@cern.ch&#39;</span>  <span class="c1"># will completely replace the previous value</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">json</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">incident_attributes_to_update</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">response</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s1">&#39;/api/now/v2/table/incident/ca37ed334f56830015d3bc511310c7a8&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">result</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">if</span> <span class="s1">&#39;result&#39;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">incident</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span> <span class="n">incident</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">]</span>  <span class="c1"># will print the number of the updated incident</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span> <span class="n">incident</span><span class="p">[</span><span class="s1">&#39;watch_list&#39;</span><span class="p">]</span>  <span class="c1"># will print the new value of the watch_list field</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
