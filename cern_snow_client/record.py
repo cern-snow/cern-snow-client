@@ -166,7 +166,7 @@ class Record(object):
         result = json.loads(result.text)
         #  parse the JSON result
         if type(key) is str:
-            if not 'result' in result:
+            if 'result' not in result:
                 return False
             result = result['result']
         elif type(key) is tuple:
@@ -232,7 +232,7 @@ class Record(object):
         #  parse the JSON result
         result = json.loads(result.text)
         self.reset_changed_values()
-        if not 'result' in result:
+        if 'result' not in result:
             return False
         #  reset the changed data : reset_changed_values()
         #  set the values inside the current object: __set_values()
