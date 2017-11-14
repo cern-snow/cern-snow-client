@@ -64,7 +64,7 @@ class SnowRestSession(object):
             raise e
 
         if 'instance' in config_file:
-            self.instance = 'https://' + config_file['instance']
+            self.set_instance(config_file['instance'])
 
         if 'auth' in config_file:
             if 'type' in config_file['auth']:
@@ -108,9 +108,18 @@ class SnowRestSession(object):
     def set_instance(self, instance):
         """
         Args:
-            instance (str): the ServiceNow instance to use. Example: '\https://cern.service-now.com'
+            instance (str): the ServiceNow instance to use. It is optional to prefix with "https://".
+        Examples:
+            >>> s = SnowRestSession()
+            >>> s.set_instance("cern.service-now.com")
+            >>>
+            >>> s2 = SnowRestSession()
+            >>> s2.set_instance("https://cerntest.service-now.com")
         """
-        self.instance = instance
+        if not instance.startswith('https://'):
+            self.instance = 'https://' + instance
+        else:
+            self.instance = instance
 
     def set_auth_type(self, auth_type):
         """
@@ -375,7 +384,10 @@ class SnowRestSession(object):
 
         Args:
             operation (str): either 'get', 'post' or 'put'
-            url (str): an absolute URL
+            url (str): a relative URL, such as "/api/now/v2/table/incident".
+                An absolute URL such as "https://cerntest.service-now.com/api/now/v2/table/incident" can also
+                be used, but the instance should match with the "instance" parameter in the configuration file,
+                or the value set with the ``.set_instance()`` method.
             headers (:obj:`dict`, optional): any additional headers to be be passed. This method will add
                 Accept:application/json and Content-Type:application/json if not specified.
                 It will also add the Authorization header if the authentication type is 'sso_auth',
@@ -394,6 +406,9 @@ class SnowRestSession(object):
             raise SnowRestSessionException("SnowRestSession.__execute: the operation paramater is mandatory")
         if not url:
             raise SnowRestSessionException("SnowRestSession.__execute: the url paramater is mandatory")
+
+        if not url.startswith('https://'):
+            url = self.instance + url
 
         if not headers:
             headers = {}
@@ -422,7 +437,10 @@ class SnowRestSession(object):
 
         Args:
             operation (str): either 'get', 'post' or 'put'
-            url (str): an absolute URL
+            url (str): a relative URL, such as "/api/now/v2/table/incident".
+                An absolute URL such as "https://cerntest.service-now.com/api/now/v2/table/incident" can also
+                be used, but the instance should match with the "instance" parameter in the configuration file,
+                or the value set with the ``.set_instance()`` method.
             headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, some headers will be set by
                 default (see __execute method)
             params (:obj:`dict`, optional): any additional URL parameters to be be passed
@@ -527,7 +545,10 @@ class SnowRestSession(object):
         has been configured.
 
         Args:
-            url (str): an absolute URL
+            url (str): a relative URL, such as "/api/now/v2/table/incident".
+                An absolute URL such as "https://cerntest.service-now.com/api/now/v2/table/incident" can also
+                be used, but the instance should match with the "instance" parameter in the configuration file,
+                or the value set with the ``.set_instance()`` method.
             headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, the 'Accept' header will be set to
                 'application/json'
             params (:obj:`dict`, optional): any additional URL parameters to be be passed
@@ -552,7 +573,10 @@ class SnowRestSession(object):
         has been configured.
 
         Args:
-            url (str): an absolute URL
+            url (str): a relative URL, such as "/api/now/v2/table/incident".
+                An absolute URL such as "https://cerntest.service-now.com/api/now/v2/table/incident" can also
+                be used, but the instance should match with the "instance" parameter in the configuration file,
+                or the value set with the ``.set_instance()`` method.
             headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, the 'Accept' header will be set to
                 'application/json', and 'Content' will be set to 'application/json'
             params (:obj:`dict`, optional): any additional URL parameters to be be passed
@@ -578,7 +602,10 @@ class SnowRestSession(object):
         has been configured.
 
         Args:
-            url (str): an absolute URL
+            url (str): a relative URL, such as "/api/now/v2/table/incident".
+                An absolute URL such as "https://cerntest.service-now.com/api/now/v2/table/incident" can also
+                be used, but the instance should match with the "instance" parameter in the configuration file,
+                or the value set with the ``.set_instance()`` method.
             headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, the 'Accept' header will be set to
                 'application/json', and 'Content' will be set to 'application/json'
             params (:obj:`dict`, optional): any additional URL parameters to be be passed
