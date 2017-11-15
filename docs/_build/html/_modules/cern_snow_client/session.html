@@ -741,6 +741,8 @@
 
 <div class="viewcode-block" id="SnowRestSession.get_record"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.get_record">[docs]</a>    <span class="k">def</span> <span class="nf">get_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        ** Will be deprecated soon, replaced by the `get` method of the `Record` class **</span>
+
 <span class="sd">        Executes a GET operation in order to read a single record from a ServiceNow table.</span>
 <span class="sd">        The authentication method, and session cookie / OAuth tokens persistance will depend on how the session</span>
 <span class="sd">        has been configured.</span>
@@ -781,13 +783,33 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SnowRestSession.get_records"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.get_records">[docs]</a>    <span class="k">def</span> <span class="nf">get_records</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">query_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">query_encoded</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="SnowRestSession.get_records"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.get_records">[docs]</a>    <span class="k">def</span> <span class="nf">get_records</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">query_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">query_encoded</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The Method get_records use the fonction get for many requests</span>
-<span class="sd">        :param table:</span>
-<span class="sd">        :param query_filter:</span>
-<span class="sd">        :param query_encoded:</span>
-<span class="sd">        :return:object_get</span>
+<span class="sd">        ** Will be deprecated soon, replaced by the `RecordQuery` class **</span>
+
+<span class="sd">        Executes a GET operation in order to read one or many records from a ServiceNow table.</span>
+<span class="sd">        The authentication method, and session cookie / OAuth tokens persistance will depend on how the session</span>
+<span class="sd">        has been configured.</span>
+
+<span class="sd">        At least a `query_filter` or `query_encoded` parameter need to be provided.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.</span>
+<span class="sd">            query_filter (dict): a dictionary ``{&#39;field_1&#39;: &#39;value_1&#39;, &#39;field_2&#39;: &#39;value_2&#39;}``</span>
+<span class="sd">                which will be used to apply a filter to the query. For example,</span>
+<span class="sd">                ``{&#39;active&#39;: &#39;true&#39;, &#39;u_functional_element&#39;: &#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;}``</span>
+<span class="sd">                corresponds to incidents that are active=true AND Functional Element=ServiceNow</span>
+<span class="sd">            query_encoded (str): a query in the ServiceNow &quot;encoded query&quot; format.</span>
+<span class="sd">                Example: active=true^u_functional_element=579fb3d90a0a8c08017ac8a1137c8ee6.</span>
+<span class="sd">                For more information, please see: https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
+<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the records.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
+<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">table</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.get_records: the table paramater needs a non empty value&quot;</span><span class="p">)</span>
@@ -808,36 +830,111 @@
 
 <div class="viewcode-block" id="SnowRestSession.get_request"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.get_request">[docs]</a>    <span class="k">def</span> <span class="nf">get_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The Method getRequest is a get for request table. You give the id or the number of the request</span>
-<span class="sd">        :return:get_object</span>
+<span class="sd">        ** Will be deprecated soon, replaced by the `get` method of the `Request` class **</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the record to be read.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+<span class="sd">            number (str): the number of the record to be read.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
+<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the record.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
+<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_record</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="n">sys_id</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SnowRestSession.get_requests"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.get_requests">[docs]</a>    <span class="k">def</span> <span class="nf">get_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">query_encoded</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The Method getRequets is a get for many request.</span>
-<span class="sd">        :return:get_object</span>
+<span class="sd">        ** Will be deprecated soon, replaced by the `RequestQuery` class **</span>
+
+<span class="sd">        At least a `query_filter` or `query_encoded` parameter need to be provided.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            query_filter (dict): a dictionary ``{&#39;field_1&#39;: &#39;value_1&#39;, &#39;field_2&#39;: &#39;value_2&#39;}``</span>
+<span class="sd">                which will be used to apply a filter to the query. For example,</span>
+<span class="sd">                ``{&#39;active&#39;: &#39;true&#39;, &#39;u_functional_element&#39;: &#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;}``</span>
+<span class="sd">                corresponds to incidents that are active=true AND Functional Element=ServiceNow</span>
+<span class="sd">            query_encoded (str): a query in the ServiceNow &quot;encoded query&quot; format.</span>
+<span class="sd">                Example: active=true^u_functional_element=579fb3d90a0a8c08017ac8a1137c8ee6.</span>
+<span class="sd">                For more information, please see: https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
+<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the records.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
+<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_records</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">,</span> <span class="n">query_filter</span><span class="o">=</span><span class="n">query_filter</span><span class="p">,</span> <span class="n">query_encoded</span><span class="o">=</span><span class="n">query_encoded</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SnowRestSession.get_incidents"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.get_incidents">[docs]</a>    <span class="k">def</span> <span class="nf">get_incidents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">query_encoded</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The Method getIncidents is a get for many incident</span>
-<span class="sd">        :return:get_object</span>
+<span class="sd">        ** Will be deprecated soon, replaced by the `IncidentQuery` class **</span>
+
+<span class="sd">        At least a `query_filter` or `query_encoded` parameter need to be provided.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            query_filter (dict): a dictionary ``{&#39;field_1&#39;: &#39;value_1&#39;, &#39;field_2&#39;: &#39;value_2&#39;}``</span>
+<span class="sd">                which will be used to apply a filter to the query. For example,</span>
+<span class="sd">                ``{&#39;active&#39;: &#39;true&#39;, &#39;u_functional_element&#39;: &#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;}``</span>
+<span class="sd">                corresponds to incidents that are active=true AND Functional Element=ServiceNow</span>
+<span class="sd">            query_encoded (str): a query in the ServiceNow &quot;encoded query&quot; format.</span>
+<span class="sd">                Example: active=true^u_functional_element=579fb3d90a0a8c08017ac8a1137c8ee6.</span>
+<span class="sd">                For more information, please see: https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
+<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the records.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
+<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_records</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;incident&#39;</span><span class="p">,</span> <span class="n">query_filter</span><span class="o">=</span><span class="n">query_filter</span><span class="p">,</span> <span class="n">query_encoded</span><span class="o">=</span><span class="n">query_encoded</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SnowRestSession.get_incident"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.get_incident">[docs]</a>    <span class="k">def</span> <span class="nf">get_incident</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The Method get_incident is a get for an incident. You give the id or the number of the incident.</span>
-<span class="sd">        :return:get_object</span>
+<span class="sd">        ** Will be deprecated soon, replaced by the `get` method of the `Incident` class **</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the record to be read.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+<span class="sd">            number (str): the number of the record to be read.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
+<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the record.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
+<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_record</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;incident&#39;</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="n">sys_id</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SnowRestSession.insert_record"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.insert_record">[docs]</a>    <span class="k">def</span> <span class="nf">insert_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="SnowRestSession.insert_record"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.insert_record">[docs]</a>    <span class="k">def</span> <span class="nf">insert_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This Method is using the post request to insert something in a table</span>
-<span class="sd">        :return:post_object</span>
+<span class="sd">        ** Will be deprecated soon, replaced by the `insert` method of the `Record` class **</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.</span>
+<span class="sd">            data (dict): the values of the fields for the record that will be created.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
+<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
+<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">table</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.insert_record: the table paramater needs a non empty value&quot;</span><span class="p">)</span>
@@ -852,24 +949,54 @@
 
 <div class="viewcode-block" id="SnowRestSession.insert_incident"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.insert_incident">[docs]</a>    <span class="k">def</span> <span class="nf">insert_incident</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This Method create an incident with the data you give in parameter</span>
-<span class="sd">        :data:dict</span>
+<span class="sd">        ** Will be deprecated soon, replaced by the `insert` method of the `Incident` class **</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (dict): the values of the fields for the record that will be created.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
+<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
+<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">insert_record</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;incident&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SnowRestSession.insert_request"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.insert_request">[docs]</a>    <span class="k">def</span> <span class="nf">insert_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This Method create a request with the data you give in parameter</span>
-<span class="sd">        :data:dict</span>
+<span class="sd">        ** Will be deprecated soon, replaced by the `insert` method of the `Record` class **</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (dict): the values of the fields for the record that will be created.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
+<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
+<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">insert_record</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SnowRestSession.update_record"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.update_record">[docs]</a>    <span class="k">def</span> <span class="nf">update_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="SnowRestSession.update_record"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.update_record">[docs]</a>    <span class="k">def</span> <span class="nf">update_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">sys_id</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This Method allow you to update any ticket</span>
-<span class="sd">        :table:string</span>
-<span class="sd">        :sys_id:string</span>
-<span class="sd">        :data:dict</span>
+<span class="sd">        ** Will be deprecated soon, replaced by the `update` method of the `Record` class **</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.</span>
+<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.</span>
+<span class="sd">            data (dict): the values of the fields that will be updated in the target record.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
+<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
+<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">table</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.update_record: the table paramater needs a non empty value&quot;</span><span class="p">)</span>
@@ -884,10 +1011,22 @@
 
 <div class="viewcode-block" id="SnowRestSession.update_request"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.update_request">[docs]</a>    <span class="k">def</span> <span class="nf">update_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This Method allow you to update the request ticket that you want to update</span>
-<span class="sd">        :sys_id:string</span>
-<span class="sd">        :number:string (RQF318....)</span>
-<span class="sd">        :data:dict</span>
+<span class="sd">        ** Will be deprecated soon, replaced by the `update` method of the `Request` class **</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+<span class="sd">            number (str): the number  of the target record to be updated.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+<span class="sd">            data (dict): the values of the fields that will be updated in the target record.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
+<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
+<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">sys_id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">number</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.update_request: &quot;</span>
@@ -901,10 +1040,22 @@
 
 <div class="viewcode-block" id="SnowRestSession.update_incident"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.update_incident">[docs]</a>    <span class="k">def</span> <span class="nf">update_incident</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This Method allow you to update the incident ticket that you want to update</span>
-<span class="sd">        :sys_id:string</span>
-<span class="sd">        :number:string (RQF318....)</span>
-<span class="sd">        :data:dict</span>
+<span class="sd">        ** Will be deprecated soon, replaced by the `update` method of the `Incident` class **</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+<span class="sd">            number (str): the number  of the target record to be updated.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+<span class="sd">            data (dict): the values of the fields that will be updated in the target record.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
+<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
+<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">sys_id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">number</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.update_incident: &quot;</span>
@@ -919,29 +1070,65 @@
 
 <div class="viewcode-block" id="SnowRestSession.incident_add_comment"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.incident_add_comment">[docs]</a>    <span class="k">def</span> <span class="nf">incident_add_comment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This Method allow you to comment the incident ticket that you want to comment</span>
-<span class="sd">        :sys_id:string</span>
-<span class="sd">        :number:string (RQF318....)</span>
-<span class="sd">        :comment:string</span>
+<span class="sd">        ** Will be deprecated soon, replaced by the `add_comment` method of the `Incident` class **</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+<span class="sd">            number (str): the number  of the target record to be updated.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+<span class="sd">            comment (str): the new comment to be added to the target record</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
+<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
+<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_comment</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;incident&#39;</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="n">sys_id</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="n">comment</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SnowRestSession.request_add_comment"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.request_add_comment">[docs]</a>    <span class="k">def</span> <span class="nf">request_add_comment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This Method allow you to comment the request ticket that you want to comment</span>
-<span class="sd">        :sys_id:string</span>
-<span class="sd">        :number:string (RQF318....)</span>
-<span class="sd">        :comment:string</span>
+<span class="sd">        ** Will be deprecated soon, replaced by the `add_comment` method of the `Request` class **</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+<span class="sd">            number (str): the number  of the target record to be updated.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+<span class="sd">            comment (str): the new comment to be added to the target record</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
+<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
+<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_comment</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="n">sys_id</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="n">comment</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SnowRestSession.add_comment"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.add_comment">[docs]</a>    <span class="k">def</span> <span class="nf">add_comment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="SnowRestSession.add_comment"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.add_comment">[docs]</a>    <span class="k">def</span> <span class="nf">add_comment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This Method allow you to commebt the ticket that you want to comment</span>
-<span class="sd">        :table:string</span>
-<span class="sd">        :sys_id:string</span>
-<span class="sd">        :number:string (RQF318....)</span>
-<span class="sd">        :comment:string</span>
+<span class="sd">        ** Will be deprecated soon, replaced by the `add_comment` method of the `Task` class **</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.</span>
+<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+<span class="sd">            number (str): the number  of the target record to be updated.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+<span class="sd">            comment (str): the new comment to be added to the target record</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
+<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
+<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">table</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.add_comment: the table parameter is mandatory&quot;</span><span class="p">)</span>
@@ -960,29 +1147,65 @@
 
 <div class="viewcode-block" id="SnowRestSession.request_add_work_note"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.request_add_work_note">[docs]</a>    <span class="k">def</span> <span class="nf">request_add_work_note</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">work_note</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This Method allow you to add a worknote on the request ticket that you want</span>
-<span class="sd">        :sys_id:string</span>
-<span class="sd">        :number:string (RQF318....)</span>
-<span class="sd">        :work_note:string</span>
+<span class="sd">        ** Will be deprecated soon, replaced by the `add_work_note` method of the `Request` class **</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+<span class="sd">            number (str): the number  of the target record to be updated.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+<span class="sd">            work_note (str): the new work note to be added to the target record</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
+<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
+<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_work_note</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;incident&#39;</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="n">sys_id</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="n">work_note</span><span class="o">=</span><span class="n">work_note</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SnowRestSession.incident_add_work_note"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.incident_add_work_note">[docs]</a>    <span class="k">def</span> <span class="nf">incident_add_work_note</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">work_note</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This Method allow you to add a worknote on the incident ticket that you want</span>
-<span class="sd">        :sys_id:string</span>
-<span class="sd">        :number:string (RQF318....)</span>
-<span class="sd">        :work_note:string</span>
+<span class="sd">        ** Will be deprecated soon, replaced by the `add_work_note` method of the `Incident` class **</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+<span class="sd">            number (str): the number  of the target record to be updated.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+<span class="sd">            work_note (str): the new work note to be added to the target record</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
+<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
+<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_work_note</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="n">sys_id</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="n">work_note</span><span class="o">=</span><span class="n">work_note</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SnowRestSession.add_work_note"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.add_work_note">[docs]</a>    <span class="k">def</span> <span class="nf">add_work_note</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">work_note</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="SnowRestSession.add_work_note"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.add_work_note">[docs]</a>    <span class="k">def</span> <span class="nf">add_work_note</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">work_note</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This Method allow you to add a worknote on the ticket that you want</span>
-<span class="sd">        :table:string</span>
-<span class="sd">        :sys_id:string</span>
-<span class="sd">        :number:string (RQF318....)</span>
-<span class="sd">        :work_note:string</span>
+<span class="sd">        ** Will be deprecated soon, replaced by the `add_work_note` method of the `Task` class **</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.</span>
+<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+<span class="sd">            number (str): the number  of the target record to be updated.</span>
+<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
+<span class="sd">            work_note (str): the new work note to be added to the target record</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
+<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
+<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">table</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.add_work_note: the table parameter is mandatory&quot;</span><span class="p">)</span>
