@@ -693,6 +693,8 @@ class SnowRestSession(object):
 
     def get_record(self, table, sys_id=None, number=None, headers=None, params=None):
         """
+        ** Will be deprecated soon, replaced by the `get` method of the `Record` class **
+
         Executes a GET operation in order to read a single record from a ServiceNow table.
         The authentication method, and session cookie / OAuth tokens persistance will depend on how the session
         has been configured.
@@ -733,13 +735,33 @@ class SnowRestSession(object):
 
         return self.get(url=url, headers=headers, params=params)
 
-    def get_records(self, table=None, query_filter=None, query_encoded=""):
+    def get_records(self, table, query_filter=None, query_encoded=""):
         """
-        The Method get_records use the fonction get for many requests
-        :param table:
-        :param query_filter:
-        :param query_encoded:
-        :return:object_get
+        ** Will be deprecated soon, replaced by the `RecordQuery` class **
+
+        Executes a GET operation in order to read one or many records from a ServiceNow table.
+        The authentication method, and session cookie / OAuth tokens persistance will depend on how the session
+        has been configured.
+
+        At least a `query_filter` or `query_encoded` parameter need to be provided.
+
+        Args:
+            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.
+            query_filter (dict): a dictionary ``{'field_1': 'value_1', 'field_2': 'value_2'}``
+                which will be used to apply a filter to the query. For example,
+                ``{'active': 'true', 'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6'}``
+                corresponds to incidents that are active=true AND Functional Element=ServiceNow
+            query_encoded (str): a query in the ServiceNow "encoded query" format.
+                Example: active=true^u_functional_element=579fb3d90a0a8c08017ac8a1137c8ee6.
+                For more information, please see: https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html
+
+        Returns:
+            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
+                The 'text' will contain a JSON or XML representation of the records.
+
+        Raises:
+            SnowRestSessionException : if mandatory parameters are missing,
+                or if the operation could not be performed due to an authentication issue
         """
         if not table:
             raise SnowRestSessionException("SnowRestSession.get_records: the table paramater needs a non empty value")
@@ -760,36 +782,111 @@ class SnowRestSession(object):
 
     def get_request(self, sys_id=None, number=None):
         """
-        The Method getRequest is a get for request table. You give the id or the number of the request
-        :return:get_object
+        ** Will be deprecated soon, replaced by the `get` method of the `Request` class **
+
+        Args:
+            sys_id (str): the sys_id (ServiceNow unique identifier) of the record to be read.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+            number (str): the number of the record to be read.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+
+        Returns:
+            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
+                The 'text' will contain a JSON or XML representation of the record.
+
+        Raises:
+            SnowRestSessionException : if mandatory parameters are missing,
+                or if the operation could not be performed due to an authentication issue
+
         """
         return self.get_record(table='u_request_fulfillment', sys_id=sys_id, number=number)
 
     def get_requests(self, query_filter=None, query_encoded=""):
         """
-        The Method getRequets is a get for many request.
-        :return:get_object
+        ** Will be deprecated soon, replaced by the `RequestQuery` class **
+
+        At least a `query_filter` or `query_encoded` parameter need to be provided.
+
+        Args:
+            query_filter (dict): a dictionary ``{'field_1': 'value_1', 'field_2': 'value_2'}``
+                which will be used to apply a filter to the query. For example,
+                ``{'active': 'true', 'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6'}``
+                corresponds to incidents that are active=true AND Functional Element=ServiceNow
+            query_encoded (str): a query in the ServiceNow "encoded query" format.
+                Example: active=true^u_functional_element=579fb3d90a0a8c08017ac8a1137c8ee6.
+                For more information, please see: https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html
+
+        Returns:
+            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
+                The 'text' will contain a JSON or XML representation of the records.
+
+        Raises:
+            SnowRestSessionException : if mandatory parameters are missing,
+                or if the operation could not be performed due to an authentication issue
         """
         return self.get_records(table='u_request_fulfillment', query_filter=query_filter, query_encoded=query_encoded)
 
     def get_incidents(self, query_filter=None, query_encoded=""):
         """
-        The Method getIncidents is a get for many incident
-        :return:get_object
+        ** Will be deprecated soon, replaced by the `IncidentQuery` class **
+
+        At least a `query_filter` or `query_encoded` parameter need to be provided.
+
+        Args:
+            query_filter (dict): a dictionary ``{'field_1': 'value_1', 'field_2': 'value_2'}``
+                which will be used to apply a filter to the query. For example,
+                ``{'active': 'true', 'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6'}``
+                corresponds to incidents that are active=true AND Functional Element=ServiceNow
+            query_encoded (str): a query in the ServiceNow "encoded query" format.
+                Example: active=true^u_functional_element=579fb3d90a0a8c08017ac8a1137c8ee6.
+                For more information, please see: https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html
+
+        Returns:
+            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
+                The 'text' will contain a JSON or XML representation of the records.
+
+        Raises:
+            SnowRestSessionException : if mandatory parameters are missing,
+                or if the operation could not be performed due to an authentication issue
         """
         return self.get_records(table='incident', query_filter=query_filter, query_encoded=query_encoded)
 
     def get_incident(self, sys_id=None, number=None):
         """
-        The Method get_incident is a get for an incident. You give the id or the number of the incident.
-        :return:get_object
+        ** Will be deprecated soon, replaced by the `get` method of the `Incident` class **
+
+        Args:
+            sys_id (str): the sys_id (ServiceNow unique identifier) of the record to be read.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+            number (str): the number of the record to be read.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+
+        Returns:
+            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
+                The 'text' will contain a JSON or XML representation of the record.
+
+        Raises:
+            SnowRestSessionException : if mandatory parameters are missing,
+                or if the operation could not be performed due to an authentication issue
+
         """
         return self.get_record(table='incident', sys_id=sys_id, number=number)
 
-    def insert_record(self, table=None, data=None):
+    def insert_record(self, table, data=None):
         """
-        This Method is using the post request to insert something in a table
-        :return:post_object
+        ** Will be deprecated soon, replaced by the `insert` method of the `Record` class **
+
+        Args:
+            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.
+            data (dict): the values of the fields for the record that will be created.
+
+        Returns:
+            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
+                The 'text' will contain a JSON or XML representation of the new record.
+
+        Raises:
+            SnowRestSessionException : if mandatory parameters are missing,
+                or if the operation could not be performed due to an authentication issue
         """
         if not table:
             raise SnowRestSessionException("SnowRestSession.insert_record: the table paramater needs a non empty value")
@@ -804,24 +901,54 @@ class SnowRestSession(object):
 
     def insert_incident(self, data):
         """
-        This Method create an incident with the data you give in parameter
-        :data:dict
+        ** Will be deprecated soon, replaced by the `insert` method of the `Incident` class **
+
+        Args:
+            data (dict): the values of the fields for the record that will be created.
+
+        Returns:
+            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
+                The 'text' will contain a JSON or XML representation of the new record.
+
+        Raises:
+            SnowRestSessionException : if mandatory parameters are missing,
+                or if the operation could not be performed due to an authentication issue
         """
         return self.insert_record(table='incident', data=data)
 
     def insert_request(self, data):
         """
-        This Method create a request with the data you give in parameter
-        :data:dict
+        ** Will be deprecated soon, replaced by the `insert` method of the `Record` class **
+
+        Args:
+            data (dict): the values of the fields for the record that will be created.
+
+        Returns:
+            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
+                The 'text' will contain a JSON or XML representation of the new record.
+
+        Raises:
+            SnowRestSessionException : if mandatory parameters are missing,
+                or if the operation could not be performed due to an authentication issue
         """
         return self.insert_record(table='u_request_fulfillment', data=data)
 
-    def update_record(self, table=None, sys_id=None, data=None):
+    def update_record(self, table, sys_id, data=None):
         """
-        This Method allow you to update any ticket
-        :table:string
-        :sys_id:string
-        :data:dict
+        ** Will be deprecated soon, replaced by the `update` method of the `Record` class **
+
+        Args:
+            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.
+            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.
+            data (dict): the values of the fields that will be updated in the target record.
+
+        Returns:
+            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
+                The 'text' will contain a JSON or XML representation of the new record.
+
+        Raises:
+            SnowRestSessionException : if mandatory parameters are missing,
+                or if the operation could not be performed due to an authentication issue
         """
         if not table:
             raise SnowRestSessionException("SnowRestSession.update_record: the table paramater needs a non empty value")
@@ -836,10 +963,22 @@ class SnowRestSession(object):
 
     def update_request(self, sys_id=None, number=None, data=None):
         """
-        This Method allow you to update the request ticket that you want to update
-        :sys_id:string
-        :number:string (RQF318....)
-        :data:dict
+        ** Will be deprecated soon, replaced by the `update` method of the `Request` class **
+
+        Args:
+            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+            number (str): the number  of the target record to be updated.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+            data (dict): the values of the fields that will be updated in the target record.
+
+        Returns:
+            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
+                The 'text' will contain a JSON or XML representation of the new record.
+
+        Raises:
+            SnowRestSessionException : if mandatory parameters are missing,
+                or if the operation could not be performed due to an authentication issue
         """
         if not sys_id and not number:
             raise SnowRestSessionException("SnowRestSession.update_request: "
@@ -853,10 +992,22 @@ class SnowRestSession(object):
 
     def update_incident(self, sys_id=None, number=None, data=None):
         """
-        This Method allow you to update the incident ticket that you want to update
-        :sys_id:string
-        :number:string (RQF318....)
-        :data:dict
+        ** Will be deprecated soon, replaced by the `update` method of the `Incident` class **
+
+        Args:
+            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+            number (str): the number  of the target record to be updated.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+            data (dict): the values of the fields that will be updated in the target record.
+
+        Returns:
+            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
+                The 'text' will contain a JSON or XML representation of the new record.
+
+        Raises:
+            SnowRestSessionException : if mandatory parameters are missing,
+                or if the operation could not be performed due to an authentication issue
         """
         if not sys_id and not number:
             raise SnowRestSessionException("SnowRestSession.update_incident: "
@@ -871,29 +1022,65 @@ class SnowRestSession(object):
 
     def incident_add_comment(self, sys_id=None, number=None, comment=None):
         """
-        This Method allow you to comment the incident ticket that you want to comment
-        :sys_id:string
-        :number:string (RQF318....)
-        :comment:string
+        ** Will be deprecated soon, replaced by the `add_comment` method of the `Incident` class **
+
+        Args:
+            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+            number (str): the number  of the target record to be updated.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+            comment (str): the new comment to be added to the target record
+
+        Returns:
+            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
+                The 'text' will contain a JSON or XML representation of the new record.
+
+        Raises:
+            SnowRestSessionException : if mandatory parameters are missing,
+                or if the operation could not be performed due to an authentication issue
         """
         return self.add_comment(table='incident', sys_id=sys_id, number=number, comment=comment)
 
     def request_add_comment(self, sys_id=None, number=None, comment=None):
         """
-        This Method allow you to comment the request ticket that you want to comment
-        :sys_id:string
-        :number:string (RQF318....)
-        :comment:string
+        ** Will be deprecated soon, replaced by the `add_comment` method of the `Request` class **
+
+        Args:
+            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+            number (str): the number  of the target record to be updated.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+            comment (str): the new comment to be added to the target record
+
+        Returns:
+            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
+                The 'text' will contain a JSON or XML representation of the new record.
+
+        Raises:
+            SnowRestSessionException : if mandatory parameters are missing,
+                or if the operation could not be performed due to an authentication issue
         """
         return self.add_comment(table='u_request_fulfillment', sys_id=sys_id, number=number, comment=comment)
 
-    def add_comment(self, table=None, sys_id=None, number=None, comment=None):
+    def add_comment(self, table, sys_id=None, number=None, comment=None):
         """
-        This Method allow you to commebt the ticket that you want to comment
-        :table:string
-        :sys_id:string
-        :number:string (RQF318....)
-        :comment:string
+        ** Will be deprecated soon, replaced by the `add_comment` method of the `Task` class **
+
+        Args:
+            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.
+            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+            number (str): the number  of the target record to be updated.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+            comment (str): the new comment to be added to the target record
+
+        Returns:
+            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
+                The 'text' will contain a JSON or XML representation of the new record.
+
+        Raises:
+            SnowRestSessionException : if mandatory parameters are missing,
+                or if the operation could not be performed due to an authentication issue
         """
         if not table:
             raise SnowRestSessionException("SnowRestSession.add_comment: the table parameter is mandatory")
@@ -912,29 +1099,65 @@ class SnowRestSession(object):
 
     def request_add_work_note(self, sys_id=None, number=None, work_note=''):
         """
-        This Method allow you to add a worknote on the request ticket that you want
-        :sys_id:string
-        :number:string (RQF318....)
-        :work_note:string
+        ** Will be deprecated soon, replaced by the `add_work_note` method of the `Request` class **
+
+        Args:
+            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+            number (str): the number  of the target record to be updated.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+            work_note (str): the new work note to be added to the target record
+
+        Returns:
+            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
+                The 'text' will contain a JSON or XML representation of the new record.
+
+        Raises:
+            SnowRestSessionException : if mandatory parameters are missing,
+                or if the operation could not be performed due to an authentication issue
         """
         return self.add_work_note(table='incident', sys_id=sys_id, number=number, work_note=work_note)
 
     def incident_add_work_note(self, sys_id=None, number=None, work_note=''):
         """
-        This Method allow you to add a worknote on the incident ticket that you want
-        :sys_id:string
-        :number:string (RQF318....)
-        :work_note:string
+        ** Will be deprecated soon, replaced by the `add_work_note` method of the `Incident` class **
+
+        Args:
+            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+            number (str): the number  of the target record to be updated.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+            work_note (str): the new work note to be added to the target record
+
+        Returns:
+            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
+                The 'text' will contain a JSON or XML representation of the new record.
+
+        Raises:
+            SnowRestSessionException : if mandatory parameters are missing,
+                or if the operation could not be performed due to an authentication issue
         """
         return self.add_work_note(table='u_request_fulfillment', sys_id=sys_id, number=number, work_note=work_note)
 
-    def add_work_note(self, table=None, sys_id=None, number=None, work_note=''):
+    def add_work_note(self, table, sys_id=None, number=None, work_note=''):
         """
-        This Method allow you to add a worknote on the ticket that you want
-        :table:string
-        :sys_id:string
-        :number:string (RQF318....)
-        :work_note:string
+        ** Will be deprecated soon, replaced by the `add_work_note` method of the `Task` class **
+
+        Args:
+            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.
+            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+            number (str): the number  of the target record to be updated.
+                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
+            work_note (str): the new work note to be added to the target record
+
+        Returns:
+            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
+                The 'text' will contain a JSON or XML representation of the new record.
+
+        Raises:
+            SnowRestSessionException : if mandatory parameters are missing,
+                or if the operation could not be performed due to an authentication issue
         """
         if not table:
             raise SnowRestSessionException("SnowRestSession.add_work_note: the table parameter is mandatory")
