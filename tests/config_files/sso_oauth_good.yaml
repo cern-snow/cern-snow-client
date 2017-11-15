@@ -6,3 +6,7 @@ auth:
 session:
   cookie_file: sso_oauth_cookie.txt
   oauth_tokens_file: token_file
+log:
+    log_enabled: true
+    log_file_path : tests/logs/basic_auth_test_log.txt
+    log_level: DEBUG

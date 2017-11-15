@@ -10,3 +10,8 @@ or querying/inserting/updating incidents and requests, including adding comments
 """
 
 __version__ = "0.3"
+
+
+import logging
+
+logging.getLogger('snow-client').addHandler(logging.NullHandler())

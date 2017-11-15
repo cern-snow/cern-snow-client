@@ -7,4 +7,11 @@ auth:
 session:
     cookie_file: mycookie.txt
     oauth_tokens_file: mytoken
-log_file : mylog.txt
+log:
+    log_enabled: true
+    log_file_path : mylog.txt
+    log_level: DEBUG
+    log_format: %(asctime)s [%(name)s] [%(levelname)s] %(message)s
+    log_file_size_bytes: 1000000
+    log_file_rotations: 10
+    log_file_encoding: utf-8

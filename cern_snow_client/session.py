@@ -9,9 +9,18 @@ import requests
 import subprocess
 import sys
 import yaml
+import uuid
+import logging
+from logging.handlers import RotatingFileHandler
 
 from . import __version__
 
+try:  # Python 2.7+
+    from logging import NullHandler
+except ImportError:
+    class NullHandler(logging.Handler):
+        def emit(self, record):
+            pass
 
 from common import SnowClientException
 
@@ -35,14 +44,25 @@ class SnowRestSession(object):
         self.session_cookie = None
         self.oauth_token_file_path = None
         self.token_dic = None
-        self.logfile = None
         self.fresh_cookie = False
         self.fresh_token = False
         self.store_cookie = True
         self.store_token = True
-        self.log_file_path = None
 
         self.session = requests.Session()
+
+        self._log_enabled = False
+        self._logger_name = 'snow-client.session_' + uuid.uuid4().hex[:-24]  # used to get a Logger
+        self._logger = logging.getLogger(self._logger_name)
+        self._log_handler = NullHandler()
+        self._logger.addHandler(self._log_handler)
+
+        self._log_file_path = None
+        self._log_level = 'INFO'
+        self._log_format = "%(asctime)s [%(name)s] [%(levelname)s] %(message)s"
+        self._log_file_size_bytes = 1000000
+        self._log_file_rotations = 10
+        self._log_file_encoding = 'utf-8'
 
     def load_config_file(self, config_file_path):
         """
@@ -107,8 +127,22 @@ class SnowRestSession(object):
                 "SnowRestSession.load_config_file: the property \"auth_type\" "
                 "must have a value of \"sso_auth\" or \"basic\"")
 
-        if 'log_file_path' in config_file:
-            self.log_file_path = config_file['log_file_path']
+        if 'log' in config_file:
+            if 'log_enabled' in config_file['log'] and config_file['log']['log_enabled']:
+                self._log_enabled = True
+            if 'log_level' in config_file['log']:
+                self.set_log_level(config_file['log']['log_level'])
+            if 'log_file_path' in config_file['log']:
+                self._log_file_path = config_file['log']['log_file_path']
+            if 'log_format' in config_file['log']:
+                self._log_format = config_file['log']['log_format']
+            if 'log_file_size_bytes' in config_file['log']:
+                self._log_file_size_bytes = config_file['log']['log_file_size_bytes']
+            if 'log_file_rotations' in config_file['log']:
+                self._log_file_rotations = config_file['log']['log_file_rotations']
+            if 'log_file_encoding' in config_file['log']:
+                self._log_file_encoding = config_file['log']['log_file_encoding']
+            self._configure_handler()
 
     def set_instance(self, instance):
         """
@@ -195,15 +229,44 @@ class SnowRestSession(object):
         """
         self.oauth_token_file_path = oauth_token_file_path
 
-    def set_log_file_path(self, log_file_path):
-        """
-        Args:
-            log_file_path (str): the path to the log file
+    def set_log_enabled(self, log_enabled):
+        self._log_enabled = log_enabled
 
-        Note: logging to a file needs to be implemented
-        """
-        # TODO: implement a log file
-        self.log_file_path = log_file_path
+    def set_log_level(self, log_level):
+        self._log_level = log_level
+        self._logger.setLevel(self._log_level)
+
+    def set_log_file_path(self, log_file_path):
+        self._log_file_path = log_file_path
+        self._configure_handler()
+
+    def set_log_format(self, log_format):
+        self._log_format = log_format
+        self._configure_handler()
+
+    def set_log_file_size_bytes(self, log_file_size_bytes):
+        self._log_file_size_bytes = log_file_size_bytes
+        self._configure_handler()
+
+    def set_log_file_rotations(self, log_file_rotations):
+        self._log_file_rotations = log_file_rotations
+        self._configure_handler()
+
+    def set_log_file_encoding(self, log_file_encoding):
+        self._log_file_encoding = log_file_encoding
+        self._configure_handler()
+
+    def is_logging_enabled(self):
+        return self._log_enabled
+
+    def get_logger_name(self):
+        return self._logger_name
+
+    def get_logger(self):
+        return self._logger
+
+    def get_log_handler(self):
+        return self._log_handler
 
     def set_basic_auth_user(self, basic_auth_user):
         """
@@ -1205,6 +1268,45 @@ class SnowRestSession(object):
             return True
 
         return False
+
+    def _configure_handler(self):
+        self._logger.removeHandler(self._log_handler)
+
+        file_handler_attributes_known = bool(
+            self._log_file_path and self._log_file_size_bytes and self._log_file_rotations
+            and self._log_file_encoding and self._log_format)
+
+        if file_handler_attributes_known:
+            self._log_handler = RotatingFileHandler(
+                self._log_file_path,
+                maxBytes=self._log_file_size_bytes,
+                backupCount=self._log_file_rotations - 1,
+                encoding=self._log_file_encoding)
+            self._log_handler.setFormatter(logging.Formatter(self._log_format))
+
+        else:
+            self._log_handler = NullHandler()
+
+        self._logger.addHandler(self._log_handler)
+
+    def _debug(self, message):
+        self._log(logging.DEBUG, message)
+
+    def _info(self, message):
+        self._log(logging.INFO, message)
+
+    def _warning(self, message):
+        self._log(logging.WARNING, message)
+
+    def _error(self, message):
+        self._log(logging.ERROR, message)
+
+    def _critical(self, message):
+        self._log(logging.CRITICAL, message)
+
+    def _log(self, level, message):
+        if self._log_enabled:
+            self._logger.log(level, message)
 
 
 class SnowRestSessionException(SnowClientException):
