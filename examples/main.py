@@ -17,7 +17,7 @@ if __name__ == '__main__':
     result = s.post(
         url='/api/now/v2/table/incident',
         headers={},
-        data={'field_1': 'value_1', 'field_2': 'value_2'}
+        data="{'field_1': 'value_1', 'field_2': 'value_2'}"
     )
     print result.status_code
     print json.loads(result.text)
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     result = s.put(
         url='/api/now/v2/table/incident/<sys_id>',
         headers={},
-        data={'field_1': 'value_1', 'field_2': 'value_2'}
+        data="{'field_1': 'value_1', 'field_2': 'value_2'}"
     )
     print result.status_code
     print json.loads(result.text)
