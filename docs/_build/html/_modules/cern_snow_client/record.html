@@ -50,12 +50,35 @@
 
 <span class="kn">from</span> <span class="nn">common</span> <span class="k">import</span> <span class="n">SnowClientException</span><span class="p">,</span> <span class="n">TableClassMapping</span>
 
+<span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
 
-<div class="viewcode-block" id="Record"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.Record">[docs]</a><span class="k">class</span> <span class="nc">Record</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="SessionAware"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.SessionAware">[docs]</a><span class="k">class</span> <span class="nc">SessionAware</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">session</span>
+
+    <span class="k">def</span> <span class="nf">_debug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">_debug</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">_info</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">_warning</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">_error</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_critical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">_critical</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Record"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.Record">[docs]</a><span class="k">class</span> <span class="nc">Record</span><span class="p">(</span><span class="n">SessionAware</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents a record in a ServiceNow table.</span>
 <span class="sd">    Attributes of the record can be set with str values.</span>
@@ -99,46 +122,47 @@
         <span class="k">if</span> <span class="n">values</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">dict</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s1">&#39;Record.__init__: the values parameter needs to be a dict.&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">__session</span> <span class="o">=</span> <span class="n">session</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span> <span class="o">=</span> <span class="n">table_name</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Record</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span> <span class="o">=</span> <span class="n">table_name</span>
 
         <span class="n">table_class_mapping</span> <span class="o">=</span> <span class="n">TableClassMapping</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">table_name</span> <span class="ow">in</span> <span class="n">table_class_mapping</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__can_insert</span> <span class="o">=</span> <span class="n">table_class_mapping</span><span class="p">[</span><span class="n">table_name</span><span class="p">][</span><span class="s1">&#39;can_be_inserted&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_can_insert</span> <span class="o">=</span> <span class="n">table_class_mapping</span><span class="p">[</span><span class="n">table_name</span><span class="p">][</span><span class="s1">&#39;can_be_inserted&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__can_insert</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_can_insert</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">sys_id</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sys_class_name</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="n">values</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__changes</span> <span class="o">=</span> <span class="n">values</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__set_values</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_changes</span> <span class="o">=</span> <span class="n">values</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_set_values</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__changes</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_changes</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">__initialized</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="n">initialized</span> <span class="o">=</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_Record__initialized&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__initialized</span>
+        <span class="n">initialized</span> <span class="o">=</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_initialized&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialized</span>
 
         <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;sys_id&#39;</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;sys_id&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">sys_id</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s2">&quot;Record.__setattr__: the field ``sys_id`` is read-only if it already has a value&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">initialized</span> <span class="ow">and</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;sys_class_name&#39;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s2">&quot;Record.__setattr__: the field ``sys_class_name`` is read-only&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_Record__&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">RecordField</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">initialized</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_Record__&#39;</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__changes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">if</span> <span class="n">initialized</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_changes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
         <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__set_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">initializing</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_set_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
             <span class="c1"># protect private attributes</span>
-            <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_Record__&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
                 <span class="k">continue</span>
             <span class="c1"># protect methods</span>
             <span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">and</span> <span class="n">inspect</span><span class="o">.</span><span class="n">ismethod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">key</span><span class="p">)):</span>
@@ -153,7 +177,8 @@
 <span class="sd">        Fetches from ServiceNow a record from the table specified in the constructor via the argument ``table_name``.</span>
 <span class="sd">        The record may be fetched by its ``sys_id`` (ServiceNow unique identifier), or with a (field_name, field_value)</span>
 <span class="sd">        pair.</span>
-<span class="sd">        The attributes of the Record will be of the RecordField class, which implements the __str__ method.</span>
+<span class="sd">        The attributes of the Record will be of the RecordField class, which behaves like a unicode value</span>
+<span class="sd">        (thanks to inheriting from unicode)</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            key (:obj:`str`, :obj:`unicode` or :obj:`tuple`): a str/unicode value with the sys_id (ServiceNow unique identifier)</span>
@@ -197,6 +222,7 @@
 <span class="sd">            &gt;&gt;&gt; if r.get((&#39;number&#39;, &#39;RQF0746626&#39;)):</span>
 <span class="sd">            &gt;&gt;&gt;     print r.short_description</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_info</span><span class="p">(</span><span class="s2">&quot;Record.get: Obtaining a record in table &quot;</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; with key = &#39;</span> <span class="o">+</span> <span class="nb">repr</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
 
         <span class="n">is_key_text</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">unicode</span><span class="p">)</span>
         <span class="n">is_key_tuple</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span>
@@ -205,14 +231,14 @@
             <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s2">&quot;Record.get: the </span><span class="se">\&quot;</span><span class="s2">key</span><span class="se">\&quot;</span><span class="s2"> parameter should be a non empty str/unicode value, &quot;</span>
                                       <span class="s2">&quot;or a tuple (field_name, field_value) where field_name is a str&quot;</span><span class="p">)</span>
         <span class="c1"># TODO: Finish this method</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/api/now/v2/table/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/api/now/v2/table/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span>
         <span class="k">if</span> <span class="n">is_key_text</span><span class="p">:</span>
             <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">key</span>
         <span class="k">elif</span> <span class="n">is_key_tuple</span><span class="p">:</span>
             <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="s1">&#39;?sysparm_query=&#39;</span> <span class="o">+</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         
         <span class="c1">#  build the URL</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sysparm_display_value&#39;</span><span class="p">:</span> <span class="s1">&#39;all&#39;</span><span class="p">})</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sysparm_display_value&#39;</span><span class="p">:</span> <span class="s1">&#39;all&#39;</span><span class="p">})</span>
         <span class="c1">#  execute a get</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
         <span class="c1">#  parse the JSON result</span>
@@ -224,8 +250,8 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]:</span>
                 <span class="k">return</span> <span class="kc">False</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="c1">#  set the values inside the current object : __set_values()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__set_values</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="c1">#  set the values inside the current object : _set_values()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_values</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
         <span class="c1">#  return True or False</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
@@ -269,25 +295,25 @@
 <span class="sd">            &gt;&gt;&gt; r.insert()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__can_insert</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_can_insert</span><span class="p">:</span>
             <span class="n">class_name</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
             <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s1">&#39;Record.insert: The current Record is of class &#39;</span> <span class="o">+</span> <span class="n">class_name</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span>
                                       <span class="s1">&#39;which cannot be inserted. &#39;</span>
                                       <span class="s1">&#39;You need to instantiate a subclass of &#39;</span> <span class="o">+</span> <span class="n">class_name</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
         <span class="c1"># TODO: Finish this method</span>
         <span class="c1">#  build the URL</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/api/now/v2/table/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/api/now/v2/table/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span>
         <span class="c1">#  execute a post using the changed data : get_changed_fields()</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__changes</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sysparm_display_value&#39;</span><span class="p">:</span> <span class="s1">&#39;all&#39;</span><span class="p">})</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_changes</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sysparm_display_value&#39;</span><span class="p">:</span> <span class="s1">&#39;all&#39;</span><span class="p">})</span>
         <span class="c1">#  parse the JSON result</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset_changed_values</span><span class="p">()</span>
         <span class="k">if</span> <span class="s1">&#39;result&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="c1">#  reset the changed data : reset_changed_values()</span>
-        <span class="c1">#  set the values inside the current object: __set_values()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__set_values</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">])</span>
+        <span class="c1">#  set the values inside the current object: _set_values()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_values</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">])</span>
         <span class="c1">#  return True or False</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
@@ -346,7 +372,7 @@
                                       <span class="s2">&quot;or a tuple (field_name, field_value) where field_name is a str&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sys_class_name</span><span class="p">:</span>
-            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;sys_class_name&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span><span class="p">)</span></div>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;sys_class_name&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span><span class="p">)</span></div>
 
         <span class="c1"># TODO: Finish this method</span>
         <span class="c1">#  build the URL (using self.sys_class_name as table)</span>
@@ -357,7 +383,7 @@
 
         <span class="c1">#  reset the changed data : reset_changed_values()</span>
 
-        <span class="c1">#  set the values inside the current object: __set_values()</span>
+        <span class="c1">#  set the values inside the current object: _set_values()</span>
 
         <span class="c1">#  return True or False</span>
 
@@ -367,20 +393,20 @@
 <span class="sd">            dict: A dictionary ``{&#39;field_name&#39; : &#39;field_value&#39;}`` with the record fields which have changed</span>
 <span class="sd">            since the last ``.insert()`` or ``.update()``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__changes</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_changes</span></div>
 
 <div class="viewcode-block" id="Record.reset_changed_values"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.Record.reset_changed_values">[docs]</a>    <span class="k">def</span> <span class="nf">reset_changed_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Resets the changes in the record fields since the last ``.insert()`` or ``.update()``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_Record__changes&#39;</span><span class="p">,</span> <span class="p">{})</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_changes</span> <span class="o">=</span> <span class="p">{}</span></div>
 
 <div class="viewcode-block" id="Record.get_session"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.Record.get_session">[docs]</a>    <span class="k">def</span> <span class="nf">get_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            SnowRestSession : The session that this Record object uses to communicate with ServiceNow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__session</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span></div>
 
 <div class="viewcode-block" id="Record.get_table_name"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.Record.get_table_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_table_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -395,7 +421,7 @@
 <span class="sd">            &gt;&gt;&gt;     print r.get_table_name  # will print &#39;task&#39;</span>
 <span class="sd">            &gt;&gt;&gt;     print r.sys_class_name   # will print &#39;incident&#39;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span></div>
 
 <div class="viewcode-block" id="Record.get_can_insert"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.Record.get_can_insert">[docs]</a>    <span class="k">def</span> <span class="nf">get_can_insert</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -404,7 +430,7 @@
 <span class="sd">            Example: the ``task`` table is a `abstract supertable` of ``incident`` and ``u_request_fulfillment``.</span>
 <span class="sd">            Records can be inserted in the ``incident`` and ``u_request_fulfillment`` tables, but not in ``task``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__can_insert</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_can_insert</span></div></div>
 
 
 <div class="viewcode-block" id="RecordField"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordField">[docs]</a><span class="k">class</span> <span class="nc">RecordField</span><span class="p">(</span><span class="n">unicode</span><span class="p">):</span>
@@ -560,7 +586,7 @@
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">table_in_link_pattern</span></div>
 
 
-<div class="viewcode-block" id="RecordQuery"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordQuery">[docs]</a><span class="k">class</span> <span class="nc">RecordQuery</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="RecordQuery"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordQuery">[docs]</a><span class="k">class</span> <span class="nc">RecordQuery</span><span class="p">(</span><span class="n">SessionAware</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class to perform get queries that returns one or more records.</span>
 
@@ -581,8 +607,8 @@
             <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s1">&#39;RecordQuery.__init__: To create a RecordQuery instance&#39;</span>
                                       <span class="s1">&#39;you need to provide table_name value.&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">__session</span> <span class="o">=</span> <span class="n">session</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span> <span class="o">=</span> <span class="n">table_name</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RecordQuery</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span> <span class="o">=</span> <span class="n">table_name</span>
 
 <div class="viewcode-block" id="RecordQuery.query"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordQuery.query">[docs]</a>    <span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">query_encoded</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -620,28 +646,28 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            SnowRestSession : The session that this RecordQuery object uses to communicate with ServiceNow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__session</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span></div>
 
 <div class="viewcode-block" id="RecordQuery.get_table_name"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordQuery.get_table_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_table_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            str : The table_name argument that was used to build this RecordQuery object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span></div></div>
 
 
-<div class="viewcode-block" id="RecordSet"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordSet">[docs]</a><span class="k">class</span> <span class="nc">RecordSet</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="RecordSet"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordSet">[docs]</a><span class="k">class</span> <span class="nc">RecordSet</span><span class="p">(</span><span class="n">SessionAware</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">result_array</span><span class="p">,</span> <span class="n">table_name</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__session</span> <span class="o">=</span> <span class="n">session</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__result_array</span> <span class="o">=</span> <span class="n">result_array</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span> <span class="o">=</span> <span class="n">table_name</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RecordSet</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_result_array</span> <span class="o">=</span> <span class="n">result_array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span> <span class="o">=</span> <span class="n">table_name</span>
 
         <span class="n">table_class_mapping</span> <span class="o">=</span> <span class="n">TableClassMapping</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">table_name</span> <span class="ow">in</span> <span class="n">table_class_mapping</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__record_class</span> <span class="o">=</span> <span class="n">table_class_mapping</span><span class="p">[</span><span class="n">table_name</span><span class="p">][</span><span class="s1">&#39;class&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_record_class</span> <span class="o">=</span> <span class="n">table_class_mapping</span><span class="p">[</span><span class="n">table_name</span><span class="p">][</span><span class="s1">&#39;class&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__record_class</span> <span class="o">=</span> <span class="n">Record</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_record_class</span> <span class="o">=</span> <span class="n">Record</span>
 
     <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
@@ -653,9 +679,9 @@
 <span class="sd">            Record : An instance of Record or of a subclass of Record.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__result_array</span><span class="p">):</span>
-            <span class="n">record_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__result_array</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">]</span>
-            <span class="n">record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__record_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__session</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">record_dict</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_result_array</span><span class="p">):</span>
+            <span class="n">record_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result_array</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">]</span>
+            <span class="n">record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_record_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">record_dict</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">return</span> <span class="n">record</span>
 
@@ -667,7 +693,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            SnowRestSession : The session that this RecordSet object uses to communicate with ServiceNow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__session</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span></div>
 
 <div class="viewcode-block" id="RecordSet.get_table_name"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordSet.get_table_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_table_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -675,14 +701,14 @@
 <span class="sd">            str : The table_name argument that was used to build this RecordSet object.</span>
 <span class="sd">            All the records contained inside this RecordSet might belong to this table, or to a child table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__table_name</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span></div>
 
 <div class="viewcode-block" id="RecordSet.get_record_class"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordSet.get_record_class">[docs]</a>    <span class="k">def</span> <span class="nf">get_record_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            type : The Python class (Task, Incident...) that is used to build the objects returned by ``next()``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__record_class</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_record_class</span></div></div>
 </pre></div>
 
           </div>

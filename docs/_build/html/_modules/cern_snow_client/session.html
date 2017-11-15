@@ -57,9 +57,18 @@
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">logging.handlers</span> <span class="k">import</span> <span class="n">RotatingFileHandler</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">__version__</span>
 
+<span class="k">try</span><span class="p">:</span>  <span class="c1"># Python 2.7+</span>
+    <span class="kn">from</span> <span class="nn">logging</span> <span class="k">import</span> <span class="n">NullHandler</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">class</span> <span class="nc">NullHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Handler</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+            <span class="k">pass</span>
 
 <span class="kn">from</span> <span class="nn">common</span> <span class="k">import</span> <span class="n">SnowClientException</span>
 
@@ -83,14 +92,25 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">session_cookie</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logfile</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fresh_cookie</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fresh_token</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_cookie</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_token</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log_file_path</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_enabled</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger_name</span> <span class="o">=</span> <span class="s1">&#39;snow-client.session_&#39;</span> <span class="o">+</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="o">-</span><span class="mi">24</span><span class="p">]</span>  <span class="c1"># used to get a Logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_logger_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_handler</span> <span class="o">=</span> <span class="n">NullHandler</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_log_handler</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_file_path</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_level</span> <span class="o">=</span> <span class="s1">&#39;INFO&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_format</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> [</span><span class="si">%(name)s</span><span class="s2">] [</span><span class="si">%(levelname)s</span><span class="s2">] </span><span class="si">%(message)s</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_file_size_bytes</span> <span class="o">=</span> <span class="mi">1000000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_file_rotations</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_file_encoding</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span>
 
 <div class="viewcode-block" id="SnowRestSession.load_config_file"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.load_config_file">[docs]</a>    <span class="k">def</span> <span class="nf">load_config_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_file_path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -155,8 +175,22 @@
                 <span class="s2">&quot;SnowRestSession.load_config_file: the property </span><span class="se">\&quot;</span><span class="s2">auth_type</span><span class="se">\&quot;</span><span class="s2"> &quot;</span>
                 <span class="s2">&quot;must have a value of </span><span class="se">\&quot;</span><span class="s2">sso_auth</span><span class="se">\&quot;</span><span class="s2"> or </span><span class="se">\&quot;</span><span class="s2">basic</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="s1">&#39;log_file_path&#39;</span> <span class="ow">in</span> <span class="n">config_file</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log_file_path</span> <span class="o">=</span> <span class="n">config_file</span><span class="p">[</span><span class="s1">&#39;log_file_path&#39;</span><span class="p">]</span></div>
+        <span class="k">if</span> <span class="s1">&#39;log&#39;</span> <span class="ow">in</span> <span class="n">config_file</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;log_enabled&#39;</span> <span class="ow">in</span> <span class="n">config_file</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">config_file</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">][</span><span class="s1">&#39;log_enabled&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_log_enabled</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="s1">&#39;log_level&#39;</span> <span class="ow">in</span> <span class="n">config_file</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_log_level</span><span class="p">(</span><span class="n">config_file</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">][</span><span class="s1">&#39;log_level&#39;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="s1">&#39;log_file_path&#39;</span> <span class="ow">in</span> <span class="n">config_file</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_log_file_path</span> <span class="o">=</span> <span class="n">config_file</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">][</span><span class="s1">&#39;log_file_path&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;log_format&#39;</span> <span class="ow">in</span> <span class="n">config_file</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_log_format</span> <span class="o">=</span> <span class="n">config_file</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">][</span><span class="s1">&#39;log_format&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;log_file_size_bytes&#39;</span> <span class="ow">in</span> <span class="n">config_file</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_log_file_size_bytes</span> <span class="o">=</span> <span class="n">config_file</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">][</span><span class="s1">&#39;log_file_size_bytes&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;log_file_rotations&#39;</span> <span class="ow">in</span> <span class="n">config_file</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_log_file_rotations</span> <span class="o">=</span> <span class="n">config_file</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">][</span><span class="s1">&#39;log_file_rotations&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;log_file_encoding&#39;</span> <span class="ow">in</span> <span class="n">config_file</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_log_file_encoding</span> <span class="o">=</span> <span class="n">config_file</span><span class="p">[</span><span class="s1">&#39;log&#39;</span><span class="p">][</span><span class="s1">&#39;log_file_encoding&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_configure_handler</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="SnowRestSession.set_instance"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.set_instance">[docs]</a>    <span class="k">def</span> <span class="nf">set_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -243,15 +277,44 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span> <span class="o">=</span> <span class="n">oauth_token_file_path</span></div>
 
-<div class="viewcode-block" id="SnowRestSession.set_log_file_path"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.set_log_file_path">[docs]</a>    <span class="k">def</span> <span class="nf">set_log_file_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_file_path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            log_file_path (str): the path to the log file</span>
+<div class="viewcode-block" id="SnowRestSession.set_log_enabled"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.set_log_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">set_log_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_enabled</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_enabled</span> <span class="o">=</span> <span class="n">log_enabled</span></div>
 
-<span class="sd">        Note: logging to a file needs to be implemented</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># TODO: implement a log file</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log_file_path</span> <span class="o">=</span> <span class="n">log_file_path</span></div>
+<div class="viewcode-block" id="SnowRestSession.set_log_level"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.set_log_level">[docs]</a>    <span class="k">def</span> <span class="nf">set_log_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_level</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_level</span> <span class="o">=</span> <span class="n">log_level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_log_level</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SnowRestSession.set_log_file_path"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.set_log_file_path">[docs]</a>    <span class="k">def</span> <span class="nf">set_log_file_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_file_path</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_file_path</span> <span class="o">=</span> <span class="n">log_file_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_configure_handler</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SnowRestSession.set_log_format"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.set_log_format">[docs]</a>    <span class="k">def</span> <span class="nf">set_log_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_format</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_format</span> <span class="o">=</span> <span class="n">log_format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_configure_handler</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SnowRestSession.set_log_file_size_bytes"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.set_log_file_size_bytes">[docs]</a>    <span class="k">def</span> <span class="nf">set_log_file_size_bytes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_file_size_bytes</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_file_size_bytes</span> <span class="o">=</span> <span class="n">log_file_size_bytes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_configure_handler</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SnowRestSession.set_log_file_rotations"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.set_log_file_rotations">[docs]</a>    <span class="k">def</span> <span class="nf">set_log_file_rotations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_file_rotations</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_file_rotations</span> <span class="o">=</span> <span class="n">log_file_rotations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_configure_handler</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SnowRestSession.set_log_file_encoding"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.set_log_file_encoding">[docs]</a>    <span class="k">def</span> <span class="nf">set_log_file_encoding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_file_encoding</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log_file_encoding</span> <span class="o">=</span> <span class="n">log_file_encoding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_configure_handler</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SnowRestSession.is_logging_enabled"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.is_logging_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">is_logging_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log_enabled</span></div>
+
+<div class="viewcode-block" id="SnowRestSession.get_logger_name"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.get_logger_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_logger_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger_name</span></div>
+
+<div class="viewcode-block" id="SnowRestSession.get_logger"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.get_logger">[docs]</a>    <span class="k">def</span> <span class="nf">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span></div>
+
+<div class="viewcode-block" id="SnowRestSession.get_log_handler"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.get_log_handler">[docs]</a>    <span class="k">def</span> <span class="nf">get_log_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log_handler</span></div>
 
 <div class="viewcode-block" id="SnowRestSession.set_basic_auth_user"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.set_basic_auth_user">[docs]</a>    <span class="k">def</span> <span class="nf">set_basic_auth_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basic_auth_user</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1252,7 +1315,46 @@
         <span class="p">):</span>
             <span class="k">return</span> <span class="kc">True</span>
 
-        <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">_configure_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">removeHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_log_handler</span><span class="p">)</span>
+
+        <span class="n">file_handler_attributes_known</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log_file_path</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log_file_size_bytes</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log_file_rotations</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log_file_encoding</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log_format</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">file_handler_attributes_known</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log_handler</span> <span class="o">=</span> <span class="n">RotatingFileHandler</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_log_file_path</span><span class="p">,</span>
+                <span class="n">maxBytes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_log_file_size_bytes</span><span class="p">,</span>
+                <span class="n">backupCount</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_log_file_rotations</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="n">encoding</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_log_file_encoding</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_log_format</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log_handler</span> <span class="o">=</span> <span class="n">NullHandler</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_log_handler</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_debug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_critical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log_enabled</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SnowRestSessionException"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSessionException">[docs]</a><span class="k">class</span> <span class="nc">SnowRestSessionException</span><span class="p">(</span><span class="n">SnowClientException</span><span class="p">):</span>
