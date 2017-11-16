@@ -33,7 +33,10 @@ class TestRecordBase(TestBase):
         self.assertFalse(r.incident_state.is_reference())
 
     def base_test_insert_record(self, s):
-        r = Record(s, 'incident', {"u_business_service" : "e85a376e0a0a8c0a004ca384c6043fe1", "u_functional_element" : "ea56f72a0a0a8c0a010f2fddfd8e0a68", "assignment_group" : "ea56f7310a0a8c0a001b376fe5aa9cc6", "short_description" : "Incident for presentation by JAMES", "comments" : "HELLO"})
+        r = Record(s, 'incident', {"u_business_service": "e85a376e0a0a8c0a004ca384c6043fe1",
+                                   "u_functional_element": "ea56f72a0a0a8c0a010f2fddfd8e0a68",
+                                   "assignment_group": "ea56f7310a0a8c0a001b376fe5aa9cc6",
+                                   "short_description": "Incident for presentation by JAMES", "comments": "HELLO"})
         inserted = r.insert()
         
         r2 = Record(s, 'incident')
@@ -49,5 +52,20 @@ class TestRecordBase(TestBase):
         self.assertEquals(r.comments, r2.comments)
     
     def base_test_update_record(self, s):
-        # TODO: implement this test
-        pass
+        r = Record(s, 'incident', {"u_business_service": "e85a376e0a0a8c0a004ca384c6043fe1",
+                                   "u_functional_element": "ea56f72a0a0a8c0a010f2fddfd8e0a68",
+                                   "assignment_group": "ea56f7310a0a8c0a001b376fe5aa9cc6",
+                                   "short_description": "Incident for presentation by JAMES", "comments": "HELLO"})
+        inserted = r.insert()
+        self.assertTrue(inserted)
+        r.short_description = 'test update short_description'
+        r.comments = 'test update comments'
+        r.update()
+        print r.short_description
+
+        r2 = Record(s, 'incident')
+        updated = r2.get(r.sys_id)
+
+        self.assertTrue(updated)
+        self.assertEquals(r2.short_description, 'test update short_description')
+        self.assertEquals(r2.comments, 'test update comments')

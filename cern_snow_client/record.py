@@ -597,9 +597,11 @@ class RecordQuery(SessionAware):
                                       "needs either a value in the query_filter or the query_encoded parameters")
         # TODO: Finish this method
         #  build the URL
-        url = self.instance + '/api/now/v2/table/' + self._table_name
+        url = '/api/now/v2/table/' + self._table_name
         #  execute a get
         if query_filter:
+            if query_encoded:
+                query_encoded = query_encoded + '^'
             query = []
             for key in query_filter:
                 query.append(key + '=' + query_filter[key])
@@ -611,13 +613,12 @@ class RecordQuery(SessionAware):
         #  build an array of objects where each object represents a record
         result = json.loads(result.text)
         if 'result' not in result:
-            return False
-        for key in result['result']:
-            result_array.append(key)
+            return RecordSet(self._session, result_array, self._table_name)
+        for record in result['result']:
+            result_array.append(record)
         #  build a RecordSet passing the array
-        r = RecordSet(self._session, result_array, self._table_name)
+        return RecordSet(self._session, result_array, self._table_name)
         #  return the RecordSet
-        return r
 
     def get_session(self):
         """
@@ -659,7 +660,10 @@ class RecordSet(SessionAware):
 
         if self.n < len(self._result_array):
             record_dict = self._result_array[self.n]
-            record = self._record_class(self._session, values=record_dict)
+            if self._record_class is Record:
+                record = Record(self._session, table_name=self._table_name , values=record_dict)
+            else:
+                record = self._record_class(self._session, values=record_dict)
             self.n += 1
             return record
 
