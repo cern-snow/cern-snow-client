@@ -1,0 +1,11 @@
+v0.2
+- Build docs
+- Moved code into package cern_snow_client
+- Cleanup of code, renaming of methods and attributes.
+- Basic Authentication support and some other improvements.
+- Unit tests.
+- Sphinx docs
+- Organized project in additional folders such as docs and examples.
+
+v0.1
+- Initial version
