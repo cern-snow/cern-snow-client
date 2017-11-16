@@ -4,5 +4,8 @@
 # Python byte code files
 *.pyc
 
+# Emacs temporary files
+*~
+
 # File with passwords for tests
 tests/config_files/passwords.yaml

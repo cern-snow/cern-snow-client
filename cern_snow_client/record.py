@@ -328,16 +328,29 @@ class Record(SessionAware):
 
         # TODO: Finish this method
         #  build the URL (using self.sys_class_name as table)
-
+        url = '/api/now/v2/table/' + self._table_name + '/'
+        if key:
+            if isinstance(key, tuple):
+                sys_id = self.get(key)
+                if sys_id is False:
+                    return False
+                sys_id = self.sys_id
+            else:
+                url = url + key
+        url = url + self.sys_id
         #  execute a put using the changed data : get_changed_fields()
-
+        data = json.dumps(self._changes)
+        result = self._session.put(url=url, data=self._changes, params={'sysparm_display_value':'all'})
         #  parse the JSON result
-
+        result = json.loads(result.text)
         #  reset the changed data : reset_changed_values()
-
-        #  set the values inside the current object: _set_values()
-
+        self.reset_changed_values()
+        if 'result' not in result:
+            return False
+        #  set the values inside the current object: __set_values()
+        self._set_values(result['result'])
         #  return True or False
+        return True
 
     def get_changed_fields(self):
         """
@@ -584,14 +597,27 @@ class RecordQuery(SessionAware):
                                       "needs either a value in the query_filter or the query_encoded parameters")
         # TODO: Finish this method
         #  build the URL
-
+        url = self.instance + '/api/now/v2/table/' + self._table_name
         #  execute a get
-
+        if query_filter:
+            query = []
+            for key in query_filter:
+                query.append(key + '=' + query_filter[key])
+                query_encoded = '^'.join(query)
+        if query_encoded:
+            url = url + '?sysparm_query=' + query_encoded
+        result = self._session.get(url)
+        result_array = []
         #  build an array of objects where each object represents a record
-
+        result = json.loads(result.text)
+        if 'result' not in result:
+            return False
+        for key in result['result']:
+            result_array.append(key)
         #  build a RecordSet passing the array
-
+        r = RecordSet(self._session, result_array, self._table_name)
         #  return the RecordSet
+        return r
 
     def get_session(self):
         """

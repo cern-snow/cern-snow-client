@@ -10,3 +10,4 @@ python -m tests.test_session_basic_auth
 python -m tests.test_session_sso_oauth
 python -m tests.test_record_basic_auth
 python -m tests.test_record_sso_oauth
+python -m tests.test_record_field
