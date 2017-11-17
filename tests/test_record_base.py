@@ -1,6 +1,8 @@
 # coding: utf-8
 
 from cern_snow_client.record import Record
+from cern_snow_client.record import RecordQuery
+from cern_snow_client.record import RecordSet
 from tests.test_base import TestBase
 
 
@@ -52,20 +54,33 @@ class TestRecordBase(TestBase):
         self.assertEquals(r.comments, r2.comments)
     
     def base_test_update_record(self, s):
-        r = Record(s, 'incident', {"u_business_service": "e85a376e0a0a8c0a004ca384c6043fe1",
-                                   "u_functional_element": "ea56f72a0a0a8c0a010f2fddfd8e0a68",
-                                   "assignment_group": "ea56f7310a0a8c0a001b376fe5aa9cc6",
-                                   "short_description": "Incident for presentation by JAMES", "comments": "HELLO"})
-        inserted = r.insert()
-        self.assertTrue(inserted)
-        r.short_description = 'test update short_description'
-        r.comments = 'test update comments'
-        r.update()
-        print r.short_description
+        pass
+        #r = Record(s, 'incident', {"u_business_service": "e85a376e0a0a8c0a004ca384c6043fe1","u_functional_element": "ea56f72a0a0a8c0a010f2fddfd8e0a68","assignment_group": "ea56f7310a0a8c0a001b376fe5aa9cc6","short_description": "Incident for presentation by JAMES","comments": "HELLO", "incident_state" : "2"})
+        #inserted = r.insert()
+        #self.assertTrue(inserted)
 
-        r2 = Record(s, 'incident')
-        updated = r2.get(r.sys_id)
+        #r = Record(s, 'incident')
+        #incident = r.get(('number', 'INC1490808'))
+        #if r.watch_list:
+        #    r.watch_list = r.watch_list + ','
+        #    r.watch_list = r.watch_list + 'david.martin.clavo@cern.ch'
+        #if r.work_note:
+        #    r.work_note = 'incident worknote'
+        #r.update()
+        #print r.watch_list
+        #print r.number
 
-        self.assertTrue(updated)
-        self.assertEquals(r2.short_description, 'test update short_description')
-        self.assertEquals(r2.comments, 'test update comments')
+        #r2 = Record(s, 'incident')
+        #updated = r2.get(r.sys_id)
+        #self.assertTrue(updated)
+        #print r2.watch_list
+        #print 'updated is true'
+
+    def base_test_get_query(self, s):
+        r = RecordQuery(s, 'incident')
+        query = r.query(query_encoded='sys_created_onONToday^short_descriptionISNOTEMPTY')
+        if query._result_array:
+            for incident in query._result_array:
+                print incident['number']
+        else:
+            print 'Problem in the query, the result is empty'
