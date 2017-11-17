@@ -98,9 +98,11 @@ class TestRecordBase(TestBase):
 
         # Query the incidents with FE=IT Service Management Support,
         # Visibility=CERN, Created in 2016, and already closed
-        record_set = r.query(
-            query_encoded="u_functional_element=ea56fb210a0a8c0a015a591ddbed3676^u_visibility=cern^"
-                          "sys_created_onDATEPART2016@javascript:gs.datePart('year','2016','EE')^active=false")
+        record_set = r.query(query_filter={
+            'u_functional_element': 'ea56fb210a0a8c0a015a591ddbed3676',
+            'u_visibility': 'cern',
+            'active': 'false'
+        })
 
         records_found = False
         for record in record_set:
@@ -112,17 +114,35 @@ class TestRecordBase(TestBase):
 
         self.assertTrue(records_found)
 
-        r2 = RecordQuery(s, 'task')
+        r2 = RecordQuery(s, 'incident')
 
         # Query the incidents with FE=IT Service Management Support,
         # Visibility=CERN, Created in 2016, and already closed
         record_set_2 = r2.query(
+            query_encoded="u_functional_element=ea56fb210a0a8c0a015a591ddbed3676^u_visibility=cern^active=false^"
+                          "sys_created_onDATEPART2016@javascript:gs.datePart('year','2016','EE')")
+
+        records_found = False
+        for record in record_set_2:
+            records_found = True
+            self.assertIsNotNone(record.number)
+            self.assertIsNotNone(record.short_description)
+            self.assertEquals(record.sys_class_name, 'incident')
+            self.assertIs(type(record), Incident)
+
+        self.assertTrue(records_found)
+
+        r3 = RecordQuery(s, 'task')
+
+        # Query the incidents with FE=IT Service Management Support,
+        # Visibility=CERN, Created in 2016, and already closed
+        record_set_3 = r3.query(
             query_encoded="sys_class_name=incident^u_functional_element=ea56fb210a0a8c0a015a591ddbed3676"
                           "^u_visibility=cern^active=false^"
                           "sys_created_onDATEPART2016@javascript:gs.datePart('year','2016','EE')")
 
         records_found = False
-        for record in record_set_2:
+        for record in record_set_3:
             records_found = True
             self.assertIsNotNone(record.number)
             self.assertIsNotNone(record.short_description)
