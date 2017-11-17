@@ -1650,6 +1650,40 @@ otherwise, an instance of the Record class.</p>
 <dt id="cern_snow_client.record.RecordSet">
 <em class="property">class </em><code class="descclassname">cern_snow_client.record.</code><code class="descname">RecordSet</code><span class="sig-paren">(</span><em>session</em>, <em>result_array</em>, <em>table_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cern_snow_client.record.SessionAware" title="cern_snow_client.record.SessionAware"><code class="xref py py-class docutils literal"><span class="pre">cern_snow_client.record.SessionAware</span></code></a></p>
+<p>An iterable class which encapsulates a list of records.
+It is constructed with an array of dictionaries (raw input from the GET call), and in each iteration
+it will build and return an object representing a record, using the appropriate class: Incident, Request,
+Task, etc. or Record if no more appropriate class is found.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>session</strong> (<a class="reference internal" href="#cern_snow_client.session.SnowRestSession" title="cern_snow_client.session.SnowRestSession"><em>SnowRestSession</em></a>) – a cern_snow_client.session.SnowRestSession object</li>
+<li><strong>result_array</strong> (<em>list</em>) – a list of dictionaries</li>
+<li><strong>table_name</strong> (<em>str</em>) – the name of a ServiceNow table, e.g. ‘incident’, from which to query from</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">RecordQuery</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Query the incidents with FE=IT Service Management Support,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Visibility=CERN, and already closed</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record_set</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query_filter</span><span class="o">=</span><span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="s1">&#39;ea56fb210a0a8c0a015a591ddbed3676&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;u_visibility&#39;</span><span class="p">:</span> <span class="s1">&#39;cern&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;active&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">})</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">record_set</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">record</span><span class="o">.</span><span class="n">number</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">record</span><span class="o">.</span><span class="n">short_description</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">record</span><span class="o">.</span><span class="n">sys_class_name</span>  <span class="c1"># will print &#39;incident</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="nb">type</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>  <span class="c1"># will print the Incident class</span>
+</pre></div>
+</div>
 <dl class="method">
 <dt id="cern_snow_client.record.RecordSet.next">
 <code class="descname">next</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordSet.next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordSet.next" title="Permalink to this definition">¶</a></dt>
@@ -1828,6 +1862,18 @@ If this parameter is set, it will override the current sys_id of this record obj
 </tr>
 </tbody>
 </table>
+<p class="rubric">Examples</p>
+<p>Adding a work note to a task after getting it:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;c1c535ba85f45540adf94de5b835cd43&#39;</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">t</span><span class="o">.</span><span class="n">add_work_note</span><span class="p">(</span><span class="s1">&#39;New work note&#39;</span><span class="p">)</span>  <span class="c1"># will immediately add a new comment in ServiceNow</span>
+</pre></div>
+</div>
+<p>Adding a comment to a task for which we know the number:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">add_work_note</span><span class="p">(</span><span class="s1">&#39;New work note&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;INC0426232&#39;</span><span class="p">))</span>  <span class="c1"># will immediately add a new comment in ServiceNow, and will download the resulting state of the task</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">

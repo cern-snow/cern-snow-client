@@ -718,6 +718,33 @@
 
 
 <div class="viewcode-block" id="RecordSet"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordSet">[docs]</a><span class="k">class</span> <span class="nc">RecordSet</span><span class="p">(</span><span class="n">SessionAware</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        An iterable class which encapsulates a list of records.</span>
+<span class="sd">        It is constructed with an array of dictionaries (raw input from the GET call), and in each iteration</span>
+<span class="sd">        it will build and return an object representing a record, using the appropriate class: Incident, Request,</span>
+<span class="sd">        Task, etc. or Record if no more appropriate class is found.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            session (SnowRestSession): a cern_snow_client.session.SnowRestSession object</span>
+<span class="sd">            result_array (list): a list of dictionaries</span>
+<span class="sd">            table_name (str): the name of a ServiceNow table, e.g. &#39;incident&#39;, from which to query from</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; r = RecordQuery(s, &#39;incident&#39;)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; # Query the incidents with FE=IT Service Management Support,</span>
+<span class="sd">            &gt;&gt;&gt; # Visibility=CERN, and already closed</span>
+<span class="sd">            &gt;&gt;&gt; record_set = r.query(query_filter={</span>
+<span class="sd">            &gt;&gt;&gt;     &#39;u_functional_element&#39;: &#39;ea56fb210a0a8c0a015a591ddbed3676&#39;,</span>
+<span class="sd">            &gt;&gt;&gt;     &#39;u_visibility&#39;: &#39;cern&#39;,</span>
+<span class="sd">            &gt;&gt;&gt;     &#39;active&#39;: &#39;false&#39;</span>
+<span class="sd">            &gt;&gt;&gt; })</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; for record in record_set:</span>
+<span class="sd">            &gt;&gt;&gt;     print record.number + &quot; &quot; + record.short_description</span>
+<span class="sd">            &gt;&gt;&gt;     print record.sys_class_name  # will print &#39;incident</span>
+<span class="sd">            &gt;&gt;&gt;     print type(record)  # will print the Incident class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">,</span> <span class="n">result_array</span><span class="p">,</span> <span class="n">table_name</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RecordSet</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
