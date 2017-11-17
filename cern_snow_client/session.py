@@ -10,6 +10,8 @@ import subprocess
 import sys
 import yaml
 
+from . import __version__
+
 
 class SnowRestSession(object):
     """
@@ -378,6 +380,14 @@ class SnowRestSession(object):
         self.fresh_cookie = True
         self.session.cookies.save(self.session_cookie_file_path, ignore_discard=True, ignore_expires=True)
 
+    @staticmethod
+    def __library_user_agent():
+        user_agent_header = 'cern-snow-client/' + __version__
+        default_headers = requests.utils.default_headers()
+        if 'User-Agent' in default_headers:
+            user_agent_header = user_agent_header + ' ' + default_headers['User-Agent']
+        return user_agent_header
+
     def __execute(self, operation, url, headers=None, params=None, data=None):
         """
         Executes directly a REST Operation and returns the result
@@ -412,6 +422,8 @@ class SnowRestSession(object):
 
         if not headers:
             headers = {}
+        if 'User-Agent' not in headers:
+            headers['User-Agent'] = self.__library_user_agent()
         if 'Accept' not in headers:
             headers['Accept'] = 'application/json'
         if (operation == 'post' or operation == 'put') and 'Content-Type' not in headers:
