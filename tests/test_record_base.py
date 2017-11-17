@@ -2,7 +2,8 @@
 
 from cern_snow_client.record import Record
 from cern_snow_client.record import RecordQuery
-from cern_snow_client.record import RecordSet
+from cern_snow_client.task import Task
+from cern_snow_client.incident import Incident
 from tests.test_base import TestBase
 
 
@@ -35,10 +36,13 @@ class TestRecordBase(TestBase):
         self.assertFalse(r.incident_state.is_reference())
 
     def base_test_insert_record(self, s):
-        r = Record(s, 'incident', {"u_business_service": "e85a376e0a0a8c0a004ca384c6043fe1",
-                                   "u_functional_element": "ea56f72a0a0a8c0a010f2fddfd8e0a68",
-                                   "assignment_group": "ea56f7310a0a8c0a001b376fe5aa9cc6",
-                                   "short_description": "Incident for presentation by JAMES", "comments": "HELLO"})
+        r = Record(s, 'incident', {  # s is a SnowRestSession object
+            'short_description': self.short_description_prefix + ' test_insert_record',
+            'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
+            'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
+            'comments': "Initial description",
+            'incident_state': '2'  # initial state : Assigned
+        })
         inserted = r.insert()
         
         r2 = Record(s, 'incident')
@@ -54,33 +58,75 @@ class TestRecordBase(TestBase):
         self.assertEquals(r.comments, r2.comments)
     
     def base_test_update_record(self, s):
-        pass
-        #r = Record(s, 'incident', {"u_business_service": "e85a376e0a0a8c0a004ca384c6043fe1","u_functional_element": "ea56f72a0a0a8c0a010f2fddfd8e0a68","assignment_group": "ea56f7310a0a8c0a001b376fe5aa9cc6","short_description": "Incident for presentation by JAMES","comments": "HELLO", "incident_state" : "2"})
-        #inserted = r.insert()
-        #self.assertTrue(inserted)
+        r = Record(s, 'incident', {  # s is a SnowRestSession object
+            'short_description': self.short_description_prefix + ' test_update_record',
+            'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
+            'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
+            'comments': "Initial description",
+            'incident_state': '2'  # initial state : Assigned
+        })
+        inserted = r.insert()
+        self.assertTrue(inserted)
 
-        #r = Record(s, 'incident')
-        #incident = r.get(('number', 'INC1490808'))
-        #if r.watch_list:
-        #    r.watch_list = r.watch_list + ','
-        #    r.watch_list = r.watch_list + 'david.martin.clavo@cern.ch'
-        #if r.work_note:
-        #    r.work_note = 'incident worknote'
-        #r.update()
-        #print r.watch_list
-        #print r.number
+        r2 = Record(s, 'incident')
+        found = r2.get(('number', r.number))
+        self.assertTrue(found)
+        self.assertEquals(r.number, r2.number)
+        self.assertEquals(r2.short_description, self.short_description_prefix + ' test_update_record')
 
-        #r2 = Record(s, 'incident')
-        #updated = r2.get(r.sys_id)
-        #self.assertTrue(updated)
-        #print r2.watch_list
-        #print 'updated is true'
+        r2.watch_list = 'test_watch_list_value@cern.ch'
+        updated = r2.update()
+        self.assertTrue(updated)
+
+        r3 = Record(s, 'incident')
+        found = r3.get(('number', r.number))
+        self.assertTrue(found)
+        self.assertEquals(r3.watch_list, 'test_watch_list_value@cern.ch')
+
+        r4 = Record(s, 'incident')
+        r4.watch_list = 'test_watch_list_value_2@cern.ch'
+        updated = r4.update(('number', r.number))
+        self.assertTrue(updated)
+
+        r5 = Record(s, 'incident')
+        found = r5.get(('number', r.number))
+        self.assertTrue(found)
+        self.assertEquals(r5.watch_list, 'test_watch_list_value_2@cern.ch')
 
     def base_test_get_query(self, s):
         r = RecordQuery(s, 'incident')
-        query = r.query(query_encoded='sys_created_onONToday^short_descriptionISNOTEMPTY')
-        if query._result_array:
-            for incident in query._result_array:
-                print incident['number']
-        else:
-            print 'Problem in the query, the result is empty'
+
+        # Query the incidents with FE=IT Service Management Support,
+        # Visibility=CERN, Created in 2016, and already closed
+        record_set = r.query(
+            query_encoded="u_functional_element=ea56fb210a0a8c0a015a591ddbed3676^u_visibility=cern^"
+                          "sys_created_onDATEPART2016@javascript:gs.datePart('year','2016','EE')^active=false")
+
+        records_found = False
+        for record in record_set:
+            records_found = True
+            self.assertIsNotNone(record.number)
+            self.assertIsNotNone(record.short_description)
+            self.assertEquals(record.sys_class_name, 'incident')
+            self.assertIs(type(record), Incident)
+
+        self.assertTrue(records_found)
+
+        r2 = RecordQuery(s, 'task')
+
+        # Query the incidents with FE=IT Service Management Support,
+        # Visibility=CERN, Created in 2016, and already closed
+        record_set_2 = r2.query(
+            query_encoded="sys_class_name=incident^u_functional_element=ea56fb210a0a8c0a015a591ddbed3676"
+                          "^u_visibility=cern^active=false^"
+                          "sys_created_onDATEPART2016@javascript:gs.datePart('year','2016','EE')")
+
+        records_found = False
+        for record in record_set_2:
+            records_found = True
+            self.assertIsNotNone(record.number)
+            self.assertIsNotNone(record.short_description)
+            self.assertEquals(record.sys_class_name, 'incident')
+            self.assertIs(type(record), Task)
+
+        self.assertTrue(records_found)
