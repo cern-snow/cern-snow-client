@@ -50,6 +50,7 @@
 
 <span class="kn">from</span> <span class="nn">record</span> <span class="k">import</span> <span class="n">Record</span>
 <span class="kn">from</span> <span class="nn">record</span> <span class="k">import</span> <span class="n">RecordQuery</span>
+<span class="kn">from</span> <span class="nn">cern_snow_client.common</span> <span class="k">import</span> <span class="n">SnowClientException</span>
 
 <span class="n">package_table</span> <span class="o">=</span> <span class="s1">&#39;task&#39;</span>
 
@@ -116,8 +117,36 @@
 <span class="sd">            &gt;&gt;&gt; t = Task(s)  # s is a SnowRestSession object</span>
 <span class="sd">            &gt;&gt;&gt; t.add_comment(&#39;New comment&#39;, key=(&#39;number&#39;, &#39;INC0426232&#39;))  # will immediately add a new comment in ServiceNow, and will download the resulting state of the task</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">is_key_text</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">unicode</span><span class="p">)</span>
+        <span class="n">is_key_tuple</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sys_id</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s1">&#39;Record.update: The current Record instance does not have a sys_id. &#39;</span>
+                                      <span class="s1">&#39;Please provide a key to specify which record to update.&#39;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sys_id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_key_text</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_key_tuple</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s2">&quot;Record.get: the </span><span class="se">\&quot;</span><span class="s2">key</span><span class="se">\&quot;</span><span class="s2"> parameter should be a non empty str/unicode value, &quot;</span>
+                                      <span class="s2">&quot;or a tuple (field_name, field_value) where field_name is a str&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sys_class_name</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;sys_class_name&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span><span class="p">)</span>
         <span class="c1"># TODO: Finish this method</span>
-        <span class="k">pass</span></div>
+        <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/api/now/v2/table/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">sys_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">sys_id</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="n">sys_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sys_id</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="n">key</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s1">&#39;result&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
 
 <div class="viewcode-block" id="Task.add_work_note"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.task.Task.add_work_note">[docs]</a>    <span class="k">def</span> <span class="nf">add_work_note</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">work_note</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>

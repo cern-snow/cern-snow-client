@@ -372,20 +372,33 @@
                                       <span class="s2">&quot;or a tuple (field_name, field_value) where field_name is a str&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sys_class_name</span><span class="p">:</span>
-            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;sys_class_name&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span><span class="p">)</span></div>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;sys_class_name&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span><span class="p">)</span>
 
         <span class="c1"># TODO: Finish this method</span>
         <span class="c1">#  build the URL (using self.sys_class_name as table)</span>
-
+        <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/api/now/v2/table/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">sys_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">sys_id</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span>
+                <span class="n">sys_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sys_id</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="n">key</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sys_id</span>
         <span class="c1">#  execute a put using the changed data : get_changed_fields()</span>
-
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_changes</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sysparm_display_value&#39;</span><span class="p">:</span><span class="s1">&#39;all&#39;</span><span class="p">})</span>
         <span class="c1">#  parse the JSON result</span>
-
+        <span class="n">result</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
         <span class="c1">#  reset the changed data : reset_changed_values()</span>
-
-        <span class="c1">#  set the values inside the current object: _set_values()</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_changed_values</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;result&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="c1">#  set the values inside the current object: __set_values()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_set_values</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">])</span>
         <span class="c1">#  return True or False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="Record.get_changed_fields"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.Record.get_changed_fields">[docs]</a>    <span class="k">def</span> <span class="nf">get_changed_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -625,21 +638,69 @@
 <span class="sd">            RecordSet : A RecordSet object, which is an iterable, and which will return in each iteration</span>
 <span class="sd">            an instance of the class corresponding to the ``table_name`` provided in the constructor, if available;</span>
 <span class="sd">            otherwise, an instance of the Record class.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowClientException : if neither a query_filter nor a query_encoded parameter is provided.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; r = RecordQuery(s, &#39;incident&#39;)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; # Query the incidents with FE=IT Service Management Support,</span>
+<span class="sd">            &gt;&gt;&gt; # Visibility=CERN, and already closed</span>
+<span class="sd">            &gt;&gt;&gt; record_set = r.query(query_filter={</span>
+<span class="sd">            &gt;&gt;&gt;     &#39;u_functional_element&#39;: &#39;ea56fb210a0a8c0a015a591ddbed3676&#39;,</span>
+<span class="sd">            &gt;&gt;&gt;     &#39;u_visibility&#39;: &#39;cern&#39;,</span>
+<span class="sd">            &gt;&gt;&gt;     &#39;active&#39;: &#39;false&#39;</span>
+<span class="sd">            &gt;&gt;&gt; })</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; # Same query with encoded query</span>
+<span class="sd">            &gt;&gt;&gt; record_set = r.query(</span>
+<span class="sd">            &gt;&gt;&gt;     query_encoded=&quot;u_functional_element=ea56fb210a0a8c0a015a591ddbed3676^&quot;</span>
+<span class="sd">            &gt;&gt;&gt;                   &quot;u_visibility=cern^active=false&quot;)</span>
+<span class="sd">            &gt;&gt;&gt;</span>
+<span class="sd">            &gt;&gt;&gt; for record in record_set:</span>
+<span class="sd">            &gt;&gt;&gt;     print record.number + &quot; &quot; + record.short_description</span>
+<span class="sd">            &gt;&gt;&gt;     print record.sys_class_name  # will print &#39;incident</span>
+<span class="sd">            &gt;&gt;&gt;     print type(record)  # will print the Incident class</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">query_filter</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">query_encoded</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s2">&quot;RecordQuery.query: &quot;</span>
-                                      <span class="s2">&quot;needs either a value in the query_filter or the query_encoded parameters&quot;</span><span class="p">)</span></div>
+                                      <span class="s2">&quot;needs either a value in the query_filter or the query_encoded parameters&quot;</span><span class="p">)</span>
         <span class="c1"># TODO: Finish this method</span>
+
         <span class="c1">#  build the URL</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/api/now/v2/table/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span>
+
+        <span class="k">if</span> <span class="n">query_filter</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">query_encoded</span><span class="p">:</span>
+                <span class="n">query_encoded</span> <span class="o">=</span> <span class="n">query_encoded</span> <span class="o">+</span> <span class="s1">&#39;^&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">query_encoded</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">query_filter</span><span class="p">:</span>
+                <span class="n">query</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="n">query_filter</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+            <span class="n">query_encoded</span> <span class="o">=</span> <span class="n">query_encoded</span> <span class="o">+</span> <span class="s1">&#39;^&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">query_encoded</span><span class="p">:</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="s1">&#39;?sysparm_query=&#39;</span> <span class="o">+</span> <span class="n">query_encoded</span>
 
         <span class="c1">#  execute a get</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_info</span><span class="p">(</span><span class="s1">&#39;RecordQuery.query: querying the table &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span> <span class="o">+</span> <span class="s1">&#39; with URL &#39;</span> <span class="o">+</span> <span class="n">url</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
 
         <span class="c1">#  build an array of objects where each object represents a record</span>
+        <span class="n">result_array</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;result&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">RecordSet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">,</span> <span class="n">result_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]:</span>
+            <span class="n">result_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
 
         <span class="c1">#  build a RecordSet passing the array</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">RecordSet</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">,</span> <span class="n">result_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span><span class="p">)</span>
 
         <span class="c1">#  return the RecordSet</span>
+        <span class="k">return</span> <span class="n">result</span></div>
 
 <div class="viewcode-block" id="RecordQuery.get_session"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.record.RecordQuery.get_session">[docs]</a>    <span class="k">def</span> <span class="nf">get_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -681,7 +742,10 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_result_array</span><span class="p">):</span>
             <span class="n">record_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result_array</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">]</span>
-            <span class="n">record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_record_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">record_dict</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_record_class</span> <span class="ow">is</span> <span class="n">Record</span><span class="p">:</span>
+                <span class="n">record</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">,</span> <span class="n">table_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span> <span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">record_dict</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_record_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">record_dict</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">return</span> <span class="n">record</span>
 

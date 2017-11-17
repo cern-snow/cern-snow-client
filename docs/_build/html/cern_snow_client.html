@@ -1582,11 +1582,36 @@ an instance of the class corresponding to the <code class="docutils literal"><sp
 otherwise, an instance of the Record class.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.record.RecordSet" title="cern_snow_client.record.RecordSet">RecordSet</a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#cern_snow_client.record.RecordSet" title="cern_snow_client.record.RecordSet">RecordSet</a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">SnowClientException</span></code> – if neither a query_filter nor a query_encoded parameter is provided.</p>
 </td>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">RecordQuery</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Query the incidents with FE=IT Service Management Support,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Visibility=CERN, and already closed</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record_set</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query_filter</span><span class="o">=</span><span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="s1">&#39;ea56fb210a0a8c0a015a591ddbed3676&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;u_visibility&#39;</span><span class="p">:</span> <span class="s1">&#39;cern&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;active&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">})</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Same query with encoded query</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record_set</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">query_encoded</span><span class="o">=</span><span class="s2">&quot;u_functional_element=ea56fb210a0a8c0a015a591ddbed3676^&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span>                  <span class="s2">&quot;u_visibility=cern^active=false&quot;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">record_set</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">record</span><span class="o">.</span><span class="n">number</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">record</span><span class="o">.</span><span class="n">short_description</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">record</span><span class="o">.</span><span class="n">sys_class_name</span>  <span class="c1"># will print &#39;incident</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="nb">type</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>  <span class="c1"># will print the Incident class</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
