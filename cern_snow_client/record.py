@@ -670,6 +670,33 @@ class RecordQuery(SessionAware):
 
 
 class RecordSet(SessionAware):
+    """
+        An iterable class which encapsulates a list of records.
+        It is constructed with an array of dictionaries (raw input from the GET call), and in each iteration
+        it will build and return an object representing a record, using the appropriate class: Incident, Request,
+        Task, etc. or Record if no more appropriate class is found.
+
+        Args:
+            session (SnowRestSession): a cern_snow_client.session.SnowRestSession object
+            result_array (list): a list of dictionaries
+            table_name (str): the name of a ServiceNow table, e.g. 'incident', from which to query from
+
+        Examples:
+            >>> r = RecordQuery(s, 'incident')
+            >>>
+            >>> # Query the incidents with FE=IT Service Management Support,
+            >>> # Visibility=CERN, and already closed
+            >>> record_set = r.query(query_filter={
+            >>>     'u_functional_element': 'ea56fb210a0a8c0a015a591ddbed3676',
+            >>>     'u_visibility': 'cern',
+            >>>     'active': 'false'
+            >>> })
+            >>>
+            >>> for record in record_set:
+            >>>     print record.number + " " + record.short_description
+            >>>     print record.sys_class_name  # will print 'incident
+            >>>     print type(record)  # will print the Incident class
+        """
 
     def __init__(self, session, result_array, table_name):
         super(RecordSet, self).__init__(session)
