@@ -621,29 +621,39 @@ class RecordQuery(SessionAware):
             raise SnowClientException("RecordQuery.query: "
                                       "needs either a value in the query_filter or the query_encoded parameters")
         # TODO: Finish this method
+
         #  build the URL
         url = '/api/now/v2/table/' + self._table_name
-        #  execute a get
+
         if query_filter:
             if query_encoded:
                 query_encoded = query_encoded + '^'
+            else:
+                query_encoded = ''
             query = []
             for key in query_filter:
                 query.append(key + '=' + query_filter[key])
-                query_encoded = '^'.join(query)
+            query_encoded = query_encoded + '^'.join(query)
         if query_encoded:
             url = url + '?sysparm_query=' + query_encoded
+
+        #  execute a get
+        self._info('RecordQuery.query: querying the table ' + self._table_name + ' with URL ' + url)
         result = self._session.get(url)
-        result_array = []
+
         #  build an array of objects where each object represents a record
+        result_array = []
         result = json.loads(result.text)
         if 'result' not in result:
             return RecordSet(self._session, result_array, self._table_name)
         for record in result['result']:
             result_array.append(record)
+
         #  build a RecordSet passing the array
-        return RecordSet(self._session, result_array, self._table_name)
+        result = RecordSet(self._session, result_array, self._table_name)
+
         #  return the RecordSet
+        return result
 
     def get_session(self):
         """
