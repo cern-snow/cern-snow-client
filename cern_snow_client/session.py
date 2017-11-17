@@ -22,6 +22,7 @@ except ImportError:
         def emit(self, record):
             pass
 
+from . import __version__
 from common import SnowClientException
 
 
