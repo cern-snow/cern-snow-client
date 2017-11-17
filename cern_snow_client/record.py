@@ -598,18 +598,17 @@ class RecordQuery(SessionAware):
             >>> r = RecordQuery(s, 'incident')
             >>>
             >>> # Query the incidents with FE=IT Service Management Support,
-            >>> # Visibility=CERN, Created in 2016, and already closed
+            >>> # Visibility=CERN, and already closed
             >>> record_set = r.query(query_filter={
             >>>     'u_functional_element': 'ea56fb210a0a8c0a015a591ddbed3676',
             >>>     'u_visibility': 'cern',
-            >>>     'active': 'false',
-            >>>     'sys_created_on': "DATEPART2016@javascript:gs.datePart('year','2016','EE')"
+            >>>     'active': 'false'
             >>> })
             >>>
             >>> # Same query with encoded query
             >>> record_set = r.query(
-            >>>     query_encoded="u_functional_element=ea56fb210a0a8c0a015a591ddbed3676^u_visibility=cern^"
-            >>>                   "sys_created_onDATEPART2016@javascript:gs.datePart('year','2016','EE')^active=false")
+            >>>     query_encoded="u_functional_element=ea56fb210a0a8c0a015a591ddbed3676^"
+            >>>                   "u_visibility=cern^active=false")
             >>>
             >>> for record in record_set:
             >>>     print record.number + " " + record.short_description
