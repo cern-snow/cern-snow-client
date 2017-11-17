@@ -99,7 +99,6 @@ class Task(Record):
             return False
         return True
 
-
     def add_work_note(self, work_note, key=None):
         """
         Similar to add_comment, but to add work notes.
@@ -117,6 +116,19 @@ class Task(Record):
         Raises:
             SnowClientException: if no key is provided and the current record has no ``sys_id``
             SnowRestSessionException : if there is any authentication problem
+
+        Examples:
+
+            Adding a work note to a task after getting it:
+
+            >>> t = Task(s)  # s is a SnowRestSession object
+            >>> if t.get('c1c535ba85f45540adf94de5b835cd43'):
+            >>>     t.add_work_note('New work note')  # will immediately add a new comment in ServiceNow
+
+            Adding a comment to a task for which we know the number:
+
+            >>> t = Task(s)  # s is a SnowRestSession object
+            >>> t.add_work_note('New work note', key=('number', 'INC0426232'))  # will immediately add a new comment in ServiceNow, and will download the resulting state of the task
         """
         # TODO: Finish this method
         pass
