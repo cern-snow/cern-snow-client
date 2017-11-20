@@ -328,7 +328,10 @@ class Record(SessionAware):
 
         # TODO: Finish this method
         #  build the URL (using self.sys_class_name as table)
-        url = '/api/now/v2/table/' + self._table_name + '/'
+        if self.sys_class_name:
+            url = '/api/now/v2/table/' + self.sys_class_name + '/'
+        else:
+            url = '/api/now/v2/table/' + self._table_name + '/'
         if key:
             if isinstance(key, tuple):
                 sys_id = self.get(key)
