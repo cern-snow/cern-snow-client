@@ -323,25 +323,24 @@ class Record(SessionAware):
             raise SnowClientException("Record.get: the \"key\" parameter should be a non empty str/unicode value, "
                                       "or a tuple (field_name, field_value) where field_name is a str")
 
-        if not self.sys_class_name:
-            object.__setattr__(self, 'sys_class_name', self._table_name)
-            self.sys_class_name = self._table_name
-
-        # TODO: Finish this method
         #  build the URL (using self.sys_class_name as table)
         if self.sys_class_name:
             url = '/api/now/v2/table/' + self.sys_class_name + '/'
         else:
             url = '/api/now/v2/table/' + self._table_name + '/'
+
+        sys_id = None
         if key:
-            if isinstance(key, tuple):
-                sys_id = self.get(key)
-                if sys_id is False:
+            if is_key_text:
+                sys_id = key
+            elif is_key_tuple:
+                if self.get(key):
+                    sys_id = self.sys_id
+                else:
                     return False
-                sys_id = self.sys_id
-            else:
-                url = url + key
-        url = url + self.sys_id
+        else:
+            sys_id = self.sys_id
+        url = url + sys_id
         #  execute a put using the changed data : get_changed_fields()
         data = json.dumps(self._changes)
         result = self._session.put(url=url, data=data, params={'sysparm_display_value':'all'})
