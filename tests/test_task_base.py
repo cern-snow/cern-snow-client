@@ -2,6 +2,8 @@
 
 from cern_snow_client.record import Record
 from cern_snow_client.task import Task
+from cern_snow_client.task import TaskQuery
+from cern_snow_client.incident import Incident
 from tests.test_base import TestBase
 from cern_snow_client.common import SnowClientException
 
@@ -487,4 +489,63 @@ class TestTaskBase(TestBase):
         self.assertTrue(r2.assigned_to, self.current_user)
 
     def base_test_task_query(self, s):
-        pass
+        t = TaskQuery(s)
+
+        # Query the incidents with FE=IT Service Management Support,
+        # Visibility=CERN, Created in 2016, and already closed
+        record_set = t.query(
+            query_encoded="u_functional_element=ea56fb210a0a8c0a015a591ddbed3676^"
+                          "u_visibility=cern^"
+                          "active=false^"
+                          "sys_class_name=incident^ORsys_class_name=u_request_fulfillment"
+        )
+
+        records_found = False
+        for record in record_set:
+            records_found = True
+            self.assertTrue(bool(record.number))
+            self.assertTrue(bool(record.short_description))
+            self.assertTrue(record.sys_class_name == 'incident' or record.sys_class_name == 'u_request_fulfillment')
+            self.assertTrue(type(record) is Task)
+            self.assertFalse(hasattr(record, 'incident_state'))
+
+        self.assertTrue(records_found)
+
+        t2 = TaskQuery(s, 'incident')
+
+        # Query the incidents with FE=IT Service Management Support,
+        # Visibility=CERN, Created in 2016, and already closed
+        record_set_2 = t2.query(
+            query_encoded="u_functional_element=ea56fb210a0a8c0a015a591ddbed3676^u_visibility=cern^active=false^"
+                          "sys_created_onDATEPART2016@javascript:gs.datePart('year','2016','EE')")
+
+        records_found = False
+        for record in record_set_2:
+            records_found = True
+            self.assertTrue(bool(record.number))
+            self.assertTrue(bool(record.short_description))
+            self.assertEquals(record.sys_class_name, 'incident')
+            self.assertTrue(type(record) is Incident)
+            self.assertTrue(hasattr(record, 'incident_state'))
+
+        self.assertTrue(records_found)
+
+        t3 = TaskQuery(s, 'task')
+
+        # Query the incidents with FE=IT Service Management Support,
+        # Visibility=CERN, Created in 2016, and already closed
+        record_set_3 = t3.query(
+            query_encoded="sys_class_name=incident^u_functional_element=ea56fb210a0a8c0a015a591ddbed3676"
+                          "^u_visibility=cern^active=false^"
+                          "sys_created_onDATEPART2016@javascript:gs.datePart('year','2016','EE')")
+
+        records_found = False
+        for record in record_set_3:
+            records_found = True
+            self.assertTrue(bool(record.number))
+            self.assertTrue(bool(record.short_description))
+            self.assertEquals(record.sys_class_name, 'incident')
+            self.assertTrue(type(record) is Task)
+            self.assertFalse(hasattr(record, 'incident_state'))
+
+        self.assertTrue(records_found)
