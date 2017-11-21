@@ -213,8 +213,7 @@ class Task(Record):
         return result
 
 
-
 class TaskQuery(RecordQuery):
 
-    def __init__(self, session):
-        RecordQuery.__init__(self, session, package_table)
+    def __init__(self, session, table_name=package_table):
+        RecordQuery.__init__(self, session, table_name)
