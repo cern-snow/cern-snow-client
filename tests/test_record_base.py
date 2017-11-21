@@ -85,13 +85,23 @@ class TestRecordBase(TestBase):
 
         r4 = Record(s, 'incident')
         r4.watch_list = 'test_watch_list_value_2@cern.ch'
-        updated = r4.update(('number', r.number))
+        updated = r4.update(r.sys_id)
         self.assertTrue(updated)
 
         r5 = Record(s, 'incident')
         found = r5.get(('number', r.number))
         self.assertTrue(found)
         self.assertEquals(r5.watch_list, 'test_watch_list_value_2@cern.ch')
+
+        r6 = Record(s, 'incident')
+        r6.watch_list = 'test_watch_list_value_3@cern.ch'
+        updated = r6.update(('number', r.number))
+        self.assertTrue(updated)
+
+        r7 = Record(s, 'incident')
+        found = r7.get(('number', r.number))
+        self.assertTrue(found)
+        self.assertEquals(r7.watch_list, 'test_watch_list_value_3@cern.ch')
 
     def base_test_get_query(self, s):
         r = RecordQuery(s, 'incident')
