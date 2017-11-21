@@ -69,28 +69,9 @@ class Task(Record):
             >>> t = Task(s)  # s is a SnowRestSession object
             >>> t.add_comment('New comment', key=('number', 'INC0426232'))  # will immediately add a new comment in ServiceNow, and will download the resulting state of the task
         """
-
-        is_key_text = isinstance(key, str) or isinstance(key, unicode)
-        is_key_tuple = isinstance(key, tuple) and len(key) == 2 and isinstance(key[0], str)
-
-        if not key and not self.sys_id:
-            raise SnowClientException('Record.update: The current Record instance does not have a sys_id. '
-                                      'Please provide a key to specify which record to update.')
-
-        elif not self.sys_id and not is_key_text and not is_key_tuple:
-            raise SnowClientException("Record.get: the \"key\" parameter should be a non empty str/unicode value, "
-                                      "or a tuple (field_name, field_value) where field_name is a str")
-
-        if not self.sys_class_name:
-            object.__setattr__(self, 'sys_class_name', self._table_name)
-        # TODO: Finish this method
-        if not self.sys_id:
-            self.get(key)
-        self.comment = comment
-        result = self.update(self.sys_id)
-        if not result:
-            return False
-        return True
+        self.comments = comment
+        result = self.update()
+        return result
 
     def add_work_note(self, work_note, key=None):
         """
@@ -123,28 +104,9 @@ class Task(Record):
             >>> t = Task(s)  # s is a SnowRestSession object
             >>> t.add_work_note('New work note', key=('number', 'INC0426232'))  # will immediately add a new comment in ServiceNow, and will download the resulting state of the task
         """
-        # TODO: Finish this method
-        is_key_text = isinstance(key, str) or isinstance(key, unicode)
-        is_key_tuple = isinstance(key, tuple) and len(key) == 2 and isinstance(key[0], str)
-
-        if not key and not self.sys_id:
-            raise SnowClientException('Record.update: The current Record instance does not have a sys_id. '
-                                      'Please provide a key to specify which record to update.')
-
-        elif not self.sys_id and not is_key_text and not is_key_tuple:
-            raise SnowClientException("Record.get: the \"key\" parameter should be a non empty str/unicode value, "
-                                      "or a tuple (field_name, field_value) where field_name is a str")
-
-        if not self.sys_class_name:
-            object.__setattr__(self, 'sys_class_name', self._table_name)
-
-        if not self.sys_id:
-            self.get(key)
-        self.work_note = work_note
-        result = self.update(self.sys_id)
-        if not result:
-            return False
-        return True
+        self.work_notes = work_note
+        result = self.update(key)
+        return result
 
     def resolve(self, solution, close_code=None, key=None):
         """
@@ -188,17 +150,35 @@ class Task(Record):
         is_key_tuple = isinstance(key, tuple) and len(key) == 2 and isinstance(key[0], str)
 
         if not key and not self.sys_id:
-            raise SnowClientException('Record.update: The current Record instance does not have a sys_id. '
+            raise SnowClientException('Record.resolve: The current Record instance does not have a sys_id. '
                                       'Please provide a key to specify which record to update.')
 
         elif not self.sys_id and not is_key_text and not is_key_tuple:
-            raise SnowClientException("Record.get: the \"key\" parameter should be a non empty str/unicode value, "
+            raise SnowClientException("Record.resolve: the \"key\" parameter should be a non empty str/unicode value, "
                                       "or a tuple (field_name, field_value) where field_name is a str")
 
         if not self.sys_class_name:
-            object.__setattr__(self, 'sys_class_name', self._table_name)
+            if key:
+                self.get(key)
+            elif self.sys_id:
+                self.get(self.sys_id)
 
-        if not self.sys_class_name:
+        if not close_code:
+            if self.sys_class_name == 'incident':
+                close_code = 'Restored'
+            elif self.sys_class_name=='u_request_fulfillment':
+                close_code='Fulfilled'
+
+        self.u_close_code = close_code
+
+        if self.sys_class_name == 'incident':
+            self.incident_state = '6'
+        elif self.sys_class_name == 'u_request_fulfillment':
+            self.u_current_task_state = '9'
+
+        self.comments = solution
+        result = self.update()
+        return result
 
 
 

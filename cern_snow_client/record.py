@@ -325,6 +325,7 @@ class Record(SessionAware):
 
         if not self.sys_class_name:
             object.__setattr__(self, 'sys_class_name', self._table_name)
+            self.sys_class_name = self._table_name
 
         # TODO: Finish this method
         #  build the URL (using self.sys_class_name as table)
