@@ -3,12 +3,15 @@
 import unittest
 import os
 
+from tests.test_base import TestBase
 from tests.test_task_base import TestTaskBase
 
 
 class TestTaskBasicAuthentication(unittest.TestCase, TestTaskBase):
 
     short_description_prefix = "snow client - task unit test - basic auth"
+
+    current_user = TestBase.basic_auth_user
 
     @classmethod
     def make_good_session(cls):

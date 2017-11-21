@@ -6,6 +6,8 @@ import yaml
 
 class TestBase(object):
 
+    basic_auth_user = 'b09313fc4f16c70015d3bc511310c719'
+
     short_description_prefix = "snow client unit test"
 
     @classmethod
