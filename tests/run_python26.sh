@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
 # This file should be run from the root directory, i.e.
-# tests/run.sh
+# tests/run_python26.sh
 # instead of
-# ./run.sh
+# ./run_python26.sh
 
 # Run the tests the Python 2.6 way, to make sure they can run in lxplus.cern.ch (2.6) and aiadm.cern.ch (2.7)
+
 echo -e "\n\npython -m tests.test_session_basic_auth"
 python -m tests.test_session_basic_auth
 
