@@ -345,7 +345,7 @@ class Record(SessionAware):
 
         #  execute a put using the changed data : get_changed_fields()
         data = json.dumps(self._changes)
-        result = self._session.put(url=url, data=data, params={'sysparm_display_value':'all'})
+        result = self._session.put(url=url, data=data, params={'sysparm_display_value': 'all'})
         #  parse the JSON result
         result = json.loads(result.text)
         #  reset the changed data : reset_changed_values()
