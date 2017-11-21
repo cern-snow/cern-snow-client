@@ -12,38 +12,38 @@ class TestRecordBasicAuthentication(unittest.TestCase):
 
         self.assertEquals(rf, 'text')
         self.assertEquals(rf, u'text')
-        self.assertIsInstance(rf, unicode)
+        self.assertTrue(isinstance(rf, unicode))
         self.assertEquals(rf + ' text2', u'text text2')
 
         self.assertEquals(rf.get_value(), 'text')
         self.assertEquals(rf.get_value(), u'text')
-        self.assertIs(type(rf.get_value()), unicode)
+        self.assertTrue(type(rf.get_value()) is unicode)
 
         self.assertEquals(rf.get_display_value(), 'text')
         self.assertEquals(rf.get_display_value(), u'text')
-        self.assertIs(type(rf.get_display_value()), unicode)
+        self.assertTrue(type(rf.get_display_value()) is unicode)
 
         self.assertFalse(rf.is_reference())
-        self.assertIsNone(rf.get_referenced_table())
+        self.assertTrue(rf.get_referenced_table() is None)
 
     def test_record_field_unicode(self):
         rf = RecordField(u'text')
 
         self.assertEquals(rf, 'text')
         self.assertEquals(rf, u'text')
-        self.assertIsInstance(rf, unicode)
+        self.assertTrue(isinstance(rf, unicode))
         self.assertEquals(rf + ' text2', u'text text2')
 
         self.assertEquals(rf.get_value(), 'text')
         self.assertEquals(rf.get_value(), u'text')
-        self.assertIs(type(rf.get_value()), unicode)
+        self.assertTrue(type(rf.get_value()) is unicode)
 
         self.assertEquals(rf.get_display_value(), 'text')
         self.assertEquals(rf.get_display_value(), u'text')
-        self.assertIs(type(rf.get_display_value()), unicode)
+        self.assertTrue(type(rf.get_display_value()) is unicode)
 
         self.assertFalse(rf.is_reference())
-        self.assertIsNone(rf.get_referenced_table())
+        self.assertTrue(rf.get_referenced_table() is None)
 
     def test_record_field_dict_no_link(self):
         rf = RecordField({
@@ -53,19 +53,19 @@ class TestRecordBasicAuthentication(unittest.TestCase):
 
         self.assertEquals(rf, 'some_value')
         self.assertEquals(rf, u'some_value')
-        self.assertIsInstance(rf, unicode)
+        self.assertTrue(isinstance(rf, unicode))
         self.assertEquals(rf + ' some_value_2', u'some_value some_value_2')
 
         self.assertEquals(rf.get_value(), 'some_value')
         self.assertEquals(rf.get_value(), u'some_value')
-        self.assertIs(type(rf.get_value()), unicode)
+        self.assertTrue(type(rf.get_value()) is unicode)
 
         self.assertEquals(rf.get_display_value(), 'some_display_value')
         self.assertEquals(rf.get_display_value(), u'some_display_value')
-        self.assertIs(type(rf.get_display_value()), unicode)
+        self.assertTrue(type(rf.get_display_value()) is unicode)
 
         self.assertFalse(rf.is_reference())
-        self.assertIsNone(rf.get_referenced_table())
+        self.assertTrue(rf.get_referenced_table() is None)
 
     def test_record_field_dict_with_link(self):
         rf = RecordField({
@@ -77,16 +77,16 @@ class TestRecordBasicAuthentication(unittest.TestCase):
 
         self.assertEquals(rf, '579fb3d90a0a8c08017ac8a1137c8ee6')
         self.assertEquals(rf, u'579fb3d90a0a8c08017ac8a1137c8ee6')
-        self.assertIsInstance(rf, unicode)
+        self.assertTrue(isinstance(rf, unicode))
         self.assertEquals(rf + ' some_value_2', u'579fb3d90a0a8c08017ac8a1137c8ee6 some_value_2')
 
         self.assertEquals(rf.get_value(), '579fb3d90a0a8c08017ac8a1137c8ee6')
         self.assertEquals(rf.get_value(), u'579fb3d90a0a8c08017ac8a1137c8ee6')
-        self.assertIs(type(rf.get_value()), unicode)
+        self.assertTrue(type(rf.get_value()) is unicode)
 
         self.assertEquals(rf.get_display_value(), 'ServiceNow')
         self.assertEquals(rf.get_display_value(), u'ServiceNow')
-        self.assertIs(type(rf.get_display_value()), unicode)
+        self.assertTrue(type(rf.get_display_value()) is unicode)
 
         self.assertTrue(rf.is_reference())
         self.assertEquals(rf.get_referenced_table(), 'u_cmdb_ci_functional_services')
