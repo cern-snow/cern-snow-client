@@ -46,5 +46,6 @@ class TestRecordBasicAuthentication(unittest.TestCase, TestRecordBase):
         TestRecordBase.base_test_get_query(self, s)
         self.remove_cookie()
 
+
 if __name__ == '__main__':
     unittest.main()  # for compatibility with Python2.6 unittest
