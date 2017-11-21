@@ -120,7 +120,7 @@ class TestRecordBase(TestBase):
             self.assertTrue(bool(record.number))
             self.assertTrue(bool(record.short_description))
             self.assertEquals(record.sys_class_name, 'incident')
-            self.assertIs(type(record), Incident)
+            self.assertTrue(type(record) is Incident)
 
         self.assertTrue(records_found)
 
@@ -138,7 +138,7 @@ class TestRecordBase(TestBase):
             self.assertTrue(bool(record.number))
             self.assertTrue(bool(record.short_description))
             self.assertEquals(record.sys_class_name, 'incident')
-            self.assertIs(type(record), Incident)
+            self.assertTrue(type(record) is Incident)
 
         self.assertTrue(records_found)
 
@@ -154,9 +154,9 @@ class TestRecordBase(TestBase):
         records_found = False
         for record in record_set_3:
             records_found = True
-            self.assertIsNotNone(record.number)
-            self.assertIsNotNone(record.short_description)
+            self.assertTrue(bool(record.number))
+            self.assertTrue(bool(record.short_description))
             self.assertEquals(record.sys_class_name, 'incident')
-            self.assertIs(type(record), Task)
+            self.assertTrue(type(record) is Task)
 
         self.assertTrue(records_found)
