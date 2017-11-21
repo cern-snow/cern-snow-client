@@ -103,7 +103,7 @@ class Record(SessionAware):
         if initialized and key == 'sys_class_name':
             raise SnowClientException("Record.__setattr__: the field ``sys_class_name`` is read-only")
 
-        if not key.startswith('_'):
+        if value is not None and not key.startswith('_'):
             value = RecordField(value)
 
         if initialized and not key.startswith('_'):
@@ -340,7 +340,9 @@ class Record(SessionAware):
                     return False
         else:
             sys_id = self.sys_id
+
         url = url + sys_id
+
         #  execute a put using the changed data : get_changed_fields()
         data = json.dumps(self._changes)
         result = self._session.put(url=url, data=data, params={'sysparm_display_value':'all'})
