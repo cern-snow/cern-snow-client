@@ -108,6 +108,38 @@ class Task(Record):
         result = self.update(key)
         return result
 
+    def take_in_progress(self, key=None):
+        """
+        The logged in account will take the task in progress.
+        The state of the task will be changed to "In Progress". If the "Assigned to" field is empty,
+        the current account will be set in it.
+
+        Args:
+            key (:obj:`str` or :obj:`tuple`, optional): a str the sys_id (ServiceNow unique identifier)
+                of the record to update, or a tuple (field_name, field_value), such as ('number', 'INC987654').
+                If this parameter is set, it will override the current sys_id of this record object, if any.
+
+        Returns:
+            bool: True if the record was updated succesfully, False otherwise.
+
+        Examples:
+
+            Taking a task in progress after getting it:
+
+            >>> t = Task(s)  # s is a SnowRestSession object
+            >>> if t.get('c1c535ba85f45540adf94de5b835cd43'):
+            >>>     t.take_in_progress()
+
+            Taking in progress a task for which we know the number:
+
+            >>> t = Task(s)  # s is a SnowRestSession object
+            >>> t.take_in_progress(key=('number', 'INC0426232'))
+        """
+        # TODO: Finish this method
+        # if an incident, make : incident_state=3
+        # if an request, make : u_current_task_state=4
+        pass
+
     def resolve(self, solution, close_code=None, key=None):
         """
         Resolves a Task in ServiceNow.
