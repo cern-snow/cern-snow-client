@@ -23,19 +23,19 @@ class TestSessionBasicAuthentication(unittest.TestCase, TestSessionBase):
     def remove_cookie(cls):
         os.remove('basic_cookie.txt')
 
-    def test_get_incident(self):
+    def test_get(self):
         s = self.make_good_session()
-        TestSessionBase.base_test_get_incident(self, s)
+        TestSessionBase.base_test_get(self, s)
         self.remove_cookie()
 
-    def test_insert_incident(self):
+    def test_post(self):
         s = self.make_good_session()
-        TestSessionBase.base_test_insert_incident(self, s)
+        TestSessionBase.base_test_post(self, s)
         self.remove_cookie()
 
-    def test_update_incident(self):
+    def test_put(self):
         s = self.make_good_session()
-        TestSessionBase.base_test_update_incident(self, s)
+        TestSessionBase.base_test_put(self, s)
         self.remove_cookie()
 
     def test_session_persistance(self):

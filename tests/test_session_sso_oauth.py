@@ -24,19 +24,19 @@ class TestSessionSsoOauth(unittest.TestCase, TestSessionBase):
         os.remove('sso_oauth_cookie.txt')
         os.remove('token_file.npy')
 
-    def test_get_incident(self):
+    def test_get(self):
         s = TestSessionSsoOauth.make_good_session()
-        TestSessionBase.base_test_get_incident(self, s)
+        TestSessionBase.base_test_get(self, s)
         TestSessionSsoOauth.remove_files()
 
-    def test_insert_incident(self):
+    def test_post(self):
         s = TestSessionSsoOauth.make_good_session()
-        TestSessionBase.base_test_insert_incident(self, s)
+        TestSessionBase.base_test_post(self, s)
         TestSessionSsoOauth.remove_files()
 
-    def test_update_incident(self):
+    def test_put(self):
         s = TestSessionSsoOauth.make_good_session()
-        TestSessionBase.base_test_update_incident(self, s)
+        TestSessionBase.base_test_put(self, s)
         TestSessionSsoOauth.remove_files()
 
     def test_session_persistance(self):

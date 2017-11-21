@@ -11,47 +11,52 @@ class TestSessionBase(TestBase):
         result = s.get('/api/now/v2/table/incident?sysparm_query=number=INC0426232')
         inc = json.loads(result.text)['result'][0]
 
+        self.assertEquals(result.status_code, 200)
         self.assertEquals(inc['number'], "INC0426232")
         self.assertEquals(inc['short_description'], "Test")
 
     def base_test_post(self, s):
-        sd = self.short_description_prefix + ": test_insert_incident"
+        sd = self.short_description_prefix + ": test_post"
         fe = '579fb3d90a0a8c08017ac8a1137c8ee6'
-
-        result = s.post('/api/now/v2/table/incident', data={
+        data = json.dumps({
             'short_description': sd,
             'u_functional_element': fe,
+            'comments': 'Initial description',
             'incident_state': '2'
         })
-        inc = json.loads(result.text)['result']
 
-        print 'INC created: %s' % inc['number']
+        result = s.post('/api/now/v2/table/incident', data=data)
+        self.assertEquals(result.status_code, 201)
+        inc = json.loads(result.text)['result']
 
         self.assertEquals(inc['short_description'], sd)
         self.assertEquals(inc['u_functional_element']['value'], fe)
         self.assertEquals(inc['incident_state'], '2')
 
     def base_test_put(self, s):
-        sd = self.short_description_prefix + ": test_update_incident"
+        sd = self.short_description_prefix + ": test_put"
         fe = '579fb3d90a0a8c08017ac8a1137c8ee6'
-
-        result = s.post('/api/now/v2/table/incident', data={
+        data = json.dumps({
             'short_description': sd,
             'u_functional_element': fe,
             'incident_state': '2',
             'watch_list': 'noreply@cern.ch'
         })
+
+        result = s.post('/api/now/v2/table/incident', data=data)
+        self.assertEquals(result.status_code, 201)
         inc = json.loads(result.text)['result']
 
-        result2 = s.put('/api/now/v2/table/incident/' + inc['sys_id'], data={
+        data = json.dumps({
             'watch_list': 'noreply2@cern.ch'
         })
+        result2 = s.put('/api/now/v2/table/incident/' + inc['sys_id'], data=data)
+        self.assertEquals(result2.status_code, 200)
         inc2 = json.loads(result2.text)['result']
 
         result3 = s.get('/api/now/v2/table/incident/' + inc['sys_id'])
+        self.assertEquals(result3.status_code, 200)
         inc3 = json.loads(result3.text)['result']
-
-        print 'INC created: %s' % inc['number']
 
         self.assertEquals(inc2['watch_list'], 'noreply2@cern.ch')
         self.assertEquals(inc3['watch_list'], 'noreply2@cern.ch')
