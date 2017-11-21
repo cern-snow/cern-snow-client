@@ -3,9 +3,271 @@
 from cern_snow_client.record import Record
 from cern_snow_client.task import Task
 from tests.test_base import TestBase
+from cern_snow_client.common import SnowClientException
 
 
 class TestTaskBase(TestBase):
+
+    def base_test_task_get(self, s):
+        t = Task(s)
+        found = t.get('c1c535ba85f45540adf94de5b835cd43')
+        self.assertTrue(found)
+        self.assertEquals(t.sys_id, 'c1c535ba85f45540adf94de5b835cd43')
+        self.assertEquals(t.number, 'INC0426232')
+        self.assertEquals(t.short_description, 'Test')
+        self.assertEquals(t.get_table_name(), 'task')
+        self.assertEquals(t.sys_class_name, 'incident')
+        self.assertTrue(not hasattr(t, 'incident_state'))
+
+        t = Task(s)
+        found = t.get(('number', 'INC0426232'))
+        self.assertTrue(found)
+        self.assertEquals(t.sys_id, 'c1c535ba85f45540adf94de5b835cd43')
+        self.assertEquals(t.number, 'INC0426232')
+        self.assertEquals(t.short_description, 'Test')
+        self.assertEquals(t.get_table_name(), 'task')
+        self.assertEquals(t.sys_class_name, 'incident')
+        self.assertTrue(not hasattr(t, 'incident_state'))
+
+        t = Task(s)
+        found = t.get('c69bd7324fdabac07db7d3ef0310c73b')
+        self.assertTrue(found)
+        self.assertEquals(t.sys_id, 'c69bd7324fdabac07db7d3ef0310c73b')
+        self.assertEquals(t.number, 'RQF0746626')
+        self.assertEquals(t.short_description, 'Test from Mats')
+        self.assertEquals(t.get_table_name(), 'task')
+        self.assertEquals(t.sys_class_name, 'u_request_fulfillment')
+        self.assertTrue(not hasattr(t, 'u_current_task_state'))
+
+        t = Task(s)
+        found = t.get(('number', 'RQF0746626'))
+        self.assertTrue(found)
+        self.assertEquals(t.sys_id, 'c69bd7324fdabac07db7d3ef0310c73b')
+        self.assertEquals(t.number, 'RQF0746626')
+        self.assertEquals(t.short_description, 'Test from Mats')
+        self.assertEquals(t.get_table_name(), 'task')
+        self.assertEquals(t.sys_class_name, 'u_request_fulfillment')
+        self.assertTrue(not hasattr(t, 'u_current_task_state'))
+
+        t = Task(s, 'incident')
+        found = t.get('c1c535ba85f45540adf94de5b835cd43')
+        self.assertTrue(found)
+        self.assertEquals(t.sys_id, 'c1c535ba85f45540adf94de5b835cd43')
+        self.assertEquals(t.number, 'INC0426232')
+        self.assertEquals(t.short_description, 'Test')
+        self.assertEquals(t.get_table_name(), 'incident')
+        self.assertEquals(t.sys_class_name, 'incident')
+        self.assertTrue(hasattr(t, 'incident_state'))
+        self.assertEquals(t.incident_state, '7')
+
+        t = Task(s, 'incident')
+        found = t.get(('number', 'RQF0746626'))
+        self.assertFalse(found)
+
+    def base_test_task_insert(self, s):
+        # incident test
+        t = Task(s, 'incident', {
+            'short_description': self.short_description_prefix + ' test_insert_task_1',
+            'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
+            'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
+            'assignment_group': 'd34218f3b4a3a4006d2153f17c76edff',  # ServiceNow 4th line
+            'comments': "Initial description",
+            'incident_state': '2'  # initial state : Assigned
+        })
+        self.assertTrue(t.get_can_insert())
+        inserted = t.insert()
+        self.assertTrue(inserted)
+        self.assertTrue(t.sys_id is not None)
+        self.assertEquals(t.get_table_name(), 'incident')
+        self.assertEquals(t.sys_class_name, 'incident')
+        self.assertEquals(t.short_description, self.short_description_prefix + ' test_insert_task_1')
+        self.assertEquals(t.u_business_service, 'e85a3f3b0a0a8c0a006a2912f2f352d1')
+        self.assertEquals(t.u_functional_element, '579fb3d90a0a8c08017ac8a1137c8ee6')
+        self.assertEquals(t.assignment_group, 'd34218f3b4a3a4006d2153f17c76edff')
+        self.assertEquals(t.description, 'Initial description')
+        self.assertEquals(t.incident_state, '2')
+
+        r = Record(s, 'incident')
+        found = r.get(t.sys_id)
+        self.assertTrue(found)
+
+        self.assertEquals(r.sys_class_name, 'incident')
+        self.assertEquals(r.short_description, self.short_description_prefix + ' test_insert_task_1')
+        self.assertEquals(r.u_business_service, 'e85a3f3b0a0a8c0a006a2912f2f352d1')
+        self.assertEquals(r.u_functional_element, '579fb3d90a0a8c08017ac8a1137c8ee6')
+        self.assertEquals(r.assignment_group, 'd34218f3b4a3a4006d2153f17c76edff')
+        self.assertEquals(r.description, 'Initial description')
+        self.assertEquals(r.incident_state, '2')
+
+        # request test
+        t = Task(s, 'u_request_fulfillment')
+        t.short_description = self.short_description_prefix + ' test_insert_task_2'
+        t.u_business_service = 'e85a3f3b0a0a8c0a006a2912f2f352d1'  # Service Element "ServiceNow"
+        t.u_functional_element = '579fb3d90a0a8c08017ac8a1137c8ee6'  # Functional Element "ServiceNow"
+        t.assignment_group = 'd34218f3b4a3a4006d2153f17c76edff'  # ServiceNow 4th line
+        t.comments = "Initial description"
+        t.u_current_task_state = '2'  # initial state : Assigned
+        inserted = t.insert()
+        self.assertTrue(t.get_can_insert())
+
+        self.assertTrue(inserted)
+        self.assertTrue(t.sys_id is not None)
+        self.assertEquals(t.get_table_name(), 'u_request_fulfillment')
+        self.assertEquals(t.sys_class_name, 'u_request_fulfillment')
+        self.assertEquals(t.short_description, self.short_description_prefix + ' test_insert_task_2')
+        self.assertEquals(t.u_business_service, 'e85a3f3b0a0a8c0a006a2912f2f352d1')
+        self.assertEquals(t.u_functional_element, '579fb3d90a0a8c08017ac8a1137c8ee6')
+        self.assertEquals(t.assignment_group, 'd34218f3b4a3a4006d2153f17c76edff')
+        self.assertEquals(t.description, 'Initial description')
+        self.assertEquals(t.u_current_task_state, '2')
+
+        r = Record(s, 'u_request_fulfillment')
+        found = r.get(t.sys_id)
+        self.assertTrue(found)
+
+        self.assertEquals(r.sys_class_name, 'u_request_fulfillment')
+        self.assertEquals(r.short_description, self.short_description_prefix + ' test_insert_task_2')
+        self.assertEquals(r.u_business_service, 'e85a3f3b0a0a8c0a006a2912f2f352d1')
+        self.assertEquals(r.u_functional_element, '579fb3d90a0a8c08017ac8a1137c8ee6')
+        self.assertEquals(r.assignment_group, 'd34218f3b4a3a4006d2153f17c76edff')
+        self.assertEquals(r.description, 'Initial description')
+        self.assertEquals(r.u_current_task_state, '2')
+
+        # insertion without specifying table test
+        t = Task(s)
+        self.assertFalse(t.get_can_insert())
+        self.assertRaises(SnowClientException, Task.insert, t)
+
+    def base_test_task_update(self, s):
+        # insert an incident for testing
+        t_original = Task(s, 'incident', {
+            'short_description': self.short_description_prefix + ' test_update_task_1',
+            'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
+            'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
+            'assignment_group': 'd34218f3b4a3a4006d2153f17c76edff',  # ServiceNow 4th line
+            'comments': "Initial description",
+            'incident_state': '2'  # initial state : Assigned
+        })
+        inserted = t_original.insert()
+        self.assertTrue(inserted)
+
+        # get the incident and the update it
+        t = Task(s)
+        found = t.get(t_original.sys_id)
+        self.assertTrue(found)
+        t.watch_list = 'test_watch_list_value@cern.ch'
+        updated = t.update()
+        self.assertTrue(updated)
+        self.assertEquals(t.watch_list, 'test_watch_list_value@cern.ch')
+
+        t = Task(s)
+        found = t.get(t_original.sys_id)
+        self.assertTrue(found)
+        self.assertEquals(t.watch_list, 'test_watch_list_value@cern.ch')
+
+        # update the incident by sys_id without getting it
+        t = Task(s)
+        t.watch_list = 'test_watch_list_value_2@cern.ch'
+        updated = t.update(t_original.sys_id)
+        self.assertTrue(updated)
+        self.assertEquals(t.watch_list, 'test_watch_list_value_2@cern.ch')
+
+        t = Task(s)
+        found = t.get(t_original.sys_id)
+        self.assertTrue(found)
+        self.assertEquals(t.watch_list, 'test_watch_list_value_2@cern.ch')
+
+        # update the incident by number without getting it
+        t = Task(s)
+        t.watch_list = 'test_watch_list_value_3@cern.ch'
+        updated = t.update(('number', t_original.number))
+        self.assertTrue(updated)
+        self.assertEquals(t.watch_list, 'test_watch_list_value_3@cern.ch')
+
+        t = Task(s)
+        found = t.get(t_original.sys_id)
+        self.assertTrue(found)
+        self.assertEquals(t.watch_list, 'test_watch_list_value_3@cern.ch')
+
+        # update the incident_state after getting it
+        t = Task(s, 'incident')
+        found = t.get(t_original.sys_id)
+        self.assertTrue(found)
+        t.incident_state = '3'
+        updated = t.update()
+        self.assertTrue(updated)
+        self.assertEquals(t.incident_state, '3')
+
+        t = Task(s, 'incident')
+        found = t.get(t_original.sys_id)
+        self.assertTrue(found)
+        self.assertEquals(t.incident_state, '3')
+
+        # update the incident_state directly by sys_id
+        t = Task(s, 'incident')
+        t.incident_state = '4'
+        updated = t.update(t_original.sys_id)
+        self.assertTrue(updated)
+        self.assertEquals(t.incident_state, '4')
+
+        t = Task(s, 'incident')
+        found = t.get(t_original.sys_id)
+        self.assertTrue(found)
+        self.assertEquals(t.incident_state, '4')
+
+        # update the incident_state directly by number
+        t = Task(s, 'incident')
+        t.incident_state = '3'
+        updated = t.update(('number', t_original.number))
+        self.assertTrue(updated)
+        self.assertEquals(t.incident_state, '3')
+
+        t = Task(s, 'incident')
+        found = t.get(t_original.sys_id)
+        self.assertTrue(found)
+        self.assertEquals(t.incident_state, '3')
+
+        # same 3 tests but without providing a table
+        t = Task(s)
+        found = t.get(t_original.sys_id)
+        self.assertTrue(found)
+        t.incident_state = '2'
+        updated = t.update()
+        self.assertTrue(updated)
+        self.assertEquals(t.incident_state, '2')
+
+        t = Task(s, 'incident')
+        found = t.get(t_original.sys_id)
+        self.assertTrue(found)
+        self.assertEquals(t.incident_state, '2')
+
+        t = Task(s)
+        t.incident_state = '3'
+        updated = t.update(t_original.sys_id)
+        self.assertTrue(updated)
+        self.assertEquals(t.incident_state, '3')
+
+        t = Task(s, 'incident')
+        found = t.get(t_original.sys_id)
+        self.assertTrue(found)
+        self.assertEquals(t.incident_state, '3')
+
+        t = Task(s)
+        t.incident_state = '4'
+        updated = t.update(('number', t_original.number))
+        self.assertTrue(updated)
+        self.assertEquals(t.incident_state, '4')
+
+        t = Task(s, 'incident')
+        found = t.get(t_original.sys_id)
+        self.assertTrue(found)
+        self.assertEquals(t.incident_state, '4')
+
+        # providing a wrong table
+        t = Task(s, 'u_request_fulfillment')
+        t.incident_state = '2'
+        updated = t.update(t_original.sys_id)
+        self.assertFalse(updated)
 
     def base_test_add_comment(self, s):
         r = Record(s, 'incident', {  # s is a SnowRestSession object

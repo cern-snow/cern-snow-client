@@ -29,6 +29,21 @@ class TestTaskBasicAuthentication(unittest.TestCase, TestTaskBase):
         except OSError:
             pass
 
+    def test_task_get(self):
+        s = self.make_good_session()
+        TestTaskBase.base_test_task_get(self, s)
+        self.remove_cookie()
+
+    def test_task_insert(self):
+        s = self.make_good_session()
+        TestTaskBase.base_test_task_insert(self, s)
+        self.remove_cookie()
+
+    def test_task_update(self):
+        s = self.make_good_session()
+        TestTaskBase.base_test_task_update(self, s)
+        self.remove_cookie()
+
     def test_add_comment(self):
         s = self.make_good_session()
         TestTaskBase.base_test_add_comment(self, s)
