@@ -70,7 +70,7 @@ class Task(Record):
             >>> t.add_comment('New comment', key=('number', 'INC0426232'))  # will immediately add a new comment in ServiceNow, and will download the resulting state of the task
         """
         self.comments = comment
-        result = self.update()
+        result = self.update(key)
         return result
 
     def add_work_note(self, work_note, key=None):
