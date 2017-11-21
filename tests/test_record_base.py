@@ -36,13 +36,15 @@ class TestRecordBase(TestBase):
         self.assertFalse(r.incident_state.is_reference())
 
     def base_test_insert_record(self, s):
-        r = Record(s, 'incident', {  # s is a SnowRestSession object
-            'short_description': self.short_description_prefix + ' test_insert_record',
+        # incident test
+        r = Record(s, 'incident', {
+            'short_description': self.short_description_prefix + ' test_insert_record_1',
             'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
             'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
             'comments': "Initial description",
             'incident_state': '2'  # initial state : Assigned
         })
+        self.assertTrue(r.get_can_insert())
         inserted = r.insert()
         
         r2 = Record(s, 'incident')
@@ -56,6 +58,32 @@ class TestRecordBase(TestBase):
         self.assertEquals(r.u_business_service, r2.u_business_service)
         self.assertEquals(r.u_functional_element, r2.u_functional_element)
         self.assertEquals(r.comments, r2.comments)
+
+        # request test
+        r = Record(s, 'u_request_fulfillment')
+        self.assertTrue(r.get_can_insert())
+        r.short_description = self.short_description_prefix + ' test_insert_record_2'
+        r.u_business_service = 'e85a3f3b0a0a8c0a006a2912f2f352d1'  # Service Element "ServiceNow"
+        r.u_functional_element = '579fb3d90a0a8c08017ac8a1137c8ee6'  # Functional Element "ServiceNow"
+        r.comments = "Initial description"
+        r.u_current_task_state = '2'  # initial state : Assigned
+        inserted = r.insert()
+
+        r2 = Record(s, 'u_request_fulfillment')
+        found = r2.get(r.sys_id)
+
+        self.assertTrue(inserted)
+        self.assertTrue(found)
+
+        self.assertEquals(r.number, r2.number)
+        self.assertEquals(r.short_description, r2.short_description)
+        self.assertEquals(r.u_business_service, r2.u_business_service)
+        self.assertEquals(r.u_functional_element, r2.u_functional_element)
+        self.assertEquals(r.comments, r2.comments)
+
+        # cannot insert test
+        r = Record(s, 'task')
+        self.assertFalse(r.get_can_insert())
     
     def base_test_update_record(self, s):
         r = Record(s, 'incident', {  # s is a SnowRestSession object
