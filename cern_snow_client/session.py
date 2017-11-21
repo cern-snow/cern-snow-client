@@ -1,9 +1,7 @@
 # coding: utf-8
 
-import ast
 import cookielib
 import json
-import numpy as np
 import os
 import requests
 import subprocess
@@ -12,8 +10,6 @@ import yaml
 import uuid
 import logging
 from logging.handlers import RotatingFileHandler
-
-from . import __version__
 
 try:  # Python 2.7+
     from logging import NullHandler
@@ -214,6 +210,23 @@ class SnowRestSession(object):
         """
         self.oauth_client_secret = oauth_client_secret
 
+    def set_basic_auth_user(self, basic_auth_user):
+        """
+        Args:
+            basic_auth_user (str): the name of the local ServiceNow account that will be used for authentication.
+            Needs set_auth_type('basic') to have an effect.
+        """
+        self.basic_auth_user = basic_auth_user
+
+    def set_basic_auth_password(self, basic_auth_password):
+        """
+        Args:
+            basic_auth_password (str): the password of the local ServiceNow account that will be used for
+            authentication.
+            Needs set_auth_type('basic') to have an effect.
+        """
+        self.basic_auth_password = basic_auth_password
+
     def set_session_cookie_file_path(self, session_cookie_file_path):
         """
         Args:
@@ -268,355 +281,6 @@ class SnowRestSession(object):
 
     def get_log_handler(self):
         return self._log_handler
-
-    def set_basic_auth_user(self, basic_auth_user):
-        """
-        Args:
-            basic_auth_user (str): the name of the local ServiceNow account that will be used for authentication.
-            Needs set_auth_type('basic') to have an effect.
-        """
-        self.basic_auth_user = basic_auth_user
-
-    def set_basic_auth_password(self, basic_auth_password):
-        """
-        Args:
-            basic_auth_password (str): the password of the local ServiceNow account that will be used for
-            authentication.
-            Needs set_auth_type('basic') to have an effect.
-        """
-        self.basic_auth_password = basic_auth_password
-
-    def __call_cern_get_sso_cookie(self):
-        """
-        Executes the cern-get-sso-cookie command (available in CERN Linux environments)
-        in order to perform a Single Sign-On and produce a cookie file.
-        """
-        args = ["cern-get-sso-cookie", "--reprocess", "--url", self.instance, "--outfile", self.session_cookie_file_path]
-        p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        p.wait()
-
-    def __cern_get_sso_cookie(self):
-        """
-        Loads and checks an existing cookie file, in order to avoid logging into ServiceNow and the
-        CERN Single-Sign-On if possible. If needed, logs in again into both to produce the cookie file.
-        The cookie file is loaded into memory.
-        If not needed to persist the cookie file, it is deleted.
-
-        Raises:
-            SnowRestSessionException: if the Single Sign On login is not succesful. This is determined by parsing
-                the cookie file after it is produced.
-        """
-
-        if not os.path.exists(self.session_cookie_file_path):  # cookie file not present. We perform Single Sign On
-            self.__call_cern_get_sso_cookie()
-            self.fresh_cookie = True
-
-        else:  # cookie file present. We check if it has the correct format
-            self.fresh_cookie = False
-            if not self.__good_cookie():  # the format is bad. We create a new cookie file
-                self.__call_cern_get_sso_cookie()
-                self.fresh_cookie = True
-
-        # we load the cookie file
-        self.session_cookie = cookielib.MozillaCookieJar(self.session_cookie_file_path)
-        self.session_cookie.load()
-
-        # we check if the log in was sucessful
-        if not self.__good_cookie():
-            raise SnowRestSessionException(
-                "SnowRestSession.__cern_get_sso_cookie: The current account has failed to perform "
-                "a Single-Sign-On login in to ServiceNow")
-
-        # we load the cookies into the requests.Session session
-        self.session.cookies = self.session_cookie
-
-        # if not needed to persist the cookie file, we delete it
-        if not self.store_cookie:
-            os.remove(self.session_cookie_file_path)
-
-    def __obtain_tokens(self):
-        """
-        Loads the OAuth access and refresh tokens from the token file.
-        If the token file is not present, new OAuth access and refresh tokens are obtained.
-
-        Raises:
-            SnowRestSessionException: if the OAuth tokens could not be retrieved from ServiceNow.
-            IOError, ValueError: if the token file could not be opened
-        """
-
-        if not os.path.exists(self.oauth_token_file_path + '.npy'):  # tokens file not present. We obtain new tokens
-            self.fresh_token = True
-            token_request = self.session.post(self.instance + '/oauth_token.do',
-                                              data={'grant_type': 'password',
-                                                    'client_id': self.oauth_client_id,
-                                                    'client_secret': self.oauth_client_secret})
-
-            if token_request.status_code == 200:  # token request was successful
-                self.token_dic = ast.literal_eval(token_request.text)
-                if self.store_token:
-                    np.save(self.oauth_token_file_path, self.token_dic)
-
-            else:  # token request failed. Possibly, an existing cookie file contained a timed out session
-                if self.fresh_cookie:  # we just performed a Single-Sign-On. There is a problem with token retrieval.
-                    raise SnowRestSessionException(
-                        "SnowRestSession.__obtain_tokens: OAuth tokens could not be retrieved from ServiceNow. "
-                        "Please check the OAuth client id and OAuth client secret.")
-
-                else:  # we may need to perform Single-Sign-On again, as the session may have timed out
-                    self.__cern_get_sso_cookie()
-                    token_request = self.session.post(self.instance + '/oauth_token.do',
-                                                      data={'grant_type': 'password',
-                                                            'client_id': self.oauth_client_id,
-                                                            'client_secret': self.oauth_client_secret})
-                    self.token_dic = None
-                    if token_request.status_code == 200:
-                        self.token_dic = ast.literal_eval(token_request.text)
-                        if self.store_token:
-                            np.save(self.oauth_token_file_path, self.token_dic)
-                        else:
-                            raise SnowRestSessionException(
-                                "SnowRestSession.__obtain_tokens: OAuth tokens could not be retrieved from ServiceNow. "
-                                "Please check the OAuth client id and OAuth client secret.")
-
-        else:  # the tokens file is present. We try to load it
-            try:
-                self.token_dic = np.load(self.oauth_token_file_path + '.npy').item()
-            except (IOError, ValueError) as e:
-                sys.stderr.write(
-                    "SnowRestSession.__obtain_tokens: Issue when opening "
-                    "the token file at %s.\n" % self.oauth_token_file_path)
-                raise e
-
-    def __initiate_session(self):
-        """
-        Initiates a session via CERN Single-Sign-On + OAuth, or basic Authentication
-
-        Raises:
-            SnowRestSessionException: if auth_type is not 'sso_auth' nor 'basic'
-        """
-        if self.auth_type == 'sso_oauth':
-            self.__cern_get_sso_cookie()
-            self.__obtain_tokens()
-
-        elif self.auth_type == 'basic':
-            self.session.auth = (self.basic_auth_user, self.basic_auth_password)
-            self.session.cookies = cookielib.MozillaCookieJar()
-            if os.path.exists(self.session_cookie_file_path):
-                self.session.cookies.load(self.session_cookie_file_path, ignore_discard=True, ignore_expires=True)
-
-        else:
-            raise SnowRestSessionException(
-                "SnowRestSession.__initiate_session: self.auth_type "
-                "has a value different from \"basic\" and \"sso_auth\"")
-
-    def __refresh_token(self):
-        """
-        Requests an OAuth access token via the OAUTH refresh token.
-        Saves the resulting access token in the token file.
-
-        Raises:
-            SnowRestSessionException: if the access token could not be obtained
-        """
-        token = self.session.post(self.instance + '/oauth_token.do',
-                                  data={'grant_type': 'refresh_token',
-                                        'client_id': self.oauth_client_id,
-                                        'client_secret': self.oauth_client_secret,
-                                        'refresh_token': self.token_dic['refresh_token']})
-
-        if token.status_code == 200:
-            self.token_dic = ast.literal_eval(token.text)
-            np.save(self.oauth_token_file_path, self.token_dic)
-
-        else:
-            token = self.session.post(self.instance + '/oauth_token.do',
-                                      data={'grant_type': 'password',
-                                            'client_id': self.oauth_client_id,
-                                            'client_secret': self.oauth_client_secret})
-            if token.status_code == 200:
-                self.token_dic = ast.literal_eval(token.text)
-                np.save(self.oauth_token_file_path, self.token_dic)
-            else:
-                if self.fresh_cookie:
-                    raise SnowRestSessionException(
-                        "SnowRestSession.__refresh_token: the OAuth client id and OAuth secret might not be valid")
-
-    def __save_cookie_basic(self):
-        """
-        Persists the basic authentication cookie file.
-        """
-        self.fresh_cookie = True
-        self.session.cookies.save(self.session_cookie_file_path, ignore_discard=True, ignore_expires=True)
-
-    @staticmethod
-    def __library_user_agent():
-        user_agent_header = 'cern-snow-client/' + __version__
-        default_headers = requests.utils.default_headers()
-        if 'User-Agent' in default_headers:
-            user_agent_header = user_agent_header + ' ' + default_headers['User-Agent']
-        return user_agent_header
-
-    def __execute(self, operation, url, headers=None, params=None, data=None):
-        """
-        Executes directly a REST Operation and returns the result
-
-        Args:
-            operation (str): either 'get', 'post' or 'put'
-            url (str): a relative URL, such as "/api/now/v2/table/incident".
-                An absolute URL such as "https://cerntest.service-now.com/api/now/v2/table/incident" can also
-                be used, but the instance should match with the "instance" parameter in the configuration file,
-                or the value set with the ``.set_instance()`` method.
-            headers (:obj:`dict`, optional): any additional headers to be be passed. This method will add
-                Accept:application/json and Content-Type:application/json if not specified.
-                It will also add the Authorization header if the authentication type is 'sso_auth',
-                by setting it to the OAuth access header.
-            params (:obj:`dict`, optional): any additional URL parameters to be be passed
-            data (object): the data to be sent in a post or put operation
-
-        Returns:
-            requests.Response
-
-        Raises:
-            SnowRestSessionException: if the operation parameter is not 'get', 'post' or 'put'
-
-        """
-        if not operation:
-            raise SnowRestSessionException("SnowRestSession.__execute: the operation paramater is mandatory")
-        if not url:
-            raise SnowRestSessionException("SnowRestSession.__execute: the url paramater is mandatory")
-        if not url.startswith('https://'):
-            url = self.instance + url
-
-        if not url.startswith('https://'):
-            url = self.instance + url
-
-        if not headers:
-            headers = {}
-        if 'User-Agent' not in headers:
-            headers['User-Agent'] = self.__library_user_agent()
-        if 'Accept' not in headers:
-            headers['Accept'] = 'application/json'
-        if (operation == 'post' or operation == 'put') and 'Content-Type' not in headers:
-            headers['Content-Type'] = 'application/json'
-        if self.auth_type == 'sso_oauth':
-            headers['Authorization'] = 'Bearer ' + self.token_dic['access_token']
-
-        if operation == 'get':
-            result = self.session.get(url, headers=headers, params=params)
-        elif operation == 'post':
-            result = self.session.post(url, headers=headers, params=params, data=data)
-        elif operation == 'put':
-            result = self.session.put(url, headers=headers, params=params, data=data)
-        else:
-            raise SnowRestSessionException("SnowRestSession.__execute: the operation paramater "
-                                           "needs to be either \"get\", \"post\" or \"put\"")
-
-        return result
-
-    def __operation(self, operation, url, headers=None, params=None, data=None):
-        """
-        Executes a REST Operation, taking care of reauthenticating if needed, and returns the result
-
-        Args:
-            operation (str): either 'get', 'post' or 'put'
-            url (str): a relative URL, such as "/api/now/v2/table/incident".
-                An absolute URL such as "https://cerntest.service-now.com/api/now/v2/table/incident" can also
-                be used, but the instance should match with the "instance" parameter in the configuration file,
-                or the value set with the ``.set_instance()`` method.
-            headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, some headers will be set by
-                default (see __execute method)
-            params (:obj:`dict`, optional): any additional URL parameters to be be passed
-            data (object): the data to be sent in a post or put operation
-
-        Returns:
-            requests.Response : if the status code is not 401, a requests.Response object is returned
-
-        Raises:
-            SnowRestSessionException : if the operation could not be performed due to an authentication issue
-        """
-        self.__initiate_session()
-
-        result = self.__execute(operation, url, headers=headers, params=params, data=data)
-
-        if result.status_code != 401:
-            if self.auth_type == 'basic':
-                self.__save_cookie_basic()
-            return result
-
-        else:
-            if self.auth_type == 'basic':
-                if not self.fresh_cookie:
-                    self.session.auth = (self.basic_auth_user, self.basic_auth_password)
-                    result = self.__execute(operation, url, headers=headers, params=params, data=data)
-                    if result.status_code != 401:
-                        self.__save_cookie_basic()
-                        return result
-                    else:
-                        raise SnowRestSessionException(
-                            "SnowRestSession.__operation: Your basic authentication "
-                            "user and password might not be valid")
-                else:
-                    raise SnowRestSessionException(
-                        "SnowRestSession.__operation: Your basic authentication "
-                        "user and password might not be valid")
-
-            elif self.auth_type == 'sso_auth':
-
-                if self.fresh_token:
-                    raise SnowRestSessionException(
-                        "SnowRestSession.__operation: failed to perform the operation. The current account might not "
-                        "be able to log in to ServiceNow or the OAuth client id and secret might not be valid")
-
-                else:
-                    self.__refresh_token()
-                    token_request = self.session.post('post', self.instance + '/oauth_token.do',
-                                                      data={'grant_type': 'password',
-                                                            'client_id': self.oauth_client_id,
-                                                            'client_secret': self.oauth_client_secret})
-                    if token_request.status_code == 200:
-                        self.token_dic = ast.literal_eval(token_request.text)
-                        np.save(self.oauth_token_file_path, self.token_dic)
-                        headers['Authorization'] = 'Bearer ' + self.token_dic['access_token']
-                        result = self.__execute(operation, url, headers=headers, params=params, data=data)
-                        if result.status_code != 401:
-                            return result
-                        else:
-                            raise SnowRestSessionException(
-                                "SnowRestSession.__operation: failed to perform the operation. "
-                                "The current account might not be able to log in to ServiceNow or "
-                                "the OAuth client id and secret might not be valid")
-
-                    else:
-                        if self.fresh_cookie:
-                            raise SnowRestSessionException(
-                                "SnowRestSession.__operation: OAuth tokens could not be retrieved from ServiceNow. "
-                                "Please check the OAuth client id and OAuth client secret.")
-                        else:
-                            os.remove(self.session_cookie_file_path)
-                            self.__cern_get_sso_cookie()
-                            token_request = self.session.post('post', self.instance + '/oauth_token.do',
-                                                              data={'grant_type': 'password',
-                                                                    'client_id': self.oauth_client_id,
-                                                                    'client_secret': self.oauth_client_secret})
-                            if token_request.status_code == 401:
-                                raise SnowRestSessionException(
-                                    "SnowRestSession.__operation: OAuth tokens could not be retrieved from ServiceNow. "
-                                    "Please check the OAuth client id and OAuth client secret.")
-                            else:
-                                self.token_dic = ast.literal_eval(token_request.text)
-                                np.save(self.oauth_token_file_path, self.token_dic)
-                                headers['Authorization'] = 'Bearer ' + self.token_dic['access_token']
-                                result = self.__execute(operation, url, headers=headers, params=params,
-                                                        data=data)
-                                if result.status_code != 401:
-                                    return result
-                                else:
-                                    raise SnowRestSessionException(
-                                        "SnowRestSession.__operation: failed to perform the operation. "
-                                        "The current account might not be able to log in to ServiceNow or "
-                                        "the OAuth client id and secret might not be valid")
-            else:
-                raise SnowRestSessionException(
-                    "SnowRestSession.__operation: self.auth_type has a value different from \"basic\" and \"sso_auth\"")
 
     def get(self, url, headers=None, params=None):
         """
@@ -772,488 +436,14 @@ class SnowRestSession(object):
         result = self.__operation(operation='put', url=url, headers=headers, params=params, data=data)
         return result
 
-    def get_record(self, table, sys_id=None, number=None, headers=None, params=None):
+    def __call_cern_get_sso_cookie(self):
         """
-        ** Will be deprecated soon, replaced by the `get` method of the `Record` class **
-
-        Executes a GET operation in order to read a single record from a ServiceNow table.
-        The authentication method, and session cookie / OAuth tokens persistance will depend on how the session
-        has been configured.
-
-        Args:
-            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.
-            sys_id (str): the sys_id (ServiceNow unique identifier) of the record to be read.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            number (str): the number of the record to be read. Can be used if the table has a Number field.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, the 'Accept' header will be set to
-                'application/json'.
-            params (:obj:`dict`, optional): any additional URL parameters to be be passed. For a complete list, please see:
-                https://docs.servicenow.com/bundle/helsinki-application-development/page/integrate/inbound-rest/concept/c_TableAPI.html#ariaid-title3
-
-        Returns:
-            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
-                The 'text' will contain a JSON or XML representation of the record.
-                The response will also contain headers. For a list of headers, please see:
-                https://docs.servicenow.com/bundle/helsinki-application-development/page/integrate/inbound-rest/concept/c_TableAPI.html#d45069e608
-
-        Raises:
-            SnowRestSessionException : if mandatory parameters are missing,
-                or if the operation could not be performed due to an authentication issue
+        Executes the cern-get-sso-cookie command (available in CERN Linux environments)
+        in order to perform a Single Sign-On and produce a cookie file.
         """
-
-        if not table:
-            raise SnowRestSessionException("SnowRestSession.get_record: the table paramater needs a non empty value")
-        if not sys_id and not number:
-            raise SnowRestSessionException("SnowRestSession.get_record: "
-                                           "needs either a value in the sys_id or the number parameters")
-
-        url = self.instance + '/api/now/v2/table/' + table
-        if sys_id:
-            url = url + '/' + sys_id
-        elif number:
-            url = url + '?sysparm_query=number=' + number
-
-        return self.get(url=url, headers=headers, params=params)
-
-    def get_records(self, table, query_filter=None, query_encoded=""):
-        """
-        ** Will be deprecated soon, replaced by the `RecordQuery` class **
-
-        Executes a GET operation in order to read one or many records from a ServiceNow table.
-        The authentication method, and session cookie / OAuth tokens persistance will depend on how the session
-        has been configured.
-
-        At least a `query_filter` or `query_encoded` parameter need to be provided.
-
-        Args:
-            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.
-            query_filter (dict): a dictionary ``{'field_1': 'value_1', 'field_2': 'value_2'}``
-                which will be used to apply a filter to the query. For example,
-                ``{'active': 'true', 'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6'}``
-                corresponds to incidents that are active=true AND Functional Element=ServiceNow
-            query_encoded (str): a query in the ServiceNow "encoded query" format.
-                Example: active=true^u_functional_element=579fb3d90a0a8c08017ac8a1137c8ee6.
-                For more information, please see: https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html
-
-        Returns:
-            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
-                The 'text' will contain a JSON or XML representation of the records.
-
-        Raises:
-            SnowRestSessionException : if mandatory parameters are missing,
-                or if the operation could not be performed due to an authentication issue
-        """
-        if not table:
-            raise SnowRestSessionException("SnowRestSession.get_records: the table paramater needs a non empty value")
-        if not query_filter and not query_encoded:
-            raise SnowRestSessionException("SnowRestSession.get_record: "
-                                           "needs either a value in the query_filter or the query_encoded parameters")
-
-        url = self.instance + '/api/now/v2/table/' + table
-        if query_filter:
-            a = []
-            for key in query_filter:
-                a.append(key + '=' + query_filter[key])
-                query_encoded = '^'.join(a)
-        if query_encoded:
-            url = url + '?sysparm_query=' + query_encoded
-
-        return self.get(url=url)
-
-    def get_request(self, sys_id=None, number=None):
-        """
-        ** Will be deprecated soon, replaced by the `get` method of the `Request` class **
-
-        Args:
-            sys_id (str): the sys_id (ServiceNow unique identifier) of the record to be read.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            number (str): the number of the record to be read.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-
-        Returns:
-            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
-                The 'text' will contain a JSON or XML representation of the record.
-
-        Raises:
-            SnowRestSessionException : if mandatory parameters are missing,
-                or if the operation could not be performed due to an authentication issue
-
-        """
-        return self.get_record(table='u_request_fulfillment', sys_id=sys_id, number=number)
-
-    def get_requests(self, query_filter=None, query_encoded=""):
-        """
-        ** Will be deprecated soon, replaced by the `RequestQuery` class **
-
-        At least a `query_filter` or `query_encoded` parameter need to be provided.
-
-        Args:
-            query_filter (dict): a dictionary ``{'field_1': 'value_1', 'field_2': 'value_2'}``
-                which will be used to apply a filter to the query. For example,
-                ``{'active': 'true', 'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6'}``
-                corresponds to incidents that are active=true AND Functional Element=ServiceNow
-            query_encoded (str): a query in the ServiceNow "encoded query" format.
-                Example: active=true^u_functional_element=579fb3d90a0a8c08017ac8a1137c8ee6.
-                For more information, please see: https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html
-
-        Returns:
-            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
-                The 'text' will contain a JSON or XML representation of the records.
-
-        Raises:
-            SnowRestSessionException : if mandatory parameters are missing,
-                or if the operation could not be performed due to an authentication issue
-        """
-        return self.get_records(table='u_request_fulfillment', query_filter=query_filter, query_encoded=query_encoded)
-
-    def get_incidents(self, query_filter=None, query_encoded=""):
-        """
-        ** Will be deprecated soon, replaced by the `IncidentQuery` class **
-
-        At least a `query_filter` or `query_encoded` parameter need to be provided.
-
-        Args:
-            query_filter (dict): a dictionary ``{'field_1': 'value_1', 'field_2': 'value_2'}``
-                which will be used to apply a filter to the query. For example,
-                ``{'active': 'true', 'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6'}``
-                corresponds to incidents that are active=true AND Functional Element=ServiceNow
-            query_encoded (str): a query in the ServiceNow "encoded query" format.
-                Example: active=true^u_functional_element=579fb3d90a0a8c08017ac8a1137c8ee6.
-                For more information, please see: https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html
-
-        Returns:
-            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
-                The 'text' will contain a JSON or XML representation of the records.
-
-        Raises:
-            SnowRestSessionException : if mandatory parameters are missing,
-                or if the operation could not be performed due to an authentication issue
-        """
-        return self.get_records(table='incident', query_filter=query_filter, query_encoded=query_encoded)
-
-    def get_incident(self, sys_id=None, number=None):
-        """
-        ** Will be deprecated soon, replaced by the `get` method of the `Incident` class **
-
-        Args:
-            sys_id (str): the sys_id (ServiceNow unique identifier) of the record to be read.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            number (str): the number of the record to be read.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-
-        Returns:
-            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
-                The 'text' will contain a JSON or XML representation of the record.
-
-        Raises:
-            SnowRestSessionException : if mandatory parameters are missing,
-                or if the operation could not be performed due to an authentication issue
-
-        """
-        return self.get_record(table='incident', sys_id=sys_id, number=number)
-
-    def insert_record(self, table, data=None):
-        """
-        ** Will be deprecated soon, replaced by the `insert` method of the `Record` class **
-
-        Args:
-            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.
-            data (dict): the values of the fields for the record that will be created.
-
-        Returns:
-            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
-                The 'text' will contain a JSON or XML representation of the new record.
-
-        Raises:
-            SnowRestSessionException : if mandatory parameters are missing,
-                or if the operation could not be performed due to an authentication issue
-        """
-        if not table:
-            raise SnowRestSessionException("SnowRestSession.insert_record: the table paramater needs a non empty value")
-        if not data:
-            raise SnowRestSessionException("SnowRestSession.insert_record: the data paramater needs a non empty value")
-
-        url = self.instance + '/api/now/v2/table/' + table
-
-        data = json.dumps(data)
-
-        return self.post(url=url, data=data)
-
-    def insert_incident(self, data):
-        """
-        ** Will be deprecated soon, replaced by the `insert` method of the `Incident` class **
-
-        Args:
-            data (dict): the values of the fields for the record that will be created.
-
-        Returns:
-            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
-                The 'text' will contain a JSON or XML representation of the new record.
-
-        Raises:
-            SnowRestSessionException : if mandatory parameters are missing,
-                or if the operation could not be performed due to an authentication issue
-        """
-        return self.insert_record(table='incident', data=data)
-
-    def insert_request(self, data):
-        """
-        ** Will be deprecated soon, replaced by the `insert` method of the `Record` class **
-
-        Args:
-            data (dict): the values of the fields for the record that will be created.
-
-        Returns:
-            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
-                The 'text' will contain a JSON or XML representation of the new record.
-
-        Raises:
-            SnowRestSessionException : if mandatory parameters are missing,
-                or if the operation could not be performed due to an authentication issue
-        """
-        return self.insert_record(table='u_request_fulfillment', data=data)
-
-    def update_record(self, table, sys_id, data=None):
-        """
-        ** Will be deprecated soon, replaced by the `update` method of the `Record` class **
-
-        Args:
-            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.
-            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.
-            data (dict): the values of the fields that will be updated in the target record.
-
-        Returns:
-            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
-                The 'text' will contain a JSON or XML representation of the new record.
-
-        Raises:
-            SnowRestSessionException : if mandatory parameters are missing,
-                or if the operation could not be performed due to an authentication issue
-        """
-        if not table:
-            raise SnowRestSessionException("SnowRestSession.update_record: the table paramater needs a non empty value")
-        if not data:
-            raise SnowRestSessionException("SnowRestSession.update_record: the data paramater needs a non empty value")
-
-        url = self.instance + '/api/now/v2/table/' + table
-        data = json.dumps(data)
-        url = url + '/' + sys_id
-
-        return self.put(url=url, data=data)
-
-    def update_request(self, sys_id=None, number=None, data=None):
-        """
-        ** Will be deprecated soon, replaced by the `update` method of the `Request` class **
-
-        Args:
-            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            number (str): the number  of the target record to be updated.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            data (dict): the values of the fields that will be updated in the target record.
-
-        Returns:
-            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
-                The 'text' will contain a JSON or XML representation of the new record.
-
-        Raises:
-            SnowRestSessionException : if mandatory parameters are missing,
-                or if the operation could not be performed due to an authentication issue
-        """
-        if not sys_id and not number:
-            raise SnowRestSessionException("SnowRestSession.update_request: "
-                                           "needs either a value in the sys_id or the number parameters")
-        if number:
-            result = self.get_request(number=number)
-            result_object = json.loads(result.text)
-            sys_id = result_object['result'][0]['sys_id']
-
-        return self.update_record(table='u_request_fulfillment', sys_id=sys_id, data=data)
-
-    def update_incident(self, sys_id=None, number=None, data=None):
-        """
-        ** Will be deprecated soon, replaced by the `update` method of the `Incident` class **
-
-        Args:
-            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            number (str): the number  of the target record to be updated.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            data (dict): the values of the fields that will be updated in the target record.
-
-        Returns:
-            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
-                The 'text' will contain a JSON or XML representation of the new record.
-
-        Raises:
-            SnowRestSessionException : if mandatory parameters are missing,
-                or if the operation could not be performed due to an authentication issue
-        """
-        if not sys_id and not number:
-            raise SnowRestSessionException("SnowRestSession.update_incident: "
-                                           "needs either a value in the sys_id or the number parameters")
-
-        if number:
-            result = self.get_incident(number=number)
-            result_object = json.loads(result.text)
-            sys_id = result_object['result'][0]['sys_id']
-
-        return self.update_record(table='incident', sys_id=sys_id, data=data)
-
-    def incident_add_comment(self, sys_id=None, number=None, comment=None):
-        """
-        ** Will be deprecated soon, replaced by the `add_comment` method of the `Incident` class **
-
-        Args:
-            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            number (str): the number  of the target record to be updated.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            comment (str): the new comment to be added to the target record
-
-        Returns:
-            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
-                The 'text' will contain a JSON or XML representation of the new record.
-
-        Raises:
-            SnowRestSessionException : if mandatory parameters are missing,
-                or if the operation could not be performed due to an authentication issue
-        """
-        return self.add_comment(table='incident', sys_id=sys_id, number=number, comment=comment)
-
-    def request_add_comment(self, sys_id=None, number=None, comment=None):
-        """
-        ** Will be deprecated soon, replaced by the `add_comment` method of the `Request` class **
-
-        Args:
-            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            number (str): the number  of the target record to be updated.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            comment (str): the new comment to be added to the target record
-
-        Returns:
-            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
-                The 'text' will contain a JSON or XML representation of the new record.
-
-        Raises:
-            SnowRestSessionException : if mandatory parameters are missing,
-                or if the operation could not be performed due to an authentication issue
-        """
-        return self.add_comment(table='u_request_fulfillment', sys_id=sys_id, number=number, comment=comment)
-
-    def add_comment(self, table, sys_id=None, number=None, comment=None):
-        """
-        ** Will be deprecated soon, replaced by the `add_comment` method of the `Task` class **
-
-        Args:
-            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.
-            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            number (str): the number  of the target record to be updated.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            comment (str): the new comment to be added to the target record
-
-        Returns:
-            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
-                The 'text' will contain a JSON or XML representation of the new record.
-
-        Raises:
-            SnowRestSessionException : if mandatory parameters are missing,
-                or if the operation could not be performed due to an authentication issue
-        """
-        if not table:
-            raise SnowRestSessionException("SnowRestSession.add_comment: the table parameter is mandatory")
-        if not sys_id and not number:
-            raise SnowRestSessionException("SnowRestSession.add_comment: "
-                                           "needs either a value in the sys_id or the number parameters")
-        if not comment:
-            raise SnowRestSessionException("SnowRestSession.add_comment: the comment parameter is mandatory")
-
-        if number:
-            result = self.get_record(table=table, number=number)
-            result_object = json.loads(result.text)
-            sys_id = result_object['result'][0]['sys_id']
-
-        return self.update_record(table=table, sys_id=sys_id, data={'comments': comment})
-
-    def request_add_work_note(self, sys_id=None, number=None, work_note=''):
-        """
-        ** Will be deprecated soon, replaced by the `add_work_note` method of the `Request` class **
-
-        Args:
-            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            number (str): the number  of the target record to be updated.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            work_note (str): the new work note to be added to the target record
-
-        Returns:
-            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
-                The 'text' will contain a JSON or XML representation of the new record.
-
-        Raises:
-            SnowRestSessionException : if mandatory parameters are missing,
-                or if the operation could not be performed due to an authentication issue
-        """
-        return self.add_work_note(table='incident', sys_id=sys_id, number=number, work_note=work_note)
-
-    def incident_add_work_note(self, sys_id=None, number=None, work_note=''):
-        """
-        ** Will be deprecated soon, replaced by the `add_work_note` method of the `Incident` class **
-
-        Args:
-            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            number (str): the number  of the target record to be updated.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            work_note (str): the new work note to be added to the target record
-
-        Returns:
-            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
-                The 'text' will contain a JSON or XML representation of the new record.
-
-        Raises:
-            SnowRestSessionException : if mandatory parameters are missing,
-                or if the operation could not be performed due to an authentication issue
-        """
-        return self.add_work_note(table='u_request_fulfillment', sys_id=sys_id, number=number, work_note=work_note)
-
-    def add_work_note(self, table, sys_id=None, number=None, work_note=''):
-        """
-        ** Will be deprecated soon, replaced by the `add_work_note` method of the `Task` class **
-
-        Args:
-            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.
-            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            number (str): the number  of the target record to be updated.
-                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.
-            work_note (str): the new work note to be added to the target record
-
-        Returns:
-            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.
-                The 'text' will contain a JSON or XML representation of the new record.
-
-        Raises:
-            SnowRestSessionException : if mandatory parameters are missing,
-                or if the operation could not be performed due to an authentication issue
-        """
-        if not table:
-            raise SnowRestSessionException("SnowRestSession.add_work_note: the table parameter is mandatory")
-        if not sys_id and not number:
-            raise SnowRestSessionException("SnowRestSession.add_work_note: "
-                                           "needs either a value in the sys_id or the number parameters")
-        if not work_note:
-            raise SnowRestSessionException("SnowRestSession.add_work_note: the work_note parameter is mandatory")
-
-        if number:
-            result = self.get_record(table=table, number=number)
-            result_object = json.loads(result.text)
-            sys_id = result_object['result'][0]['sys_`id']
-
-        return self.update_record(table=table, sys_id=sys_id, data={'work_notes': work_note})
+        args = ["cern-get-sso-cookie", "--reprocess", "--url", self.instance, "--outfile", self.session_cookie_file_path]
+        p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p.wait()
 
     def __good_cookie(self):
         cookie_file = open(self.session_cookie_file_path)
@@ -1269,6 +459,336 @@ class SnowRestSession(object):
             return True
 
         return False
+
+    def __cern_get_sso_cookie(self):
+        """
+        Loads and checks an existing cookie file, in order to avoid logging into ServiceNow and the
+        CERN Single-Sign-On if possible. If needed, logs in again into both to produce the cookie file.
+        The cookie file is loaded into memory.
+        If not needed to persist the cookie file, it is deleted.
+
+        Raises:
+            SnowRestSessionException: if the Single Sign On login is not succesful. This is determined by parsing
+                the cookie file after it is produced.
+        """
+
+        if not os.path.exists(self.session_cookie_file_path):  # cookie file not present. We perform Single Sign On
+            self.__call_cern_get_sso_cookie()
+            self.fresh_cookie = True
+
+        else:  # cookie file present. We check if it has the correct format
+            self.fresh_cookie = False
+            if not self.__good_cookie():  # the format is bad. We create a new cookie file
+                self.__call_cern_get_sso_cookie()
+                self.fresh_cookie = True
+
+        # we load the cookie file
+        self.session_cookie = cookielib.MozillaCookieJar(self.session_cookie_file_path)
+        self.session_cookie.load()
+
+        # we check if the log in was sucessful
+        if not self.__good_cookie():
+            raise SnowRestSessionException(
+                "SnowRestSession.__cern_get_sso_cookie: The current account has failed to perform "
+                "a Single-Sign-On login in to ServiceNow")
+
+        # we load the cookies into the requests.Session session
+        self.session.cookies = self.session_cookie
+
+        # if not needed to persist the cookie file, we delete it
+        if not self.store_cookie:
+            os.remove(self.session_cookie_file_path)
+
+    def __obtain_tokens(self):
+        """
+        Loads the OAuth access and refresh tokens from the token file.
+        If the token file is not present, new OAuth access and refresh tokens are obtained.
+
+        Raises:
+            SnowRestSessionException: if the OAuth tokens could not be retrieved from ServiceNow.
+            IOError, ValueError: if the token file could not be opened
+        """
+
+        if not os.path.exists(self.oauth_token_file_path):  # tokens file not present. We obtain new tokens
+            self.fresh_token = True
+            token_request = self.session.post(self.instance + '/oauth_token.do',
+                                              data={'grant_type': 'password',
+                                                    'client_id': self.oauth_client_id,
+                                                    'client_secret': self.oauth_client_secret})
+
+            if token_request.status_code == 200:  # token request was successful
+                self.token_dic = json.loads(token_request.text)
+                if self.store_token:
+                    with open(self.oauth_token_file_path, 'w') as token_file:
+                        json.dump(self.token_dic, token_file)
+
+            else:  # token request failed. Possibly, an existing cookie file contained a timed out session
+                if self.fresh_cookie:  # we just performed a Single-Sign-On. There is a problem with token retrieval.
+                    raise SnowRestSessionException(
+                        "SnowRestSession.__obtain_tokens: OAuth tokens could not be retrieved from ServiceNow. "
+                        "Please check the OAuth client id and OAuth client secret.")
+
+                else:  # we may need to perform Single-Sign-On again, as the session may have timed out
+                    self.__cern_get_sso_cookie()
+                    token_request = self.session.post(self.instance + '/oauth_token.do',
+                                                      data={'grant_type': 'password',
+                                                            'client_id': self.oauth_client_id,
+                                                            'client_secret': self.oauth_client_secret})
+                    self.token_dic = None
+                    if token_request.status_code == 200:
+                        self.token_dic = json.loads(token_request.text)
+                        if self.store_token:
+                            with open(self.oauth_token_file_path, 'w') as token_file:
+                                json.dump(self.token_dic, token_file)
+                        else:
+                            raise SnowRestSessionException(
+                                "SnowRestSession.__obtain_tokens: OAuth tokens could not be retrieved from ServiceNow. "
+                                "Please check the OAuth client id and OAuth client secret.")
+
+        else:  # the tokens file is present. We try to load it
+            try:
+                with open(self.oauth_token_file_path, 'r') as token_file:
+                    self.token_dic = json.load(token_file)
+            except (IOError, ValueError) as e:
+                sys.stderr.write(
+                    "SnowRestSession.__obtain_tokens: Issue when opening "
+                    "the token file at %s.\n" % self.oauth_token_file_path)
+                raise e
+
+    def __initiate_session(self):
+        """
+        Initiates a session via CERN Single-Sign-On + OAuth, or basic Authentication
+
+        Raises:
+            SnowRestSessionException: if auth_type is not 'sso_auth' nor 'basic'
+        """
+        if self.auth_type == 'sso_oauth':
+            self.__cern_get_sso_cookie()
+            self.__obtain_tokens()
+
+        elif self.auth_type == 'basic':
+            self.session.auth = (self.basic_auth_user, self.basic_auth_password)
+            self.session.cookies = cookielib.MozillaCookieJar()
+            if os.path.exists(self.session_cookie_file_path):
+                self.session.cookies.load(self.session_cookie_file_path, ignore_discard=True, ignore_expires=True)
+
+        else:
+            raise SnowRestSessionException(
+                "SnowRestSession.__initiate_session: self.auth_type "
+                "has a value different from \"basic\" and \"sso_auth\"")
+
+    def __refresh_token(self):
+        """
+        Requests an OAuth access token via the OAUTH refresh token.
+        Saves the resulting access token in the token file.
+
+        Raises:
+            SnowRestSessionException: if the access token could not be obtained
+        """
+        token_request = self.session.post(self.instance + '/oauth_token.do',
+                                          data={'grant_type': 'refresh_token',
+                                                'client_id': self.oauth_client_id,
+                                                'client_secret': self.oauth_client_secret,
+                                                'refresh_token': self.token_dic['refresh_token']})
+
+        if token_request.status_code == 200:
+            self.token_dic = json.loads(token_request.text)
+            with open(self.oauth_token_file_path, 'w') as token_file:
+                json.dump(self.token_dic, token_file)
+
+        else:
+            token_request = self.session.post(self.instance + '/oauth_token.do',
+                                              data={'grant_type': 'password',
+                                                    'client_id': self.oauth_client_id,
+                                                    'client_secret': self.oauth_client_secret})
+            if token_request.status_code == 200:
+                self.token_dic = json.loads(token_request.text)
+                with open(self.oauth_token_file_path, 'w') as token_file:
+                    json.dump(self.token_dic, token_file)
+            else:
+                if self.fresh_cookie:
+                    raise SnowRestSessionException(
+                        "SnowRestSession.__refresh_token: the OAuth client id and OAuth secret might not be valid")
+
+    def __save_cookie_basic(self):
+        """
+        Persists the basic authentication cookie file.
+        """
+        self.fresh_cookie = True
+        self.session.cookies.save(self.session_cookie_file_path, ignore_discard=True, ignore_expires=True)
+
+    @staticmethod
+    def __library_user_agent():
+        user_agent_header = 'cern-snow-client/' + __version__
+        default_headers = requests.utils.default_headers()
+        if 'User-Agent' in default_headers:
+            user_agent_header = user_agent_header + ' ' + default_headers['User-Agent']
+        return user_agent_header
+
+    def __execute(self, operation, url, headers=None, params=None, data=None):
+        """
+        Executes directly a REST Operation and returns the result
+
+        Args:
+            operation (str): either 'get', 'post' or 'put'
+            url (str): a relative URL, such as "/api/now/v2/table/incident".
+                An absolute URL such as "https://cerntest.service-now.com/api/now/v2/table/incident" can also
+                be used, but the instance should match with the "instance" parameter in the configuration file,
+                or the value set with the ``.set_instance()`` method.
+            headers (:obj:`dict`, optional): any additional headers to be be passed. This method will add
+                Accept:application/json and Content-Type:application/json if not specified.
+                It will also add the Authorization header if the authentication type is 'sso_auth',
+                by setting it to the OAuth access header.
+            params (:obj:`dict`, optional): any additional URL parameters to be be passed
+            data (object): the data to be sent in a post or put operation
+
+        Returns:
+            requests.Response
+
+        Raises:
+            SnowRestSessionException: if the operation parameter is not 'get', 'post' or 'put'
+
+        """
+        if not operation:
+            raise SnowRestSessionException("SnowRestSession.__execute: the operation paramater is mandatory")
+        if not url:
+            raise SnowRestSessionException("SnowRestSession.__execute: the url paramater is mandatory")
+        if not url.startswith('https://'):
+            url = self.instance + url
+
+        if not url.startswith('https://'):
+            url = self.instance + url
+
+        if not headers:
+            headers = {}
+        if 'User-Agent' not in headers:
+            headers['User-Agent'] = self.__library_user_agent()
+        if 'Accept' not in headers:
+            headers['Accept'] = 'application/json'
+        if (operation == 'post' or operation == 'put') and 'Content-Type' not in headers:
+            headers['Content-Type'] = 'application/json'
+        if self.auth_type == 'sso_oauth':
+            headers['Authorization'] = 'Bearer ' + self.token_dic['access_token']
+
+        if operation == 'get':
+            result = self.session.get(url, headers=headers, params=params)
+        elif operation == 'post':
+            result = self.session.post(url, headers=headers, params=params, data=data)
+        elif operation == 'put':
+            result = self.session.put(url, headers=headers, params=params, data=data)
+        else:
+            raise SnowRestSessionException("SnowRestSession.__execute: the operation paramater "
+                                           "needs to be either \"get\", \"post\" or \"put\"")
+
+        return result
+
+    def __operation(self, operation, url, headers=None, params=None, data=None):
+        """
+        Executes a REST Operation, taking care of reauthenticating if needed, and returns the result
+
+        Args:
+            operation (str): either 'get', 'post' or 'put'
+            url (str): a relative URL, such as "/api/now/v2/table/incident".
+                An absolute URL such as "https://cerntest.service-now.com/api/now/v2/table/incident" can also
+                be used, but the instance should match with the "instance" parameter in the configuration file,
+                or the value set with the ``.set_instance()`` method.
+            headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, some headers will be set by
+                default (see __execute method)
+            params (:obj:`dict`, optional): any additional URL parameters to be be passed
+            data (object): the data to be sent in a post or put operation
+
+        Returns:
+            requests.Response : if the status code is not 401, a requests.Response object is returned
+
+        Raises:
+            SnowRestSessionException : if the operation could not be performed due to an authentication issue
+        """
+        self.__initiate_session()
+
+        result = self.__execute(operation, url, headers=headers, params=params, data=data)
+
+        if result.status_code != 401:
+            if self.auth_type == 'basic':
+                self.__save_cookie_basic()
+            return result
+
+        else:
+            if self.auth_type == 'basic':
+                if not self.fresh_cookie:
+                    self.session.auth = (self.basic_auth_user, self.basic_auth_password)
+                    result = self.__execute(operation, url, headers=headers, params=params, data=data)
+                    if result.status_code != 401:
+                        self.__save_cookie_basic()
+                        return result
+                    else:
+                        raise SnowRestSessionException(
+                            "SnowRestSession.__operation: Your basic authentication "
+                            "user and password might not be valid")
+                else:
+                    raise SnowRestSessionException(
+                        "SnowRestSession.__operation: Your basic authentication "
+                        "user and password might not be valid")
+
+            elif self.auth_type == 'sso_auth':
+
+                if self.fresh_token:
+                    raise SnowRestSessionException(
+                        "SnowRestSession.__operation: failed to perform the operation. The current account might not "
+                        "be able to log in to ServiceNow or the OAuth client id and secret might not be valid")
+
+                else:
+                    self.__refresh_token()
+                    token_request = self.session.post('post', self.instance + '/oauth_token.do',
+                                                      data={'grant_type': 'password',
+                                                            'client_id': self.oauth_client_id,
+                                                            'client_secret': self.oauth_client_secret})
+                    if token_request.status_code == 200:
+                        self.token_dic = json.loads(token_request.text)
+                        with open(self.oauth_token_file_path, 'w') as token_file:
+                            json.dump(self.token_dic, token_file)
+                        headers['Authorization'] = 'Bearer ' + self.token_dic['access_token']
+                        result = self.__execute(operation, url, headers=headers, params=params, data=data)
+                        if result.status_code != 401:
+                            return result
+                        else:
+                            raise SnowRestSessionException(
+                                "SnowRestSession.__operation: failed to perform the operation. "
+                                "The current account might not be able to log in to ServiceNow or "
+                                "the OAuth client id and secret might not be valid")
+
+                    else:
+                        if self.fresh_cookie:
+                            raise SnowRestSessionException(
+                                "SnowRestSession.__operation: OAuth tokens could not be retrieved from ServiceNow. "
+                                "Please check the OAuth client id and OAuth client secret.")
+                        else:
+                            os.remove(self.session_cookie_file_path)
+                            self.__cern_get_sso_cookie()
+                            token_request = self.session.post('post', self.instance + '/oauth_token.do',
+                                                              data={'grant_type': 'password',
+                                                                    'client_id': self.oauth_client_id,
+                                                                    'client_secret': self.oauth_client_secret})
+                            if token_request.status_code == 401:
+                                raise SnowRestSessionException(
+                                    "SnowRestSession.__operation: OAuth tokens could not be retrieved from ServiceNow. "
+                                    "Please check the OAuth client id and OAuth client secret.")
+                            else:
+                                self.token_dic = json.loads(token_request.text)
+                                with open(self.oauth_token_file_path, 'w') as token_file:
+                                    json.dump(self.token_dic, token_file)
+                                headers['Authorization'] = 'Bearer ' + self.token_dic['access_token']
+                                result = self.__execute(operation, url, headers=headers, params=params,
+                                                        data=data)
+                                if result.status_code != 401:
+                                    return result
+                                else:
+                                    raise SnowRestSessionException(
+                                        "SnowRestSession.__operation: failed to perform the operation. "
+                                        "The current account might not be able to log in to ServiceNow or "
+                                        "the OAuth client id and secret might not be valid")
+            else:
+                raise SnowRestSessionException(
+                    "SnowRestSession.__operation: self.auth_type has a value different from \"basic\" and \"sso_auth\"")
 
     def _configure_handler(self):
         self._logger.removeHandler(self._log_handler)

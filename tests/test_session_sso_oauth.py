@@ -21,8 +21,9 @@ class TestSessionSsoOauth(unittest.TestCase, TestSessionBase):
 
     @classmethod
     def remove_files(cls):
+        return
         os.remove('sso_oauth_cookie.txt')
-        os.remove('token_file.npy')
+        os.remove('token_file.txt')
 
     def test_get(self):
         s = TestSessionSsoOauth.make_good_session()

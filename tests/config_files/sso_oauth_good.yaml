@@ -5,7 +5,7 @@ auth:
   oauth_client_id: 1b606d966a008380d686014a4cc61e42
 session:
   cookie_file: sso_oauth_cookie.txt
-  oauth_tokens_file: token_file
+  oauth_tokens_file: token_file.txt
 log:
     log_enabled: true
     log_file_path : tests/logs/basic_auth_test_log.txt
