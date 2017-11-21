@@ -15,7 +15,7 @@ class TableClassMapping(object):
             from incident import Incident
 
             cls.__table_class_mapping = {
-                'task': {'class': Task, 'can_be_inserted': False},
+                'task': {'class': Task, 'can_be_inserted': False, 'is_base_table': True},
                 'incident': {'class': Incident, 'can_be_inserted': True}
             }
 

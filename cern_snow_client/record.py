@@ -323,23 +323,31 @@ class Record(SessionAware):
             raise SnowClientException("Record.get: the \"key\" parameter should be a non empty str/unicode value, "
                                       "or a tuple (field_name, field_value) where field_name is a str")
 
-        #  build the URL (using self.sys_class_name as table)
+        if is_key_tuple:
+            if self.get(key):
+                sys_id = self.sys_id
+            else:
+                return False
+        else:
+            if is_key_text:
+                sys_id = key
+            else:
+                sys_id = self.sys_id
+
+            if not self.sys_class_name:
+                table_class_mapping = TableClassMapping.get()
+                if (
+                        self._table_name in table_class_mapping and
+                        'is_base_table' in table_class_mapping[self._table_name] and
+                        table_class_mapping[self._table_name]['is_base_table']
+                ):
+                    self.get(sys_id)
+
+        # build the URL (using self.sys_class_name as table)
         if self.sys_class_name:
             url = '/api/now/v2/table/' + self.sys_class_name + '/'
         else:
             url = '/api/now/v2/table/' + self._table_name + '/'
-
-        sys_id = None
-        if key:
-            if is_key_text:
-                sys_id = key
-            elif is_key_tuple:
-                if self.get(key):
-                    sys_id = self.sys_id
-                else:
-                    return False
-        else:
-            sys_id = self.sys_id
 
         url = url + sys_id
 
