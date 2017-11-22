@@ -1,7 +1,6 @@
 # coding: utf-8
 
 import unittest
-import os
 
 from tests.test_base import TestBase
 from tests.test_record_base import TestRecordBase
@@ -15,19 +14,11 @@ class TestRecordBasicAuthentication(unittest.TestCase, TestRecordBase):
 
     @classmethod
     def make_good_session(cls):
-        good_basic_auth_config_file = 'tests/config_files/basic_good.yaml'
-        basic_auth_password = cls.get_password('basic_good')
-
-        s = cls.make_session(good_basic_auth_config_file)
-        s.set_basic_auth_password(basic_auth_password)
-        return s
+        return cls.make_good_basic_auth_session()
 
     @classmethod
     def remove_cookie(cls):
-        try:
-            os.remove('basic_cookie.txt')
-        except OSError:
-            pass
+        cls.remove_basic_cookie_file()
 
     def test_get_record(self):
         s = self.make_good_session()
