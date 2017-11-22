@@ -5,11 +5,11 @@ auth:
     oauth_client_id: 6405e..........
     oauth_client_secret: sdazh8........
 session:
-    cookie_file: mycookie.txt
-    oauth_tokens_file: mytoken
+    cookie_file: cookie.txt
+    oauth_tokens_file: tokens.txt
 log:
     log_enabled: true
-    log_file_path : mylog.txt
+    log_file_path : log.txt
     log_level: DEBUG
     log_format: %(asctime)s [%(name)s] [%(levelname)s] %(message)s
     log_file_size_bytes: 1000000
