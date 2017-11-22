@@ -48,10 +48,8 @@
   <h1>Source code for cern_snow_client.session</h1><div class="highlight"><pre>
 <span></span><span class="c1"># coding: utf-8</span>
 
-<span class="kn">import</span> <span class="nn">ast</span>
 <span class="kn">import</span> <span class="nn">cookielib</span>
 <span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
@@ -60,8 +58,6 @@
 <span class="kn">import</span> <span class="nn">uuid</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">logging.handlers</span> <span class="k">import</span> <span class="n">RotatingFileHandler</span>
-
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">__version__</span>
 
 <span class="k">try</span><span class="p">:</span>  <span class="c1"># Python 2.7+</span>
     <span class="kn">from</span> <span class="nn">logging</span> <span class="k">import</span> <span class="n">NullHandler</span>
@@ -262,6 +258,23 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_secret</span> <span class="o">=</span> <span class="n">oauth_client_secret</span></div>
 
+<div class="viewcode-block" id="SnowRestSession.set_basic_auth_user"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.set_basic_auth_user">[docs]</a>    <span class="k">def</span> <span class="nf">set_basic_auth_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basic_auth_user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            basic_auth_user (str): the name of the local ServiceNow account that will be used for authentication.</span>
+<span class="sd">            Needs set_auth_type(&#39;basic&#39;) to have an effect.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">basic_auth_user</span> <span class="o">=</span> <span class="n">basic_auth_user</span></div>
+
+<div class="viewcode-block" id="SnowRestSession.set_basic_auth_password"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.set_basic_auth_password">[docs]</a>    <span class="k">def</span> <span class="nf">set_basic_auth_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basic_auth_password</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            basic_auth_password (str): the password of the local ServiceNow account that will be used for</span>
+<span class="sd">            authentication.</span>
+<span class="sd">            Needs set_auth_type(&#39;basic&#39;) to have an effect.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">basic_auth_password</span> <span class="o">=</span> <span class="n">basic_auth_password</span></div>
+
 <div class="viewcode-block" id="SnowRestSession.set_session_cookie_file_path"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.set_session_cookie_file_path">[docs]</a>    <span class="k">def</span> <span class="nf">set_session_cookie_file_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session_cookie_file_path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
@@ -316,355 +329,6 @@
 
 <div class="viewcode-block" id="SnowRestSession.get_log_handler"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.get_log_handler">[docs]</a>    <span class="k">def</span> <span class="nf">get_log_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log_handler</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.set_basic_auth_user"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.set_basic_auth_user">[docs]</a>    <span class="k">def</span> <span class="nf">set_basic_auth_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basic_auth_user</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            basic_auth_user (str): the name of the local ServiceNow account that will be used for authentication.</span>
-<span class="sd">            Needs set_auth_type(&#39;basic&#39;) to have an effect.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">basic_auth_user</span> <span class="o">=</span> <span class="n">basic_auth_user</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.set_basic_auth_password"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.set_basic_auth_password">[docs]</a>    <span class="k">def</span> <span class="nf">set_basic_auth_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basic_auth_password</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Args:</span>
-<span class="sd">            basic_auth_password (str): the password of the local ServiceNow account that will be used for</span>
-<span class="sd">            authentication.</span>
-<span class="sd">            Needs set_auth_type(&#39;basic&#39;) to have an effect.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">basic_auth_password</span> <span class="o">=</span> <span class="n">basic_auth_password</span></div>
-
-    <span class="k">def</span> <span class="nf">__call_cern_get_sso_cookie</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Executes the cern-get-sso-cookie command (available in CERN Linux environments)</span>
-<span class="sd">        in order to perform a Single Sign-On and produce a cookie file.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;cern-get-sso-cookie&quot;</span><span class="p">,</span> <span class="s2">&quot;--reprocess&quot;</span><span class="p">,</span> <span class="s2">&quot;--url&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;--outfile&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_cookie_file_path</span><span class="p">]</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
-        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">__cern_get_sso_cookie</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Loads and checks an existing cookie file, in order to avoid logging into ServiceNow and the</span>
-<span class="sd">        CERN Single-Sign-On if possible. If needed, logs in again into both to produce the cookie file.</span>
-<span class="sd">        The cookie file is loaded into memory.</span>
-<span class="sd">        If not needed to persist the cookie file, it is deleted.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException: if the Single Sign On login is not succesful. This is determined by parsing</span>
-<span class="sd">                the cookie file after it is produced.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_cookie_file_path</span><span class="p">):</span>  <span class="c1"># cookie file not present. We perform Single Sign On</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__call_cern_get_sso_cookie</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">fresh_cookie</span> <span class="o">=</span> <span class="kc">True</span>
-
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># cookie file present. We check if it has the correct format</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">fresh_cookie</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__good_cookie</span><span class="p">():</span>  <span class="c1"># the format is bad. We create a new cookie file</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">__call_cern_get_sso_cookie</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">fresh_cookie</span> <span class="o">=</span> <span class="kc">True</span>
-
-        <span class="c1"># we load the cookie file</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">session_cookie</span> <span class="o">=</span> <span class="n">cookielib</span><span class="o">.</span><span class="n">MozillaCookieJar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_cookie_file_path</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">session_cookie</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-
-        <span class="c1"># we check if the log in was sucessful</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__good_cookie</span><span class="p">():</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
-                <span class="s2">&quot;SnowRestSession.__cern_get_sso_cookie: The current account has failed to perform &quot;</span>
-                <span class="s2">&quot;a Single-Sign-On login in to ServiceNow&quot;</span><span class="p">)</span>
-
-        <span class="c1"># we load the cookies into the requests.Session session</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">cookies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_cookie</span>
-
-        <span class="c1"># if not needed to persist the cookie file, we delete it</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_cookie</span><span class="p">:</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_cookie_file_path</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__obtain_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Loads the OAuth access and refresh tokens from the token file.</span>
-<span class="sd">        If the token file is not present, new OAuth access and refresh tokens are obtained.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException: if the OAuth tokens could not be retrieved from ServiceNow.</span>
-<span class="sd">            IOError, ValueError: if the token file could not be opened</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span> <span class="o">+</span> <span class="s1">&#39;.npy&#39;</span><span class="p">):</span>  <span class="c1"># tokens file not present. We obtain new tokens</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">fresh_token</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">token_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="s1">&#39;/oauth_token.do&#39;</span><span class="p">,</span>
-                                              <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;grant_type&#39;</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>
-                                                    <span class="s1">&#39;client_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_id</span><span class="p">,</span>
-                                                    <span class="s1">&#39;client_secret&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_secret</span><span class="p">})</span>
-
-            <span class="k">if</span> <span class="n">token_request</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>  <span class="c1"># token request was successful</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">token_request</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_token</span><span class="p">:</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">)</span>
-
-            <span class="k">else</span><span class="p">:</span>  <span class="c1"># token request failed. Possibly, an existing cookie file contained a timed out session</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fresh_cookie</span><span class="p">:</span>  <span class="c1"># we just performed a Single-Sign-On. There is a problem with token retrieval.</span>
-                    <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
-                        <span class="s2">&quot;SnowRestSession.__obtain_tokens: OAuth tokens could not be retrieved from ServiceNow. &quot;</span>
-                        <span class="s2">&quot;Please check the OAuth client id and OAuth client secret.&quot;</span><span class="p">)</span>
-
-                <span class="k">else</span><span class="p">:</span>  <span class="c1"># we may need to perform Single-Sign-On again, as the session may have timed out</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">__cern_get_sso_cookie</span><span class="p">()</span>
-                    <span class="n">token_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="s1">&#39;/oauth_token.do&#39;</span><span class="p">,</span>
-                                                      <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;grant_type&#39;</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>
-                                                            <span class="s1">&#39;client_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_id</span><span class="p">,</span>
-                                                            <span class="s1">&#39;client_secret&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_secret</span><span class="p">})</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span> <span class="o">=</span> <span class="kc">None</span>
-                    <span class="k">if</span> <span class="n">token_request</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">token_request</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_token</span><span class="p">:</span>
-                            <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">)</span>
-                        <span class="k">else</span><span class="p">:</span>
-                            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
-                                <span class="s2">&quot;SnowRestSession.__obtain_tokens: OAuth tokens could not be retrieved from ServiceNow. &quot;</span>
-                                <span class="s2">&quot;Please check the OAuth client id and OAuth client secret.&quot;</span><span class="p">)</span>
-
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># the tokens file is present. We try to load it</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span> <span class="o">+</span> <span class="s1">&#39;.npy&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-            <span class="k">except</span> <span class="p">(</span><span class="ne">IOError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
-                    <span class="s2">&quot;SnowRestSession.__obtain_tokens: Issue when opening &quot;</span>
-                    <span class="s2">&quot;the token file at </span><span class="si">%s</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span><span class="p">)</span>
-                <span class="k">raise</span> <span class="n">e</span>
-
-    <span class="k">def</span> <span class="nf">__initiate_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initiates a session via CERN Single-Sign-On + OAuth, or basic Authentication</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException: if auth_type is not &#39;sso_auth&#39; nor &#39;basic&#39;</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_type</span> <span class="o">==</span> <span class="s1">&#39;sso_oauth&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__cern_get_sso_cookie</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__obtain_tokens</span><span class="p">()</span>
-
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_type</span> <span class="o">==</span> <span class="s1">&#39;basic&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basic_auth_user</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">basic_auth_password</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">cookies</span> <span class="o">=</span> <span class="n">cookielib</span><span class="o">.</span><span class="n">MozillaCookieJar</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_cookie_file_path</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">cookies</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_cookie_file_path</span><span class="p">,</span> <span class="n">ignore_discard</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ignore_expires</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
-                <span class="s2">&quot;SnowRestSession.__initiate_session: self.auth_type &quot;</span>
-                <span class="s2">&quot;has a value different from </span><span class="se">\&quot;</span><span class="s2">basic</span><span class="se">\&quot;</span><span class="s2"> and </span><span class="se">\&quot;</span><span class="s2">sso_auth</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__refresh_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Requests an OAuth access token via the OAUTH refresh token.</span>
-<span class="sd">        Saves the resulting access token in the token file.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException: if the access token could not be obtained</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="s1">&#39;/oauth_token.do&#39;</span><span class="p">,</span>
-                                  <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;grant_type&#39;</span><span class="p">:</span> <span class="s1">&#39;refresh_token&#39;</span><span class="p">,</span>
-                                        <span class="s1">&#39;client_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_id</span><span class="p">,</span>
-                                        <span class="s1">&#39;client_secret&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_secret</span><span class="p">,</span>
-                                        <span class="s1">&#39;refresh_token&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">[</span><span class="s1">&#39;refresh_token&#39;</span><span class="p">]})</span>
-
-        <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">)</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="s1">&#39;/oauth_token.do&#39;</span><span class="p">,</span>
-                                      <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;grant_type&#39;</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>
-                                            <span class="s1">&#39;client_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_id</span><span class="p">,</span>
-                                            <span class="s1">&#39;client_secret&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_secret</span><span class="p">})</span>
-            <span class="k">if</span> <span class="n">token</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fresh_cookie</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
-                        <span class="s2">&quot;SnowRestSession.__refresh_token: the OAuth client id and OAuth secret might not be valid&quot;</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">__save_cookie_basic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Persists the basic authentication cookie file.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fresh_cookie</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">cookies</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_cookie_file_path</span><span class="p">,</span> <span class="n">ignore_discard</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ignore_expires</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">__library_user_agent</span><span class="p">():</span>
-        <span class="n">user_agent_header</span> <span class="o">=</span> <span class="s1">&#39;cern-snow-client/&#39;</span> <span class="o">+</span> <span class="n">__version__</span>
-        <span class="n">default_headers</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">default_headers</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s1">&#39;User-Agent&#39;</span> <span class="ow">in</span> <span class="n">default_headers</span><span class="p">:</span>
-            <span class="n">user_agent_header</span> <span class="o">=</span> <span class="n">user_agent_header</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">default_headers</span><span class="p">[</span><span class="s1">&#39;User-Agent&#39;</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">user_agent_header</span>
-
-    <span class="k">def</span> <span class="nf">__execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Executes directly a REST Operation and returns the result</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            operation (str): either &#39;get&#39;, &#39;post&#39; or &#39;put&#39;</span>
-<span class="sd">            url (str): a relative URL, such as &quot;/api/now/v2/table/incident&quot;.</span>
-<span class="sd">                An absolute URL such as &quot;https://cerntest.service-now.com/api/now/v2/table/incident&quot; can also</span>
-<span class="sd">                be used, but the instance should match with the &quot;instance&quot; parameter in the configuration file,</span>
-<span class="sd">                or the value set with the ``.set_instance()`` method.</span>
-<span class="sd">            headers (:obj:`dict`, optional): any additional headers to be be passed. This method will add</span>
-<span class="sd">                Accept:application/json and Content-Type:application/json if not specified.</span>
-<span class="sd">                It will also add the Authorization header if the authentication type is &#39;sso_auth&#39;,</span>
-<span class="sd">                by setting it to the OAuth access header.</span>
-<span class="sd">            params (:obj:`dict`, optional): any additional URL parameters to be be passed</span>
-<span class="sd">            data (object): the data to be sent in a post or put operation</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException: if the operation parameter is not &#39;get&#39;, &#39;post&#39; or &#39;put&#39;</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">operation</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.__execute: the operation paramater is mandatory&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.__execute: the url paramater is mandatory&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;https://&#39;</span><span class="p">):</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="n">url</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;https://&#39;</span><span class="p">):</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="n">url</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">headers</span><span class="p">:</span>
-            <span class="n">headers</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="s1">&#39;User-Agent&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">headers</span><span class="p">:</span>
-            <span class="n">headers</span><span class="p">[</span><span class="s1">&#39;User-Agent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__library_user_agent</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s1">&#39;Accept&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">headers</span><span class="p">:</span>
-            <span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Accept&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;application/json&#39;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;post&#39;</span> <span class="ow">or</span> <span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;put&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;Content-Type&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">headers</span><span class="p">:</span>
-            <span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;application/json&#39;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_type</span> <span class="o">==</span> <span class="s1">&#39;sso_oauth&#39;</span><span class="p">:</span>
-            <span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Authorization&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">[</span><span class="s1">&#39;access_token&#39;</span><span class="p">]</span>
-
-        <span class="k">if</span> <span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;get&#39;</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;post&#39;</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;put&#39;</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.__execute: the operation paramater &quot;</span>
-                                           <span class="s2">&quot;needs to be either </span><span class="se">\&quot;</span><span class="s2">get</span><span class="se">\&quot;</span><span class="s2">, </span><span class="se">\&quot;</span><span class="s2">post</span><span class="se">\&quot;</span><span class="s2"> or </span><span class="se">\&quot;</span><span class="s2">put</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">result</span>
-
-    <span class="k">def</span> <span class="nf">__operation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Executes a REST Operation, taking care of reauthenticating if needed, and returns the result</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            operation (str): either &#39;get&#39;, &#39;post&#39; or &#39;put&#39;</span>
-<span class="sd">            url (str): a relative URL, such as &quot;/api/now/v2/table/incident&quot;.</span>
-<span class="sd">                An absolute URL such as &quot;https://cerntest.service-now.com/api/now/v2/table/incident&quot; can also</span>
-<span class="sd">                be used, but the instance should match with the &quot;instance&quot; parameter in the configuration file,</span>
-<span class="sd">                or the value set with the ``.set_instance()`` method.</span>
-<span class="sd">            headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, some headers will be set by</span>
-<span class="sd">                default (see __execute method)</span>
-<span class="sd">            params (:obj:`dict`, optional): any additional URL parameters to be be passed</span>
-<span class="sd">            data (object): the data to be sent in a post or put operation</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : if the status code is not 401, a requests.Response object is returned</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if the operation could not be performed due to an authentication issue</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__initiate_session</span><span class="p">()</span>
-
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__execute</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">401</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_type</span> <span class="o">==</span> <span class="s1">&#39;basic&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">__save_cookie_basic</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">result</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_type</span> <span class="o">==</span> <span class="s1">&#39;basic&#39;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fresh_cookie</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basic_auth_user</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">basic_auth_password</span><span class="p">)</span>
-                    <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__execute</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">401</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">__save_cookie_basic</span><span class="p">()</span>
-                        <span class="k">return</span> <span class="n">result</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
-                            <span class="s2">&quot;SnowRestSession.__operation: Your basic authentication &quot;</span>
-                            <span class="s2">&quot;user and password might not be valid&quot;</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
-                        <span class="s2">&quot;SnowRestSession.__operation: Your basic authentication &quot;</span>
-                        <span class="s2">&quot;user and password might not be valid&quot;</span><span class="p">)</span>
-
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_type</span> <span class="o">==</span> <span class="s1">&#39;sso_auth&#39;</span><span class="p">:</span>
-
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fresh_token</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
-                        <span class="s2">&quot;SnowRestSession.__operation: failed to perform the operation. The current account might not &quot;</span>
-                        <span class="s2">&quot;be able to log in to ServiceNow or the OAuth client id and secret might not be valid&quot;</span><span class="p">)</span>
-
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">__refresh_token</span><span class="p">()</span>
-                    <span class="n">token_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="s1">&#39;/oauth_token.do&#39;</span><span class="p">,</span>
-                                                      <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;grant_type&#39;</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>
-                                                            <span class="s1">&#39;client_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_id</span><span class="p">,</span>
-                                                            <span class="s1">&#39;client_secret&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_secret</span><span class="p">})</span>
-                    <span class="k">if</span> <span class="n">token_request</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">token_request</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-                        <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">)</span>
-                        <span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Authorization&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">[</span><span class="s1">&#39;access_token&#39;</span><span class="p">]</span>
-                        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__execute</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-                        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">401</span><span class="p">:</span>
-                            <span class="k">return</span> <span class="n">result</span>
-                        <span class="k">else</span><span class="p">:</span>
-                            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
-                                <span class="s2">&quot;SnowRestSession.__operation: failed to perform the operation. &quot;</span>
-                                <span class="s2">&quot;The current account might not be able to log in to ServiceNow or &quot;</span>
-                                <span class="s2">&quot;the OAuth client id and secret might not be valid&quot;</span><span class="p">)</span>
-
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fresh_cookie</span><span class="p">:</span>
-                            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
-                                <span class="s2">&quot;SnowRestSession.__operation: OAuth tokens could not be retrieved from ServiceNow. &quot;</span>
-                                <span class="s2">&quot;Please check the OAuth client id and OAuth client secret.&quot;</span><span class="p">)</span>
-                        <span class="k">else</span><span class="p">:</span>
-                            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_cookie_file_path</span><span class="p">)</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">__cern_get_sso_cookie</span><span class="p">()</span>
-                            <span class="n">token_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="s1">&#39;/oauth_token.do&#39;</span><span class="p">,</span>
-                                                              <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;grant_type&#39;</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>
-                                                                    <span class="s1">&#39;client_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_id</span><span class="p">,</span>
-                                                                    <span class="s1">&#39;client_secret&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_secret</span><span class="p">})</span>
-                            <span class="k">if</span> <span class="n">token_request</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">401</span><span class="p">:</span>
-                                <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
-                                    <span class="s2">&quot;SnowRestSession.__operation: OAuth tokens could not be retrieved from ServiceNow. &quot;</span>
-                                    <span class="s2">&quot;Please check the OAuth client id and OAuth client secret.&quot;</span><span class="p">)</span>
-                            <span class="k">else</span><span class="p">:</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">token_request</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-                                <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">)</span>
-                                <span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Authorization&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">[</span><span class="s1">&#39;access_token&#39;</span><span class="p">]</span>
-                                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__execute</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
-                                                        <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-                                <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">401</span><span class="p">:</span>
-                                    <span class="k">return</span> <span class="n">result</span>
-                                <span class="k">else</span><span class="p">:</span>
-                                    <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
-                                        <span class="s2">&quot;SnowRestSession.__operation: failed to perform the operation. &quot;</span>
-                                        <span class="s2">&quot;The current account might not be able to log in to ServiceNow or &quot;</span>
-                                        <span class="s2">&quot;the OAuth client id and secret might not be valid&quot;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
-                    <span class="s2">&quot;SnowRestSession.__operation: self.auth_type has a value different from </span><span class="se">\&quot;</span><span class="s2">basic</span><span class="se">\&quot;</span><span class="s2"> and </span><span class="se">\&quot;</span><span class="s2">sso_auth</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SnowRestSession.get"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -820,488 +484,14 @@
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__operation</span><span class="p">(</span><span class="n">operation</span><span class="o">=</span><span class="s1">&#39;put&#39;</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span></div>
 
-<div class="viewcode-block" id="SnowRestSession.get_record"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.get_record">[docs]</a>    <span class="k">def</span> <span class="nf">get_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__call_cern_get_sso_cookie</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ** Will be deprecated soon, replaced by the `get` method of the `Record` class **</span>
-
-<span class="sd">        Executes a GET operation in order to read a single record from a ServiceNow table.</span>
-<span class="sd">        The authentication method, and session cookie / OAuth tokens persistance will depend on how the session</span>
-<span class="sd">        has been configured.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.</span>
-<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the record to be read.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            number (str): the number of the record to be read. Can be used if the table has a Number field.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, the &#39;Accept&#39; header will be set to</span>
-<span class="sd">                &#39;application/json&#39;.</span>
-<span class="sd">            params (:obj:`dict`, optional): any additional URL parameters to be be passed. For a complete list, please see:</span>
-<span class="sd">                https://docs.servicenow.com/bundle/helsinki-application-development/page/integrate/inbound-rest/concept/c_TableAPI.html#ariaid-title3</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
-<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the record.</span>
-<span class="sd">                The response will also contain headers. For a list of headers, please see:</span>
-<span class="sd">                https://docs.servicenow.com/bundle/helsinki-application-development/page/integrate/inbound-rest/concept/c_TableAPI.html#d45069e608</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
-<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
+<span class="sd">        Executes the cern-get-sso-cookie command (available in CERN Linux environments)</span>
+<span class="sd">        in order to perform a Single Sign-On and produce a cookie file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">table</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.get_record: the table paramater needs a non empty value&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">sys_id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">number</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.get_record: &quot;</span>
-                                           <span class="s2">&quot;needs either a value in the sys_id or the number parameters&quot;</span><span class="p">)</span>
-
-        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="s1">&#39;/api/now/v2/table/&#39;</span> <span class="o">+</span> <span class="n">table</span>
-        <span class="k">if</span> <span class="n">sys_id</span><span class="p">:</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">sys_id</span>
-        <span class="k">elif</span> <span class="n">number</span><span class="p">:</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="s1">&#39;?sysparm_query=number=&#39;</span> <span class="o">+</span> <span class="n">number</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.get_records"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.get_records">[docs]</a>    <span class="k">def</span> <span class="nf">get_records</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">query_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">query_encoded</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ** Will be deprecated soon, replaced by the `RecordQuery` class **</span>
-
-<span class="sd">        Executes a GET operation in order to read one or many records from a ServiceNow table.</span>
-<span class="sd">        The authentication method, and session cookie / OAuth tokens persistance will depend on how the session</span>
-<span class="sd">        has been configured.</span>
-
-<span class="sd">        At least a `query_filter` or `query_encoded` parameter need to be provided.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.</span>
-<span class="sd">            query_filter (dict): a dictionary ``{&#39;field_1&#39;: &#39;value_1&#39;, &#39;field_2&#39;: &#39;value_2&#39;}``</span>
-<span class="sd">                which will be used to apply a filter to the query. For example,</span>
-<span class="sd">                ``{&#39;active&#39;: &#39;true&#39;, &#39;u_functional_element&#39;: &#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;}``</span>
-<span class="sd">                corresponds to incidents that are active=true AND Functional Element=ServiceNow</span>
-<span class="sd">            query_encoded (str): a query in the ServiceNow &quot;encoded query&quot; format.</span>
-<span class="sd">                Example: active=true^u_functional_element=579fb3d90a0a8c08017ac8a1137c8ee6.</span>
-<span class="sd">                For more information, please see: https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
-<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the records.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
-<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">table</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.get_records: the table paramater needs a non empty value&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">query_filter</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">query_encoded</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.get_record: &quot;</span>
-                                           <span class="s2">&quot;needs either a value in the query_filter or the query_encoded parameters&quot;</span><span class="p">)</span>
-
-        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="s1">&#39;/api/now/v2/table/&#39;</span> <span class="o">+</span> <span class="n">table</span>
-        <span class="k">if</span> <span class="n">query_filter</span><span class="p">:</span>
-            <span class="n">a</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">query_filter</span><span class="p">:</span>
-                <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="n">query_filter</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
-                <span class="n">query_encoded</span> <span class="o">=</span> <span class="s1">&#39;^&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">query_encoded</span><span class="p">:</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="s1">&#39;?sysparm_query=&#39;</span> <span class="o">+</span> <span class="n">query_encoded</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.get_request"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.get_request">[docs]</a>    <span class="k">def</span> <span class="nf">get_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ** Will be deprecated soon, replaced by the `get` method of the `Request` class **</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the record to be read.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            number (str): the number of the record to be read.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
-<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the record.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
-<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_record</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="n">sys_id</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.get_requests"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.get_requests">[docs]</a>    <span class="k">def</span> <span class="nf">get_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">query_encoded</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ** Will be deprecated soon, replaced by the `RequestQuery` class **</span>
-
-<span class="sd">        At least a `query_filter` or `query_encoded` parameter need to be provided.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            query_filter (dict): a dictionary ``{&#39;field_1&#39;: &#39;value_1&#39;, &#39;field_2&#39;: &#39;value_2&#39;}``</span>
-<span class="sd">                which will be used to apply a filter to the query. For example,</span>
-<span class="sd">                ``{&#39;active&#39;: &#39;true&#39;, &#39;u_functional_element&#39;: &#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;}``</span>
-<span class="sd">                corresponds to incidents that are active=true AND Functional Element=ServiceNow</span>
-<span class="sd">            query_encoded (str): a query in the ServiceNow &quot;encoded query&quot; format.</span>
-<span class="sd">                Example: active=true^u_functional_element=579fb3d90a0a8c08017ac8a1137c8ee6.</span>
-<span class="sd">                For more information, please see: https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
-<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the records.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
-<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_records</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">,</span> <span class="n">query_filter</span><span class="o">=</span><span class="n">query_filter</span><span class="p">,</span> <span class="n">query_encoded</span><span class="o">=</span><span class="n">query_encoded</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.get_incidents"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.get_incidents">[docs]</a>    <span class="k">def</span> <span class="nf">get_incidents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">query_encoded</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ** Will be deprecated soon, replaced by the `IncidentQuery` class **</span>
-
-<span class="sd">        At least a `query_filter` or `query_encoded` parameter need to be provided.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            query_filter (dict): a dictionary ``{&#39;field_1&#39;: &#39;value_1&#39;, &#39;field_2&#39;: &#39;value_2&#39;}``</span>
-<span class="sd">                which will be used to apply a filter to the query. For example,</span>
-<span class="sd">                ``{&#39;active&#39;: &#39;true&#39;, &#39;u_functional_element&#39;: &#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;}``</span>
-<span class="sd">                corresponds to incidents that are active=true AND Functional Element=ServiceNow</span>
-<span class="sd">            query_encoded (str): a query in the ServiceNow &quot;encoded query&quot; format.</span>
-<span class="sd">                Example: active=true^u_functional_element=579fb3d90a0a8c08017ac8a1137c8ee6.</span>
-<span class="sd">                For more information, please see: https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
-<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the records.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
-<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_records</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;incident&#39;</span><span class="p">,</span> <span class="n">query_filter</span><span class="o">=</span><span class="n">query_filter</span><span class="p">,</span> <span class="n">query_encoded</span><span class="o">=</span><span class="n">query_encoded</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.get_incident"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.get_incident">[docs]</a>    <span class="k">def</span> <span class="nf">get_incident</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ** Will be deprecated soon, replaced by the `get` method of the `Incident` class **</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the record to be read.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            number (str): the number of the record to be read.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
-<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the record.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
-<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_record</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;incident&#39;</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="n">sys_id</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.insert_record"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.insert_record">[docs]</a>    <span class="k">def</span> <span class="nf">insert_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ** Will be deprecated soon, replaced by the `insert` method of the `Record` class **</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.</span>
-<span class="sd">            data (dict): the values of the fields for the record that will be created.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
-<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
-<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">table</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.insert_record: the table paramater needs a non empty value&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.insert_record: the data paramater needs a non empty value&quot;</span><span class="p">)</span>
-
-        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="s1">&#39;/api/now/v2/table/&#39;</span> <span class="o">+</span> <span class="n">table</span>
-
-        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.insert_incident"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.insert_incident">[docs]</a>    <span class="k">def</span> <span class="nf">insert_incident</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ** Will be deprecated soon, replaced by the `insert` method of the `Incident` class **</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            data (dict): the values of the fields for the record that will be created.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
-<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
-<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">insert_record</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;incident&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.insert_request"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.insert_request">[docs]</a>    <span class="k">def</span> <span class="nf">insert_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ** Will be deprecated soon, replaced by the `insert` method of the `Record` class **</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            data (dict): the values of the fields for the record that will be created.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
-<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
-<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">insert_record</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.update_record"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.update_record">[docs]</a>    <span class="k">def</span> <span class="nf">update_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">sys_id</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ** Will be deprecated soon, replaced by the `update` method of the `Record` class **</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.</span>
-<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.</span>
-<span class="sd">            data (dict): the values of the fields that will be updated in the target record.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
-<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
-<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">table</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.update_record: the table paramater needs a non empty value&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.update_record: the data paramater needs a non empty value&quot;</span><span class="p">)</span>
-
-        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="s1">&#39;/api/now/v2/table/&#39;</span> <span class="o">+</span> <span class="n">table</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">sys_id</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.update_request"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.update_request">[docs]</a>    <span class="k">def</span> <span class="nf">update_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ** Will be deprecated soon, replaced by the `update` method of the `Request` class **</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            number (str): the number  of the target record to be updated.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            data (dict): the values of the fields that will be updated in the target record.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
-<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
-<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">sys_id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">number</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.update_request: &quot;</span>
-                                           <span class="s2">&quot;needs either a value in the sys_id or the number parameters&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">number</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_request</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">)</span>
-            <span class="n">result_object</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-            <span class="n">sys_id</span> <span class="o">=</span> <span class="n">result_object</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;sys_id&#39;</span><span class="p">]</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_record</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="n">sys_id</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.update_incident"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.update_incident">[docs]</a>    <span class="k">def</span> <span class="nf">update_incident</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ** Will be deprecated soon, replaced by the `update` method of the `Incident` class **</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            number (str): the number  of the target record to be updated.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            data (dict): the values of the fields that will be updated in the target record.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
-<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
-<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">sys_id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">number</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.update_incident: &quot;</span>
-                                           <span class="s2">&quot;needs either a value in the sys_id or the number parameters&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">number</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_incident</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">)</span>
-            <span class="n">result_object</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-            <span class="n">sys_id</span> <span class="o">=</span> <span class="n">result_object</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;sys_id&#39;</span><span class="p">]</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_record</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;incident&#39;</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="n">sys_id</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.incident_add_comment"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.incident_add_comment">[docs]</a>    <span class="k">def</span> <span class="nf">incident_add_comment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ** Will be deprecated soon, replaced by the `add_comment` method of the `Incident` class **</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            number (str): the number  of the target record to be updated.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            comment (str): the new comment to be added to the target record</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
-<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
-<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_comment</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;incident&#39;</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="n">sys_id</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="n">comment</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.request_add_comment"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.request_add_comment">[docs]</a>    <span class="k">def</span> <span class="nf">request_add_comment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ** Will be deprecated soon, replaced by the `add_comment` method of the `Request` class **</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            number (str): the number  of the target record to be updated.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            comment (str): the new comment to be added to the target record</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
-<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
-<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_comment</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="n">sys_id</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="n">comment</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.add_comment"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.add_comment">[docs]</a>    <span class="k">def</span> <span class="nf">add_comment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ** Will be deprecated soon, replaced by the `add_comment` method of the `Task` class **</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.</span>
-<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            number (str): the number  of the target record to be updated.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            comment (str): the new comment to be added to the target record</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
-<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
-<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">table</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.add_comment: the table parameter is mandatory&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">sys_id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">number</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.add_comment: &quot;</span>
-                                           <span class="s2">&quot;needs either a value in the sys_id or the number parameters&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">comment</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.add_comment: the comment parameter is mandatory&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">number</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_record</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">table</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">)</span>
-            <span class="n">result_object</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-            <span class="n">sys_id</span> <span class="o">=</span> <span class="n">result_object</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;sys_id&#39;</span><span class="p">]</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_record</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">table</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="n">sys_id</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;comments&#39;</span><span class="p">:</span> <span class="n">comment</span><span class="p">})</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.request_add_work_note"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.request_add_work_note">[docs]</a>    <span class="k">def</span> <span class="nf">request_add_work_note</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">work_note</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ** Will be deprecated soon, replaced by the `add_work_note` method of the `Request` class **</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            number (str): the number  of the target record to be updated.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            work_note (str): the new work note to be added to the target record</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
-<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
-<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_work_note</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;incident&#39;</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="n">sys_id</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="n">work_note</span><span class="o">=</span><span class="n">work_note</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.incident_add_work_note"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.incident_add_work_note">[docs]</a>    <span class="k">def</span> <span class="nf">incident_add_work_note</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">work_note</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ** Will be deprecated soon, replaced by the `add_work_note` method of the `Incident` class **</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            number (str): the number  of the target record to be updated.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            work_note (str): the new work note to be added to the target record</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
-<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
-<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_work_note</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="n">sys_id</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">,</span> <span class="n">work_note</span><span class="o">=</span><span class="n">work_note</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SnowRestSession.add_work_note"><a class="viewcode-back" href="../../cern_snow_client.html#cern_snow_client.session.SnowRestSession.add_work_note">[docs]</a>    <span class="k">def</span> <span class="nf">add_work_note</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">work_note</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        ** Will be deprecated soon, replaced by the `add_work_note` method of the `Task` class **</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            table (str): the name of a ServiceNow table, such as ``incident``. Mandatory parameter.</span>
-<span class="sd">            sys_id (str): the sys_id (ServiceNow unique identifier) of the target record to be updated.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            number (str): the number  of the target record to be updated.</span>
-<span class="sd">                Giving either a `sys_id` or a `number` parameter is mandatory, but not both.</span>
-<span class="sd">            work_note (str): the new work note to be added to the target record</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            requests.Response : If the status code is not 401, a ``requests.Response`` object is returned.</span>
-<span class="sd">                The &#39;text&#39; will contain a JSON or XML representation of the new record.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            SnowRestSessionException : if mandatory parameters are missing,</span>
-<span class="sd">                or if the operation could not be performed due to an authentication issue</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">table</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.add_work_note: the table parameter is mandatory&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">sys_id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">number</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.add_work_note: &quot;</span>
-                                           <span class="s2">&quot;needs either a value in the sys_id or the number parameters&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">work_note</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.add_work_note: the work_note parameter is mandatory&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">number</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_record</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">table</span><span class="p">,</span> <span class="n">number</span><span class="o">=</span><span class="n">number</span><span class="p">)</span>
-            <span class="n">result_object</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-            <span class="n">sys_id</span> <span class="o">=</span> <span class="n">result_object</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;sys_`id&#39;</span><span class="p">]</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_record</span><span class="p">(</span><span class="n">table</span><span class="o">=</span><span class="n">table</span><span class="p">,</span> <span class="n">sys_id</span><span class="o">=</span><span class="n">sys_id</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;work_notes&#39;</span><span class="p">:</span> <span class="n">work_note</span><span class="p">})</span></div>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;cern-get-sso-cookie&quot;</span><span class="p">,</span> <span class="s2">&quot;--reprocess&quot;</span><span class="p">,</span> <span class="s2">&quot;--url&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;--outfile&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_cookie_file_path</span><span class="p">]</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">__good_cookie</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">cookie_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_cookie_file_path</span><span class="p">)</span>
@@ -1317,6 +507,336 @@
             <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__cern_get_sso_cookie</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads and checks an existing cookie file, in order to avoid logging into ServiceNow and the</span>
+<span class="sd">        CERN Single-Sign-On if possible. If needed, logs in again into both to produce the cookie file.</span>
+<span class="sd">        The cookie file is loaded into memory.</span>
+<span class="sd">        If not needed to persist the cookie file, it is deleted.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException: if the Single Sign On login is not succesful. This is determined by parsing</span>
+<span class="sd">                the cookie file after it is produced.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_cookie_file_path</span><span class="p">):</span>  <span class="c1"># cookie file not present. We perform Single Sign On</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__call_cern_get_sso_cookie</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fresh_cookie</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># cookie file present. We check if it has the correct format</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fresh_cookie</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__good_cookie</span><span class="p">():</span>  <span class="c1"># the format is bad. We create a new cookie file</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__call_cern_get_sso_cookie</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fresh_cookie</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># we load the cookie file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_cookie</span> <span class="o">=</span> <span class="n">cookielib</span><span class="o">.</span><span class="n">MozillaCookieJar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_cookie_file_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_cookie</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+        <span class="c1"># we check if the log in was sucessful</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__good_cookie</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
+                <span class="s2">&quot;SnowRestSession.__cern_get_sso_cookie: The current account has failed to perform &quot;</span>
+                <span class="s2">&quot;a Single-Sign-On login in to ServiceNow&quot;</span><span class="p">)</span>
+
+        <span class="c1"># we load the cookies into the requests.Session session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">cookies</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session_cookie</span>
+
+        <span class="c1"># if not needed to persist the cookie file, we delete it</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_cookie</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_cookie_file_path</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__obtain_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads the OAuth access and refresh tokens from the token file.</span>
+<span class="sd">        If the token file is not present, new OAuth access and refresh tokens are obtained.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException: if the OAuth tokens could not be retrieved from ServiceNow.</span>
+<span class="sd">            IOError, ValueError: if the token file could not be opened</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span><span class="p">):</span>  <span class="c1"># tokens file not present. We obtain new tokens</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fresh_token</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">token_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="s1">&#39;/oauth_token.do&#39;</span><span class="p">,</span>
+                                              <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;grant_type&#39;</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>
+                                                    <span class="s1">&#39;client_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_id</span><span class="p">,</span>
+                                                    <span class="s1">&#39;client_secret&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_secret</span><span class="p">})</span>
+
+            <span class="k">if</span> <span class="n">token_request</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>  <span class="c1"># token request was successful</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">token_request</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_token</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">token_file</span><span class="p">:</span>
+                        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">,</span> <span class="n">token_file</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># token request failed. Possibly, an existing cookie file contained a timed out session</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fresh_cookie</span><span class="p">:</span>  <span class="c1"># we just performed a Single-Sign-On. There is a problem with token retrieval.</span>
+                    <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
+                        <span class="s2">&quot;SnowRestSession.__obtain_tokens: OAuth tokens could not be retrieved from ServiceNow. &quot;</span>
+                        <span class="s2">&quot;Please check the OAuth client id and OAuth client secret.&quot;</span><span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># we may need to perform Single-Sign-On again, as the session may have timed out</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__cern_get_sso_cookie</span><span class="p">()</span>
+                    <span class="n">token_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="s1">&#39;/oauth_token.do&#39;</span><span class="p">,</span>
+                                                      <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;grant_type&#39;</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>
+                                                            <span class="s1">&#39;client_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_id</span><span class="p">,</span>
+                                                            <span class="s1">&#39;client_secret&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_secret</span><span class="p">})</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">if</span> <span class="n">token_request</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">token_request</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_token</span><span class="p">:</span>
+                            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">token_file</span><span class="p">:</span>
+                                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">,</span> <span class="n">token_file</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
+                                <span class="s2">&quot;SnowRestSession.__obtain_tokens: OAuth tokens could not be retrieved from ServiceNow. &quot;</span>
+                                <span class="s2">&quot;Please check the OAuth client id and OAuth client secret.&quot;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># the tokens file is present. We try to load it</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">token_file</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">token_file</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">IOError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                    <span class="s2">&quot;SnowRestSession.__obtain_tokens: Issue when opening &quot;</span>
+                    <span class="s2">&quot;the token file at </span><span class="si">%s</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">e</span>
+
+    <span class="k">def</span> <span class="nf">__initiate_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initiates a session via CERN Single-Sign-On + OAuth, or basic Authentication</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException: if auth_type is not &#39;sso_auth&#39; nor &#39;basic&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_type</span> <span class="o">==</span> <span class="s1">&#39;sso_oauth&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__cern_get_sso_cookie</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__obtain_tokens</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_type</span> <span class="o">==</span> <span class="s1">&#39;basic&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basic_auth_user</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">basic_auth_password</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">cookies</span> <span class="o">=</span> <span class="n">cookielib</span><span class="o">.</span><span class="n">MozillaCookieJar</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_cookie_file_path</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">cookies</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_cookie_file_path</span><span class="p">,</span> <span class="n">ignore_discard</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ignore_expires</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
+                <span class="s2">&quot;SnowRestSession.__initiate_session: self.auth_type &quot;</span>
+                <span class="s2">&quot;has a value different from </span><span class="se">\&quot;</span><span class="s2">basic</span><span class="se">\&quot;</span><span class="s2"> and </span><span class="se">\&quot;</span><span class="s2">sso_auth</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__refresh_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Requests an OAuth access token via the OAUTH refresh token.</span>
+<span class="sd">        Saves the resulting access token in the token file.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException: if the access token could not be obtained</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">token_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="s1">&#39;/oauth_token.do&#39;</span><span class="p">,</span>
+                                          <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;grant_type&#39;</span><span class="p">:</span> <span class="s1">&#39;refresh_token&#39;</span><span class="p">,</span>
+                                                <span class="s1">&#39;client_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_id</span><span class="p">,</span>
+                                                <span class="s1">&#39;client_secret&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_secret</span><span class="p">,</span>
+                                                <span class="s1">&#39;refresh_token&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">[</span><span class="s1">&#39;refresh_token&#39;</span><span class="p">]})</span>
+
+        <span class="k">if</span> <span class="n">token_request</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">token_request</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">token_file</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">,</span> <span class="n">token_file</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">token_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="s1">&#39;/oauth_token.do&#39;</span><span class="p">,</span>
+                                              <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;grant_type&#39;</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>
+                                                    <span class="s1">&#39;client_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_id</span><span class="p">,</span>
+                                                    <span class="s1">&#39;client_secret&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_secret</span><span class="p">})</span>
+            <span class="k">if</span> <span class="n">token_request</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">token_request</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">token_file</span><span class="p">:</span>
+                    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">,</span> <span class="n">token_file</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fresh_cookie</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
+                        <span class="s2">&quot;SnowRestSession.__refresh_token: the OAuth client id and OAuth secret might not be valid&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__save_cookie_basic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Persists the basic authentication cookie file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fresh_cookie</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">cookies</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_cookie_file_path</span><span class="p">,</span> <span class="n">ignore_discard</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ignore_expires</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__library_user_agent</span><span class="p">():</span>
+        <span class="n">user_agent_header</span> <span class="o">=</span> <span class="s1">&#39;cern-snow-client/&#39;</span> <span class="o">+</span> <span class="n">__version__</span>
+        <span class="n">default_headers</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">default_headers</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;User-Agent&#39;</span> <span class="ow">in</span> <span class="n">default_headers</span><span class="p">:</span>
+            <span class="n">user_agent_header</span> <span class="o">=</span> <span class="n">user_agent_header</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">default_headers</span><span class="p">[</span><span class="s1">&#39;User-Agent&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">user_agent_header</span>
+
+    <span class="k">def</span> <span class="nf">__execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Executes directly a REST Operation and returns the result</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            operation (str): either &#39;get&#39;, &#39;post&#39; or &#39;put&#39;</span>
+<span class="sd">            url (str): a relative URL, such as &quot;/api/now/v2/table/incident&quot;.</span>
+<span class="sd">                An absolute URL such as &quot;https://cerntest.service-now.com/api/now/v2/table/incident&quot; can also</span>
+<span class="sd">                be used, but the instance should match with the &quot;instance&quot; parameter in the configuration file,</span>
+<span class="sd">                or the value set with the ``.set_instance()`` method.</span>
+<span class="sd">            headers (:obj:`dict`, optional): any additional headers to be be passed. This method will add</span>
+<span class="sd">                Accept:application/json and Content-Type:application/json if not specified.</span>
+<span class="sd">                It will also add the Authorization header if the authentication type is &#39;sso_auth&#39;,</span>
+<span class="sd">                by setting it to the OAuth access header.</span>
+<span class="sd">            params (:obj:`dict`, optional): any additional URL parameters to be be passed</span>
+<span class="sd">            data (object): the data to be sent in a post or put operation</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException: if the operation parameter is not &#39;get&#39;, &#39;post&#39; or &#39;put&#39;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">operation</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.__execute: the operation paramater is mandatory&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.__execute: the url paramater is mandatory&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;https://&#39;</span><span class="p">):</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="n">url</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;https://&#39;</span><span class="p">):</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="n">url</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">headers</span><span class="p">:</span>
+            <span class="n">headers</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="s1">&#39;User-Agent&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">headers</span><span class="p">:</span>
+            <span class="n">headers</span><span class="p">[</span><span class="s1">&#39;User-Agent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__library_user_agent</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;Accept&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">headers</span><span class="p">:</span>
+            <span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Accept&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;application/json&#39;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;post&#39;</span> <span class="ow">or</span> <span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;put&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;Content-Type&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">headers</span><span class="p">:</span>
+            <span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;application/json&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_type</span> <span class="o">==</span> <span class="s1">&#39;sso_oauth&#39;</span><span class="p">:</span>
+            <span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Authorization&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">[</span><span class="s1">&#39;access_token&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;get&#39;</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;post&#39;</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">operation</span> <span class="o">==</span> <span class="s1">&#39;put&#39;</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span><span class="s2">&quot;SnowRestSession.__execute: the operation paramater &quot;</span>
+                                           <span class="s2">&quot;needs to be either </span><span class="se">\&quot;</span><span class="s2">get</span><span class="se">\&quot;</span><span class="s2">, </span><span class="se">\&quot;</span><span class="s2">post</span><span class="se">\&quot;</span><span class="s2"> or </span><span class="se">\&quot;</span><span class="s2">put</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">__operation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Executes a REST Operation, taking care of reauthenticating if needed, and returns the result</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            operation (str): either &#39;get&#39;, &#39;post&#39; or &#39;put&#39;</span>
+<span class="sd">            url (str): a relative URL, such as &quot;/api/now/v2/table/incident&quot;.</span>
+<span class="sd">                An absolute URL such as &quot;https://cerntest.service-now.com/api/now/v2/table/incident&quot; can also</span>
+<span class="sd">                be used, but the instance should match with the &quot;instance&quot; parameter in the configuration file,</span>
+<span class="sd">                or the value set with the ``.set_instance()`` method.</span>
+<span class="sd">            headers (:obj:`dict`, optional): any additional headers to be be passed. If not set, some headers will be set by</span>
+<span class="sd">                default (see __execute method)</span>
+<span class="sd">            params (:obj:`dict`, optional): any additional URL parameters to be be passed</span>
+<span class="sd">            data (object): the data to be sent in a post or put operation</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Response : if the status code is not 401, a requests.Response object is returned</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            SnowRestSessionException : if the operation could not be performed due to an authentication issue</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__initiate_session</span><span class="p">()</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__execute</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">401</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_type</span> <span class="o">==</span> <span class="s1">&#39;basic&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__save_cookie_basic</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_type</span> <span class="o">==</span> <span class="s1">&#39;basic&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fresh_cookie</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basic_auth_user</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">basic_auth_password</span><span class="p">)</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__execute</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">401</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">__save_cookie_basic</span><span class="p">()</span>
+                        <span class="k">return</span> <span class="n">result</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
+                            <span class="s2">&quot;SnowRestSession.__operation: Your basic authentication &quot;</span>
+                            <span class="s2">&quot;user and password might not be valid&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
+                        <span class="s2">&quot;SnowRestSession.__operation: Your basic authentication &quot;</span>
+                        <span class="s2">&quot;user and password might not be valid&quot;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_type</span> <span class="o">==</span> <span class="s1">&#39;sso_auth&#39;</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fresh_token</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
+                        <span class="s2">&quot;SnowRestSession.__operation: failed to perform the operation. The current account might not &quot;</span>
+                        <span class="s2">&quot;be able to log in to ServiceNow or the OAuth client id and secret might not be valid&quot;</span><span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__refresh_token</span><span class="p">()</span>
+                    <span class="n">token_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="s1">&#39;/oauth_token.do&#39;</span><span class="p">,</span>
+                                                      <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;grant_type&#39;</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>
+                                                            <span class="s1">&#39;client_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_id</span><span class="p">,</span>
+                                                            <span class="s1">&#39;client_secret&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_secret</span><span class="p">})</span>
+                    <span class="k">if</span> <span class="n">token_request</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">token_request</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">token_file</span><span class="p">:</span>
+                            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">,</span> <span class="n">token_file</span><span class="p">)</span>
+                        <span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Authorization&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">[</span><span class="s1">&#39;access_token&#39;</span><span class="p">]</span>
+                        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__execute</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">401</span><span class="p">:</span>
+                            <span class="k">return</span> <span class="n">result</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
+                                <span class="s2">&quot;SnowRestSession.__operation: failed to perform the operation. &quot;</span>
+                                <span class="s2">&quot;The current account might not be able to log in to ServiceNow or &quot;</span>
+                                <span class="s2">&quot;the OAuth client id and secret might not be valid&quot;</span><span class="p">)</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fresh_cookie</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
+                                <span class="s2">&quot;SnowRestSession.__operation: OAuth tokens could not be retrieved from ServiceNow. &quot;</span>
+                                <span class="s2">&quot;Please check the OAuth client id and OAuth client secret.&quot;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_cookie_file_path</span><span class="p">)</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">__cern_get_sso_cookie</span><span class="p">()</span>
+                            <span class="n">token_request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance</span> <span class="o">+</span> <span class="s1">&#39;/oauth_token.do&#39;</span><span class="p">,</span>
+                                                              <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;grant_type&#39;</span><span class="p">:</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>
+                                                                    <span class="s1">&#39;client_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_id</span><span class="p">,</span>
+                                                                    <span class="s1">&#39;client_secret&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">oauth_client_secret</span><span class="p">})</span>
+                            <span class="k">if</span> <span class="n">token_request</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">401</span><span class="p">:</span>
+                                <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
+                                    <span class="s2">&quot;SnowRestSession.__operation: OAuth tokens could not be retrieved from ServiceNow. &quot;</span>
+                                    <span class="s2">&quot;Please check the OAuth client id and OAuth client secret.&quot;</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">token_request</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oauth_token_file_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">token_file</span><span class="p">:</span>
+                                    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">,</span> <span class="n">token_file</span><span class="p">)</span>
+                                <span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Authorization&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_dic</span><span class="p">[</span><span class="s1">&#39;access_token&#39;</span><span class="p">]</span>
+                                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__execute</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+                                                        <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">401</span><span class="p">:</span>
+                                    <span class="k">return</span> <span class="n">result</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
+                                        <span class="s2">&quot;SnowRestSession.__operation: failed to perform the operation. &quot;</span>
+                                        <span class="s2">&quot;The current account might not be able to log in to ServiceNow or &quot;</span>
+                                        <span class="s2">&quot;the OAuth client id and secret might not be valid&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">SnowRestSessionException</span><span class="p">(</span>
+                    <span class="s2">&quot;SnowRestSession.__operation: self.auth_type has a value different from </span><span class="se">\&quot;</span><span class="s2">basic</span><span class="se">\&quot;</span><span class="s2"> and </span><span class="se">\&quot;</span><span class="s2">sso_auth</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_configure_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">removeHandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_log_handler</span><span class="p">)</span>

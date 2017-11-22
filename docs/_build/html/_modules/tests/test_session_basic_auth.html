@@ -49,7 +49,6 @@
 <span></span><span class="c1"># coding: utf-8</span>
 
 <span class="kn">import</span> <span class="nn">unittest</span>
-<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">from</span> <span class="nn">tests.test_session_base</span> <span class="k">import</span> <span class="n">TestSessionBase</span>
 
@@ -60,30 +59,25 @@
 
 <div class="viewcode-block" id="TestSessionBasicAuthentication.make_good_session"><a class="viewcode-back" href="../../tests.html#tests.test_session_basic_auth.TestSessionBasicAuthentication.make_good_session">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">make_good_session</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="n">good_basic_auth_config_file</span> <span class="o">=</span> <span class="s1">&#39;tests/config_files/basic_good.yaml&#39;</span>
-        <span class="n">basic_auth_password</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_password</span><span class="p">(</span><span class="s1">&#39;basic_good&#39;</span><span class="p">)</span>
-
-        <span class="n">s</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">make_session</span><span class="p">(</span><span class="n">good_basic_auth_config_file</span><span class="p">)</span>
-        <span class="n">s</span><span class="o">.</span><span class="n">set_basic_auth_password</span><span class="p">(</span><span class="n">basic_auth_password</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">s</span></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">make_good_basic_auth_session</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TestSessionBasicAuthentication.remove_cookie"><a class="viewcode-back" href="../../tests.html#tests.test_session_basic_auth.TestSessionBasicAuthentication.remove_cookie">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">remove_cookie</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;basic_cookie.txt&#39;</span><span class="p">)</span></div>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">remove_basic_cookie_file</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="TestSessionBasicAuthentication.test_get_incident"><a class="viewcode-back" href="../../tests.html#tests.test_session_basic_auth.TestSessionBasicAuthentication.test_get_incident">[docs]</a>    <span class="k">def</span> <span class="nf">test_get_incident</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestSessionBasicAuthentication.test_get"><a class="viewcode-back" href="../../tests.html#tests.test_session_basic_auth.TestSessionBasicAuthentication.test_get">[docs]</a>    <span class="k">def</span> <span class="nf">test_get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_good_session</span><span class="p">()</span>
-        <span class="n">TestSessionBase</span><span class="o">.</span><span class="n">base_test_get_incident</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="n">TestSessionBase</span><span class="o">.</span><span class="n">base_test_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remove_cookie</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="TestSessionBasicAuthentication.test_insert_incident"><a class="viewcode-back" href="../../tests.html#tests.test_session_basic_auth.TestSessionBasicAuthentication.test_insert_incident">[docs]</a>    <span class="k">def</span> <span class="nf">test_insert_incident</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestSessionBasicAuthentication.test_post"><a class="viewcode-back" href="../../tests.html#tests.test_session_basic_auth.TestSessionBasicAuthentication.test_post">[docs]</a>    <span class="k">def</span> <span class="nf">test_post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_good_session</span><span class="p">()</span>
-        <span class="n">TestSessionBase</span><span class="o">.</span><span class="n">base_test_insert_incident</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="n">TestSessionBase</span><span class="o">.</span><span class="n">base_test_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remove_cookie</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="TestSessionBasicAuthentication.test_update_incident"><a class="viewcode-back" href="../../tests.html#tests.test_session_basic_auth.TestSessionBasicAuthentication.test_update_incident">[docs]</a>    <span class="k">def</span> <span class="nf">test_update_incident</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestSessionBasicAuthentication.test_put"><a class="viewcode-back" href="../../tests.html#tests.test_session_basic_auth.TestSessionBasicAuthentication.test_put">[docs]</a>    <span class="k">def</span> <span class="nf">test_put</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_good_session</span><span class="p">()</span>
-        <span class="n">TestSessionBase</span><span class="o">.</span><span class="n">base_test_update_incident</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="n">TestSessionBase</span><span class="o">.</span><span class="n">base_test_put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remove_cookie</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TestSessionBasicAuthentication.test_session_persistance"><a class="viewcode-back" href="../../tests.html#tests.test_session_basic_auth.TestSessionBasicAuthentication.test_session_persistance">[docs]</a>    <span class="k">def</span> <span class="nf">test_session_persistance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

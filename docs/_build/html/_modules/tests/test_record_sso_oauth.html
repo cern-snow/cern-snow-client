@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>tests.test_session_sso_oauth &#8212; cern-snow-client 0.3 documentation</title>
+    <title>tests.test_record_sso_oauth &#8212; cern-snow-client 0.3 documentation</title>
     <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -45,45 +45,48 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <h1>Source code for tests.test_session_sso_oauth</h1><div class="highlight"><pre>
+  <h1>Source code for tests.test_record_sso_oauth</h1><div class="highlight"><pre>
 <span></span><span class="c1"># coding: utf-8</span>
 
 <span class="kn">import</span> <span class="nn">unittest</span>
 
-<span class="kn">from</span> <span class="nn">tests.test_session_base</span> <span class="k">import</span> <span class="n">TestSessionBase</span>
+<span class="kn">from</span> <span class="nn">tests.test_base</span> <span class="k">import</span> <span class="n">TestBase</span>
+<span class="kn">from</span> <span class="nn">tests.test_record_base</span> <span class="k">import</span> <span class="n">TestRecordBase</span>
 
 
-<div class="viewcode-block" id="TestSessionSsoOauth"><a class="viewcode-back" href="../../tests.html#tests.test_session_sso_oauth.TestSessionSsoOauth">[docs]</a><span class="k">class</span> <span class="nc">TestSessionSsoOauth</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">,</span> <span class="n">TestSessionBase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestRecordBasicAuthentication"><a class="viewcode-back" href="../../tests.html#tests.test_record_sso_oauth.TestRecordBasicAuthentication">[docs]</a><span class="k">class</span> <span class="nc">TestRecordBasicAuthentication</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">,</span> <span class="n">TestRecordBase</span><span class="p">):</span>
 
-    <span class="n">short_description_prefix</span> <span class="o">=</span> <span class="s2">&quot;snow client - session unit test - sso oauth&quot;</span>
+    <span class="n">short_description_prefix</span> <span class="o">=</span> <span class="s2">&quot;snow client - record unit test - sso oauth&quot;</span>
 
-<div class="viewcode-block" id="TestSessionSsoOauth.make_good_session"><a class="viewcode-back" href="../../tests.html#tests.test_session_sso_oauth.TestSessionSsoOauth.make_good_session">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="n">current_user</span> <span class="o">=</span> <span class="n">TestBase</span><span class="o">.</span><span class="n">sso_oauth_user</span>
+
+<div class="viewcode-block" id="TestRecordBasicAuthentication.make_good_session"><a class="viewcode-back" href="../../tests.html#tests.test_record_sso_oauth.TestRecordBasicAuthentication.make_good_session">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">make_good_session</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">make_good_sso_oauth_session</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="TestSessionSsoOauth.remove_files"><a class="viewcode-back" href="../../tests.html#tests.test_session_sso_oauth.TestSessionSsoOauth.remove_files">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">remove_files</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="TestRecordBasicAuthentication.remove_cookie"><a class="viewcode-back" href="../../tests.html#tests.test_record_sso_oauth.TestRecordBasicAuthentication.remove_cookie">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">remove_cookie</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">remove_sso_oauth_cookie_token_files</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="TestSessionSsoOauth.test_get"><a class="viewcode-back" href="../../tests.html#tests.test_session_sso_oauth.TestSessionSsoOauth.test_get">[docs]</a>    <span class="k">def</span> <span class="nf">test_get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestRecordBasicAuthentication.test_get_record"><a class="viewcode-back" href="../../tests.html#tests.test_record_sso_oauth.TestRecordBasicAuthentication.test_get_record">[docs]</a>    <span class="k">def</span> <span class="nf">test_get_record</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_good_session</span><span class="p">()</span>
-        <span class="n">TestSessionBase</span><span class="o">.</span><span class="n">base_test_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">remove_files</span><span class="p">()</span></div>
+        <span class="n">TestRecordBase</span><span class="o">.</span><span class="n">base_test_get_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_cookie</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="TestSessionSsoOauth.test_post"><a class="viewcode-back" href="../../tests.html#tests.test_session_sso_oauth.TestSessionSsoOauth.test_post">[docs]</a>    <span class="k">def</span> <span class="nf">test_post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestRecordBasicAuthentication.test_insert_record"><a class="viewcode-back" href="../../tests.html#tests.test_record_sso_oauth.TestRecordBasicAuthentication.test_insert_record">[docs]</a>    <span class="k">def</span> <span class="nf">test_insert_record</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_good_session</span><span class="p">()</span>
-        <span class="n">TestSessionBase</span><span class="o">.</span><span class="n">base_test_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">remove_files</span><span class="p">()</span></div>
+        <span class="n">TestRecordBase</span><span class="o">.</span><span class="n">base_test_insert_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_cookie</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="TestSessionSsoOauth.test_put"><a class="viewcode-back" href="../../tests.html#tests.test_session_sso_oauth.TestSessionSsoOauth.test_put">[docs]</a>    <span class="k">def</span> <span class="nf">test_put</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestRecordBasicAuthentication.test_update_record"><a class="viewcode-back" href="../../tests.html#tests.test_record_sso_oauth.TestRecordBasicAuthentication.test_update_record">[docs]</a>    <span class="k">def</span> <span class="nf">test_update_record</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_good_session</span><span class="p">()</span>
-        <span class="n">TestSessionBase</span><span class="o">.</span><span class="n">base_test_put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">remove_files</span><span class="p">()</span></div>
+        <span class="n">TestRecordBase</span><span class="o">.</span><span class="n">base_test_update_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_cookie</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="TestSessionSsoOauth.test_session_persistance"><a class="viewcode-back" href="../../tests.html#tests.test_session_sso_oauth.TestSessionSsoOauth.test_session_persistance">[docs]</a>    <span class="k">def</span> <span class="nf">test_session_persistance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TestRecordBasicAuthentication.test_record_query"><a class="viewcode-back" href="../../tests.html#tests.test_record_sso_oauth.TestRecordBasicAuthentication.test_record_query">[docs]</a>    <span class="k">def</span> <span class="nf">test_record_query</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_good_session</span><span class="p">()</span>
-        <span class="n">TestSessionBase</span><span class="o">.</span><span class="n">base_test_session_persistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">remove_files</span><span class="p">()</span></div></div>
+        <span class="n">TestRecordBase</span><span class="o">.</span><span class="n">base_test_get_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_cookie</span><span class="p">()</span></div></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>

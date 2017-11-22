@@ -1,0 +1,485 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>tests.test_incident_base &#8212; cern-snow-client 0.3 documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">cern-snow-client 0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tests.test_incident_base</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding: utf-8</span>
+
+<span class="kn">from</span> <span class="nn">cern_snow_client.incident</span> <span class="k">import</span> <span class="n">Incident</span>
+<span class="kn">from</span> <span class="nn">cern_snow_client.incident</span> <span class="k">import</span> <span class="n">IncidentQuery</span>
+<span class="kn">from</span> <span class="nn">tests.test_base</span> <span class="k">import</span> <span class="n">TestBase</span>
+
+
+<div class="viewcode-block" id="TestIncidentBase"><a class="viewcode-back" href="../../tests.html#tests.test_incident_base.TestIncidentBase">[docs]</a><span class="k">class</span> <span class="nc">TestIncidentBase</span><span class="p">(</span><span class="n">TestBase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestIncidentBase.base_test_incident_get"><a class="viewcode-back" href="../../tests.html#tests.test_incident_base.TestIncidentBase.base_test_incident_get">[docs]</a>    <span class="k">def</span> <span class="nf">base_test_incident_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;c1c535ba85f45540adf94de5b835cd43&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">sys_id</span><span class="p">,</span> <span class="s1">&#39;c1c535ba85f45540adf94de5b835cd43&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="s1">&#39;INC0426232&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">short_description</span><span class="p">,</span> <span class="s1">&#39;Test&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">get_table_name</span><span class="p">(),</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">sys_class_name</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;7&#39;</span><span class="p">)</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;INC0426232&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">sys_id</span><span class="p">,</span> <span class="s1">&#39;c1c535ba85f45540adf94de5b835cd43&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="s1">&#39;INC0426232&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">short_description</span><span class="p">,</span> <span class="s1">&#39;Test&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">get_table_name</span><span class="p">(),</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">sys_class_name</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;7&#39;</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;RQF0746626&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">found</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestIncidentBase.base_test_incident_insert"><a class="viewcode-back" href="../../tests.html#tests.test_incident_base.TestIncidentBase.base_test_incident_insert">[docs]</a>    <span class="k">def</span> <span class="nf">base_test_incident_insert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="c1"># incident test with values in constructor</span>
+        <span class="n">i_original</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s1">&#39;short_description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_insert_incident_1&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;u_business_service&#39;</span><span class="p">:</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">,</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">,</span>  <span class="c1"># Functional Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;assignment_group&#39;</span><span class="p">:</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span><span class="p">,</span>  <span class="c1"># ServiceNow 4th line</span>
+            <span class="s1">&#39;comments&#39;</span><span class="p">:</span> <span class="s2">&quot;Initial description&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;incident_state&#39;</span><span class="p">:</span> <span class="s1">&#39;2&#39;</span>  <span class="c1"># initial state : Assigned</span>
+        <span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">get_can_insert</span><span class="p">())</span>
+        <span class="n">inserted</span> <span class="o">=</span> <span class="n">i_original</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">inserted</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">get_table_name</span><span class="p">(),</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_class_name</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">short_description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_insert_incident_1&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">u_business_service</span><span class="p">,</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">u_functional_element</span><span class="p">,</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">assignment_group</span><span class="p">,</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="s1">&#39;Initial description&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">sys_class_name</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">short_description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_insert_incident_1&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">u_business_service</span><span class="p">,</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">u_functional_element</span><span class="p">,</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">assignment_group</span><span class="p">,</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="s1">&#39;Initial description&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">)</span>
+
+        <span class="c1"># incident test, setting values after constructor</span>
+        <span class="n">i_original</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">i_original</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_insert_incident_2&#39;</span>
+        <span class="n">i_original</span><span class="o">.</span><span class="n">u_business_service</span> <span class="o">=</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+        <span class="n">i_original</span><span class="o">.</span><span class="n">u_functional_element</span> <span class="o">=</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span>  <span class="c1"># Functional Element &quot;ServiceNow&quot;</span>
+        <span class="n">i_original</span><span class="o">.</span><span class="n">assignment_group</span> <span class="o">=</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span>  <span class="c1"># ServiceNow 4th line</span>
+        <span class="n">i_original</span><span class="o">.</span><span class="n">comments</span> <span class="o">=</span> <span class="s2">&quot;Initial description&quot;</span>
+        <span class="n">i_original</span><span class="o">.</span><span class="n">incident_state</span> <span class="o">=</span> <span class="s1">&#39;2&#39;</span>  <span class="c1"># initial state : Assigned</span>
+        <span class="n">inserted</span> <span class="o">=</span> <span class="n">i_original</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">get_can_insert</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">inserted</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">get_table_name</span><span class="p">(),</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_class_name</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">short_description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_insert_incident_2&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">u_business_service</span><span class="p">,</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">u_functional_element</span><span class="p">,</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">assignment_group</span><span class="p">,</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="s1">&#39;Initial description&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">sys_class_name</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">short_description</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_insert_incident_2&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">u_business_service</span><span class="p">,</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">u_functional_element</span><span class="p">,</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">assignment_group</span><span class="p">,</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="s1">&#39;Initial description&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestIncidentBase.base_test_incident_update"><a class="viewcode-back" href="../../tests.html#tests.test_incident_base.TestIncidentBase.base_test_incident_update">[docs]</a>    <span class="k">def</span> <span class="nf">base_test_incident_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="c1"># insert an incident for testing</span>
+        <span class="n">i_original</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s1">&#39;short_description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_update_incident_1&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;u_business_service&#39;</span><span class="p">:</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">,</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">,</span>  <span class="c1"># Functional Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;assignment_group&#39;</span><span class="p">:</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span><span class="p">,</span>  <span class="c1"># ServiceNow 4th line</span>
+            <span class="s1">&#39;comments&#39;</span><span class="p">:</span> <span class="s2">&quot;Initial description&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;incident_state&#39;</span><span class="p">:</span> <span class="s1">&#39;2&#39;</span>  <span class="c1"># initial state : Assigned</span>
+        <span class="p">})</span>
+        <span class="n">inserted</span> <span class="o">=</span> <span class="n">i_original</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">inserted</span><span class="p">)</span>
+
+        <span class="c1"># get the incident and the update it</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="n">i</span><span class="o">.</span><span class="n">watch_list</span> <span class="o">=</span> <span class="s1">&#39;test_watch_list_value@cern.ch&#39;</span>
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">watch_list</span><span class="p">,</span> <span class="s1">&#39;test_watch_list_value@cern.ch&#39;</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">watch_list</span><span class="p">,</span> <span class="s1">&#39;test_watch_list_value@cern.ch&#39;</span><span class="p">)</span>
+
+        <span class="c1"># update the incident by sys_id without getting it</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">i</span><span class="o">.</span><span class="n">watch_list</span> <span class="o">=</span> <span class="s1">&#39;test_watch_list_value_2@cern.ch&#39;</span>
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">watch_list</span><span class="p">,</span> <span class="s1">&#39;test_watch_list_value_2@cern.ch&#39;</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">watch_list</span><span class="p">,</span> <span class="s1">&#39;test_watch_list_value_2@cern.ch&#39;</span><span class="p">)</span>
+
+        <span class="c1"># update the incident by number without getting it</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">i</span><span class="o">.</span><span class="n">watch_list</span> <span class="o">=</span> <span class="s1">&#39;test_watch_list_value_3@cern.ch&#39;</span>
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">update</span><span class="p">((</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="n">i_original</span><span class="o">.</span><span class="n">number</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">watch_list</span><span class="p">,</span> <span class="s1">&#39;test_watch_list_value_3@cern.ch&#39;</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">watch_list</span><span class="p">,</span> <span class="s1">&#39;test_watch_list_value_3@cern.ch&#39;</span><span class="p">)</span>
+
+        <span class="c1"># update the incident_state after getting it</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="n">i</span><span class="o">.</span><span class="n">incident_state</span> <span class="o">=</span> <span class="s1">&#39;3&#39;</span>
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">)</span>
+
+        <span class="c1"># update the incident_state directly by sys_id</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">i</span><span class="o">.</span><span class="n">incident_state</span> <span class="o">=</span> <span class="s1">&#39;4&#39;</span>
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">)</span>
+
+        <span class="c1"># update the incident_state directly by number</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">i</span><span class="o">.</span><span class="n">incident_state</span> <span class="o">=</span> <span class="s1">&#39;3&#39;</span>
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">update</span><span class="p">((</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="n">i_original</span><span class="o">.</span><span class="n">number</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestIncidentBase.base_test_incident_add_comment"><a class="viewcode-back" href="../../tests.html#tests.test_incident_base.TestIncidentBase.base_test_incident_add_comment">[docs]</a>    <span class="k">def</span> <span class="nf">base_test_incident_add_comment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="n">i_original</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">{</span>  <span class="c1"># s is a SnowRestSession object</span>
+            <span class="s1">&#39;short_description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_incident_add_comment&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;u_business_service&#39;</span><span class="p">:</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">,</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">,</span>  <span class="c1"># Functional Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;assignment_group&#39;</span><span class="p">:</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span><span class="p">,</span>  <span class="c1"># ServiceNow 4th line</span>
+            <span class="s1">&#39;comments&#39;</span><span class="p">:</span> <span class="s2">&quot;Initial description&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;incident_state&#39;</span><span class="p">:</span> <span class="s1">&#39;2&#39;</span>  <span class="c1"># initial state : Assigned</span>
+        <span class="p">})</span>
+        <span class="n">inserted</span> <span class="o">=</span> <span class="n">i_original</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">inserted</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">add_comment</span><span class="p">(</span><span class="s1">&#39;New comment&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">add_comment</span><span class="p">(</span><span class="s1">&#39;New comment 2&#39;</span><span class="p">,</span> <span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">add_comment</span><span class="p">(</span><span class="s1">&#39;New comment 3&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="n">i_original</span><span class="o">.</span><span class="n">number</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestIncidentBase.base_test_incident_add_work_note"><a class="viewcode-back" href="../../tests.html#tests.test_incident_base.TestIncidentBase.base_test_incident_add_work_note">[docs]</a>    <span class="k">def</span> <span class="nf">base_test_incident_add_work_note</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="n">i_original</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">{</span>  <span class="c1"># s is a SnowRestSession object</span>
+            <span class="s1">&#39;short_description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_incident_add_comment&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;u_business_service&#39;</span><span class="p">:</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">,</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">,</span>  <span class="c1"># Functional Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;assignment_group&#39;</span><span class="p">:</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span><span class="p">,</span>  <span class="c1"># ServiceNow 4th line</span>
+            <span class="s1">&#39;comments&#39;</span><span class="p">:</span> <span class="s2">&quot;Initial description&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;incident_state&#39;</span><span class="p">:</span> <span class="s1">&#39;2&#39;</span>  <span class="c1"># initial state : Assigned</span>
+        <span class="p">})</span>
+        <span class="n">inserted</span> <span class="o">=</span> <span class="n">i_original</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">inserted</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">add_work_note</span><span class="p">(</span><span class="s1">&#39;New work note&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">add_work_note</span><span class="p">(</span><span class="s1">&#39;New work note 2&#39;</span><span class="p">,</span> <span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">add_work_note</span><span class="p">(</span><span class="s1">&#39;New work note 3&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="n">i_original</span><span class="o">.</span><span class="n">number</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestIncidentBase.base_test_incident_take_in_progress"><a class="viewcode-back" href="../../tests.html#tests.test_incident_base.TestIncidentBase.base_test_incident_take_in_progress">[docs]</a>    <span class="k">def</span> <span class="nf">base_test_incident_take_in_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="TestIncidentBase.base_test_incident_resolve"><a class="viewcode-back" href="../../tests.html#tests.test_incident_base.TestIncidentBase.base_test_incident_resolve">[docs]</a>    <span class="k">def</span> <span class="nf">base_test_incident_resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="c1"># first test: insert an incident, get it, resolve it. No close code provided</span>
+        <span class="n">i_original</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">{</span>  <span class="c1"># s is a SnowRestSession object</span>
+            <span class="s1">&#39;short_description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_incident_resolve&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;u_business_service&#39;</span><span class="p">:</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">,</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">,</span>  <span class="c1"># Functional Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;assignment_group&#39;</span><span class="p">:</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span><span class="p">,</span>  <span class="c1"># ServiceNow 4th line</span>
+            <span class="s1">&#39;comments&#39;</span><span class="p">:</span> <span class="s2">&quot;Initial description&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;incident_state&#39;</span><span class="p">:</span> <span class="s1">&#39;2&#39;</span>  <span class="c1"># initial state : Assigned</span>
+        <span class="p">})</span>
+        <span class="n">inserted</span> <span class="o">=</span> <span class="n">i_original</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">inserted</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s1">&#39;Solution text&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">u_solution</span><span class="p">,</span> <span class="s1">&#39;Solution text&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">u_close_code</span><span class="p">,</span> <span class="s1">&#39;Restored&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">assigned_to</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_user</span><span class="p">)</span>
+
+        <span class="c1"># second test: insert an incident, resolve it providing the sys_id. No close code provided</span>
+        <span class="n">i_original</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">{</span>  <span class="c1"># s is a SnowRestSession object</span>
+            <span class="s1">&#39;short_description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_incident_resolve_2&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;u_business_service&#39;</span><span class="p">:</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">,</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">,</span>  <span class="c1"># Functional Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;assignment_group&#39;</span><span class="p">:</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span><span class="p">,</span>  <span class="c1"># ServiceNow 4th line</span>
+            <span class="s1">&#39;comments&#39;</span><span class="p">:</span> <span class="s2">&quot;Initial description&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;incident_state&#39;</span><span class="p">:</span> <span class="s1">&#39;2&#39;</span>  <span class="c1"># initial state : Assigned</span>
+        <span class="p">})</span>
+        <span class="n">inserted</span> <span class="o">=</span> <span class="n">i_original</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">inserted</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s1">&#39;Solution text&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">u_solution</span><span class="p">,</span> <span class="s1">&#39;Solution text&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">u_close_code</span><span class="p">,</span> <span class="s1">&#39;Restored&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">assigned_to</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_user</span><span class="p">)</span>
+
+        <span class="c1"># third test: insert an incident, resolve it providing the number. No close code provided</span>
+        <span class="n">i_original</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">{</span>  <span class="c1"># s is a SnowRestSession object</span>
+            <span class="s1">&#39;short_description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_incident_resolve_3&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;u_business_service&#39;</span><span class="p">:</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">,</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">,</span>  <span class="c1"># Functional Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;assignment_group&#39;</span><span class="p">:</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span><span class="p">,</span>  <span class="c1"># ServiceNow 4th line</span>
+            <span class="s1">&#39;comments&#39;</span><span class="p">:</span> <span class="s2">&quot;Initial description&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;incident_state&#39;</span><span class="p">:</span> <span class="s1">&#39;2&#39;</span>  <span class="c1"># initial state : Assigned</span>
+        <span class="p">})</span>
+        <span class="n">inserted</span> <span class="o">=</span> <span class="n">i_original</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">inserted</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s1">&#39;Solution text&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="n">i_original</span><span class="o">.</span><span class="n">number</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">u_solution</span><span class="p">,</span> <span class="s1">&#39;Solution text&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">u_close_code</span><span class="p">,</span> <span class="s1">&#39;Restored&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">assigned_to</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_user</span><span class="p">)</span>
+
+        <span class="c1"># fourth test: insert an incident, get it, resolve ii. Provide a non-default close code</span>
+        <span class="n">i_original</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">{</span>  <span class="c1"># s is a SnowRestSession object</span>
+            <span class="s1">&#39;short_description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_incident_resolve_4&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;u_business_service&#39;</span><span class="p">:</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">,</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">,</span>  <span class="c1"># Functional Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;assignment_group&#39;</span><span class="p">:</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span><span class="p">,</span>  <span class="c1"># ServiceNow 4th line</span>
+            <span class="s1">&#39;comments&#39;</span><span class="p">:</span> <span class="s2">&quot;Initial description&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;incident_state&#39;</span><span class="p">:</span> <span class="s1">&#39;2&#39;</span>  <span class="c1"># initial state : Assigned</span>
+        <span class="p">})</span>
+        <span class="n">inserted</span> <span class="o">=</span> <span class="n">i_original</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">inserted</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s1">&#39;Solution text&#39;</span><span class="p">,</span> <span class="s1">&#39;Not Reproducible&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i_original</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="s1">&#39;6&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">u_solution</span><span class="p">,</span> <span class="s1">&#39;Solution text&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">u_close_code</span><span class="p">,</span> <span class="s1">&#39;Not Reproducible&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">assigned_to</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_user</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestIncidentBase.base_test_incident_query"><a class="viewcode-back" href="../../tests.html#tests.test_incident_base.TestIncidentBase.base_test_incident_query">[docs]</a>    <span class="k">def</span> <span class="nf">base_test_incident_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">IncidentQuery</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="c1"># Query the incidents with FE=IT Service Management Support,</span>
+        <span class="c1"># Visibility=CERN, Created in 2016, and already closed</span>
+        <span class="n">record_set</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query_filter</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="s1">&#39;ea56fb210a0a8c0a015a591ddbed3676&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;u_visibility&#39;</span><span class="p">:</span> <span class="s1">&#39;cern&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;active&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span>
+        <span class="p">})</span>
+
+        <span class="n">records_found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">record_set</span><span class="p">:</span>
+            <span class="n">records_found</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">number</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">short_description</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">sys_class_name</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">record</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Incident</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s1">&#39;incident_state&#39;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">records_found</span><span class="p">)</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="n">IncidentQuery</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="c1"># Query the incidents with FE=IT Service Management Support,</span>
+        <span class="c1"># Visibility=CERN, Created in 2016, and already closed</span>
+        <span class="n">record_set</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">query_encoded</span><span class="o">=</span><span class="s2">&quot;u_functional_element=ea56fb210a0a8c0a015a591ddbed3676^u_visibility=cern^active=false^&quot;</span>
+                          <span class="s2">&quot;sys_created_onDATEPART2016@javascript:gs.datePart(&#39;year&#39;,&#39;2016&#39;,&#39;EE&#39;)&quot;</span><span class="p">)</span>
+
+        <span class="n">records_found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">record_set</span><span class="p">:</span>
+            <span class="n">records_found</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">number</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">short_description</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">sys_class_name</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">record</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Incident</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="s1">&#39;incident_state&#39;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">records_found</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">cern-snow-client 0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, James Clerc, David Martin Clavo.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

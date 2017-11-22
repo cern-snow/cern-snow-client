@@ -184,6 +184,41 @@ in the file.</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.set_basic_auth_user">
+<code class="descname">set_basic_auth_user</code><span class="sig-paren">(</span><em>basic_auth_user</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.set_basic_auth_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.set_basic_auth_user" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>basic_auth_user</strong> (<em>str</em>) – the name of the local ServiceNow account that will be used for authentication.</li>
+<li><strong>set_auth_type</strong> (<em>Needs</em>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cern_snow_client.session.SnowRestSession.set_basic_auth_password">
+<code class="descname">set_basic_auth_password</code><span class="sig-paren">(</span><em>basic_auth_password</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.set_basic_auth_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.set_basic_auth_password" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>basic_auth_password</strong> (<em>str</em>) – the password of the local ServiceNow account that will be used for</li>
+<li><strong>authentication.</strong> – </li>
+<li><strong>set_auth_type</strong> (<em>Needs</em>) – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="cern_snow_client.session.SnowRestSession.set_session_cookie_file_path">
 <code class="descname">set_session_cookie_file_path</code><span class="sig-paren">(</span><em>session_cookie_file_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.set_session_cookie_file_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.set_session_cookie_file_path" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -271,41 +306,6 @@ in the file.</li>
 <dt id="cern_snow_client.session.SnowRestSession.get_log_handler">
 <code class="descname">get_log_handler</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.get_log_handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.get_log_handler" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.set_basic_auth_user">
-<code class="descname">set_basic_auth_user</code><span class="sig-paren">(</span><em>basic_auth_user</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.set_basic_auth_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.set_basic_auth_user" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>basic_auth_user</strong> (<em>str</em>) – the name of the local ServiceNow account that will be used for authentication.</li>
-<li><strong>set_auth_type</strong> (<em>Needs</em>) – </li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.set_basic_auth_password">
-<code class="descname">set_basic_auth_password</code><span class="sig-paren">(</span><em>basic_auth_password</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.set_basic_auth_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.set_basic_auth_password" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>basic_auth_password</strong> (<em>str</em>) – the password of the local ServiceNow account that will be used for</li>
-<li><strong>authentication.</strong> – </li>
-<li><strong>set_auth_type</strong> (<em>Needs</em>) – </li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
 
 <dl class="method">
 <dt id="cern_snow_client.session.SnowRestSession.get">
@@ -489,649 +489,6 @@ ServiceNow may also set various HTTP status codes or headers in the response.</p
 <span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span> <span class="n">incident</span><span class="p">[</span><span class="s1">&#39;watch_list&#39;</span><span class="p">]</span>  <span class="c1"># will print the new value of the watch_list field</span>
 </pre></div>
 </div>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.get_record">
-<code class="descname">get_record</code><span class="sig-paren">(</span><em>table</em>, <em>sys_id=None</em>, <em>number=None</em>, <em>headers=None</em>, <em>params=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.get_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.get_record" title="Permalink to this definition">¶</a></dt>
-<dd><p>** Will be deprecated soon, replaced by the <cite>get</cite> method of the <cite>Record</cite> class **</p>
-<p>Executes a GET operation in order to read a single record from a ServiceNow table.
-The authentication method, and session cookie / OAuth tokens persistance will depend on how the session
-has been configured.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>table</strong> (<em>str</em>) – the name of a ServiceNow table, such as <code class="docutils literal"><span class="pre">incident</span></code>. Mandatory parameter.</li>
-<li><strong>sys_id</strong> (<em>str</em>) – the sys_id (ServiceNow unique identifier) of the record to be read.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>number</strong> (<em>str</em>) – the number of the record to be read. Can be used if the table has a Number field.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>headers</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – any additional headers to be be passed. If not set, the ‘Accept’ header will be set to
-‘application/json’.</li>
-<li><strong>params</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – any additional URL parameters to be be passed. For a complete list, please see:
-<a class="reference external" href="https://docs.servicenow.com/bundle/helsinki-application-development/page/integrate/inbound-rest/concept/c_TableAPI.html#ariaid-title3">https://docs.servicenow.com/bundle/helsinki-application-development/page/integrate/inbound-rest/concept/c_TableAPI.html#ariaid-title3</a></li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
-<dd><p class="first last">The ‘text’ will contain a JSON or XML representation of the record.
-The response will also contain headers. For a list of headers, please see:
-<a class="reference external" href="https://docs.servicenow.com/bundle/helsinki-application-development/page/integrate/inbound-rest/concept/c_TableAPI.html#d45069e608">https://docs.servicenow.com/bundle/helsinki-application-development/page/integrate/inbound-rest/concept/c_TableAPI.html#d45069e608</a></p>
-</dd>
-</dl>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
-or if the operation could not be performed due to an authentication issue</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.get_records">
-<code class="descname">get_records</code><span class="sig-paren">(</span><em>table</em>, <em>query_filter=None</em>, <em>query_encoded=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.get_records"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.get_records" title="Permalink to this definition">¶</a></dt>
-<dd><p>** Will be deprecated soon, replaced by the <cite>RecordQuery</cite> class **</p>
-<p>Executes a GET operation in order to read one or many records from a ServiceNow table.
-The authentication method, and session cookie / OAuth tokens persistance will depend on how the session
-has been configured.</p>
-<p>At least a <cite>query_filter</cite> or <cite>query_encoded</cite> parameter need to be provided.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>table</strong> (<em>str</em>) – the name of a ServiceNow table, such as <code class="docutils literal"><span class="pre">incident</span></code>. Mandatory parameter.</li>
-<li><strong>query_filter</strong> (<em>dict</em>) – a dictionary <code class="docutils literal"><span class="pre">{'field_1':</span> <span class="pre">'value_1',</span> <span class="pre">'field_2':</span> <span class="pre">'value_2'}</span></code>
-which will be used to apply a filter to the query. For example,
-<code class="docutils literal"><span class="pre">{'active':</span> <span class="pre">'true',</span> <span class="pre">'u_functional_element':</span> <span class="pre">'579fb3d90a0a8c08017ac8a1137c8ee6'}</span></code>
-corresponds to incidents that are active=true AND Functional Element=ServiceNow</li>
-<li><strong>query_encoded</strong> (<em>str</em>) – a query in the ServiceNow “encoded query” format.
-Example: active=true^u_functional_element=579fb3d90a0a8c08017ac8a1137c8ee6.
-For more information, please see: <a class="reference external" href="https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html">https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html</a></li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
-<dd><p class="first last">The ‘text’ will contain a JSON or XML representation of the records.</p>
-</dd>
-</dl>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
-or if the operation could not be performed due to an authentication issue</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.get_request">
-<code class="descname">get_request</code><span class="sig-paren">(</span><em>sys_id=None</em>, <em>number=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.get_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.get_request" title="Permalink to this definition">¶</a></dt>
-<dd><p>** Will be deprecated soon, replaced by the <cite>get</cite> method of the <cite>Request</cite> class **</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sys_id</strong> (<em>str</em>) – the sys_id (ServiceNow unique identifier) of the record to be read.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>number</strong> (<em>str</em>) – the number of the record to be read.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
-<dd><p class="first last">The ‘text’ will contain a JSON or XML representation of the record.</p>
-</dd>
-</dl>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
-or if the operation could not be performed due to an authentication issue</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.get_requests">
-<code class="descname">get_requests</code><span class="sig-paren">(</span><em>query_filter=None</em>, <em>query_encoded=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.get_requests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.get_requests" title="Permalink to this definition">¶</a></dt>
-<dd><p>** Will be deprecated soon, replaced by the <cite>RequestQuery</cite> class **</p>
-<p>At least a <cite>query_filter</cite> or <cite>query_encoded</cite> parameter need to be provided.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>query_filter</strong> (<em>dict</em>) – a dictionary <code class="docutils literal"><span class="pre">{'field_1':</span> <span class="pre">'value_1',</span> <span class="pre">'field_2':</span> <span class="pre">'value_2'}</span></code>
-which will be used to apply a filter to the query. For example,
-<code class="docutils literal"><span class="pre">{'active':</span> <span class="pre">'true',</span> <span class="pre">'u_functional_element':</span> <span class="pre">'579fb3d90a0a8c08017ac8a1137c8ee6'}</span></code>
-corresponds to incidents that are active=true AND Functional Element=ServiceNow</li>
-<li><strong>query_encoded</strong> (<em>str</em>) – a query in the ServiceNow “encoded query” format.
-Example: active=true^u_functional_element=579fb3d90a0a8c08017ac8a1137c8ee6.
-For more information, please see: <a class="reference external" href="https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html">https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html</a></li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
-<dd><p class="first last">The ‘text’ will contain a JSON or XML representation of the records.</p>
-</dd>
-</dl>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
-or if the operation could not be performed due to an authentication issue</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.get_incidents">
-<code class="descname">get_incidents</code><span class="sig-paren">(</span><em>query_filter=None</em>, <em>query_encoded=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.get_incidents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.get_incidents" title="Permalink to this definition">¶</a></dt>
-<dd><p>** Will be deprecated soon, replaced by the <cite>IncidentQuery</cite> class **</p>
-<p>At least a <cite>query_filter</cite> or <cite>query_encoded</cite> parameter need to be provided.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>query_filter</strong> (<em>dict</em>) – a dictionary <code class="docutils literal"><span class="pre">{'field_1':</span> <span class="pre">'value_1',</span> <span class="pre">'field_2':</span> <span class="pre">'value_2'}</span></code>
-which will be used to apply a filter to the query. For example,
-<code class="docutils literal"><span class="pre">{'active':</span> <span class="pre">'true',</span> <span class="pre">'u_functional_element':</span> <span class="pre">'579fb3d90a0a8c08017ac8a1137c8ee6'}</span></code>
-corresponds to incidents that are active=true AND Functional Element=ServiceNow</li>
-<li><strong>query_encoded</strong> (<em>str</em>) – a query in the ServiceNow “encoded query” format.
-Example: active=true^u_functional_element=579fb3d90a0a8c08017ac8a1137c8ee6.
-For more information, please see: <a class="reference external" href="https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html">https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html</a></li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
-<dd><p class="first last">The ‘text’ will contain a JSON or XML representation of the records.</p>
-</dd>
-</dl>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
-or if the operation could not be performed due to an authentication issue</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.get_incident">
-<code class="descname">get_incident</code><span class="sig-paren">(</span><em>sys_id=None</em>, <em>number=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.get_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.get_incident" title="Permalink to this definition">¶</a></dt>
-<dd><p>** Will be deprecated soon, replaced by the <cite>get</cite> method of the <cite>Incident</cite> class **</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sys_id</strong> (<em>str</em>) – the sys_id (ServiceNow unique identifier) of the record to be read.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>number</strong> (<em>str</em>) – the number of the record to be read.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
-<dd><p class="first last">The ‘text’ will contain a JSON or XML representation of the record.</p>
-</dd>
-</dl>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
-or if the operation could not be performed due to an authentication issue</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.insert_record">
-<code class="descname">insert_record</code><span class="sig-paren">(</span><em>table</em>, <em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.insert_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.insert_record" title="Permalink to this definition">¶</a></dt>
-<dd><p>** Will be deprecated soon, replaced by the <cite>insert</cite> method of the <cite>Record</cite> class **</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>table</strong> (<em>str</em>) – the name of a ServiceNow table, such as <code class="docutils literal"><span class="pre">incident</span></code>. Mandatory parameter.</li>
-<li><strong>data</strong> (<em>dict</em>) – the values of the fields for the record that will be created.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
-<dd><p class="first last">The ‘text’ will contain a JSON or XML representation of the new record.</p>
-</dd>
-</dl>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
-or if the operation could not be performed due to an authentication issue</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.insert_incident">
-<code class="descname">insert_incident</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.insert_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.insert_incident" title="Permalink to this definition">¶</a></dt>
-<dd><p>** Will be deprecated soon, replaced by the <cite>insert</cite> method of the <cite>Incident</cite> class **</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – the values of the fields for the record that will be created.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
-<dd>The ‘text’ will contain a JSON or XML representation of the new record.</dd>
-</dl>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">requests.Response</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
-or if the operation could not be performed due to an authentication issue</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.insert_request">
-<code class="descname">insert_request</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.insert_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.insert_request" title="Permalink to this definition">¶</a></dt>
-<dd><p>** Will be deprecated soon, replaced by the <cite>insert</cite> method of the <cite>Record</cite> class **</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – the values of the fields for the record that will be created.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
-<dd>The ‘text’ will contain a JSON or XML representation of the new record.</dd>
-</dl>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">requests.Response</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
-or if the operation could not be performed due to an authentication issue</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.update_record">
-<code class="descname">update_record</code><span class="sig-paren">(</span><em>table</em>, <em>sys_id</em>, <em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.update_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.update_record" title="Permalink to this definition">¶</a></dt>
-<dd><p>** Will be deprecated soon, replaced by the <cite>update</cite> method of the <cite>Record</cite> class **</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>table</strong> (<em>str</em>) – the name of a ServiceNow table, such as <code class="docutils literal"><span class="pre">incident</span></code>. Mandatory parameter.</li>
-<li><strong>sys_id</strong> (<em>str</em>) – the sys_id (ServiceNow unique identifier) of the target record to be updated.</li>
-<li><strong>data</strong> (<em>dict</em>) – the values of the fields that will be updated in the target record.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
-<dd><p class="first last">The ‘text’ will contain a JSON or XML representation of the new record.</p>
-</dd>
-</dl>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
-or if the operation could not be performed due to an authentication issue</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.update_request">
-<code class="descname">update_request</code><span class="sig-paren">(</span><em>sys_id=None</em>, <em>number=None</em>, <em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.update_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.update_request" title="Permalink to this definition">¶</a></dt>
-<dd><p>** Will be deprecated soon, replaced by the <cite>update</cite> method of the <cite>Request</cite> class **</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sys_id</strong> (<em>str</em>) – the sys_id (ServiceNow unique identifier) of the target record to be updated.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>number</strong> (<em>str</em>) – the number  of the target record to be updated.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>data</strong> (<em>dict</em>) – the values of the fields that will be updated in the target record.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
-<dd><p class="first last">The ‘text’ will contain a JSON or XML representation of the new record.</p>
-</dd>
-</dl>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
-or if the operation could not be performed due to an authentication issue</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.update_incident">
-<code class="descname">update_incident</code><span class="sig-paren">(</span><em>sys_id=None</em>, <em>number=None</em>, <em>data=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.update_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.update_incident" title="Permalink to this definition">¶</a></dt>
-<dd><p>** Will be deprecated soon, replaced by the <cite>update</cite> method of the <cite>Incident</cite> class **</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sys_id</strong> (<em>str</em>) – the sys_id (ServiceNow unique identifier) of the target record to be updated.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>number</strong> (<em>str</em>) – the number  of the target record to be updated.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>data</strong> (<em>dict</em>) – the values of the fields that will be updated in the target record.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
-<dd><p class="first last">The ‘text’ will contain a JSON or XML representation of the new record.</p>
-</dd>
-</dl>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
-or if the operation could not be performed due to an authentication issue</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.incident_add_comment">
-<code class="descname">incident_add_comment</code><span class="sig-paren">(</span><em>sys_id=None</em>, <em>number=None</em>, <em>comment=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.incident_add_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.incident_add_comment" title="Permalink to this definition">¶</a></dt>
-<dd><p>** Will be deprecated soon, replaced by the <cite>add_comment</cite> method of the <cite>Incident</cite> class **</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sys_id</strong> (<em>str</em>) – the sys_id (ServiceNow unique identifier) of the target record to be updated.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>number</strong> (<em>str</em>) – the number  of the target record to be updated.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>comment</strong> (<em>str</em>) – the new comment to be added to the target record</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
-<dd><p class="first last">The ‘text’ will contain a JSON or XML representation of the new record.</p>
-</dd>
-</dl>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
-or if the operation could not be performed due to an authentication issue</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.request_add_comment">
-<code class="descname">request_add_comment</code><span class="sig-paren">(</span><em>sys_id=None</em>, <em>number=None</em>, <em>comment=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.request_add_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.request_add_comment" title="Permalink to this definition">¶</a></dt>
-<dd><p>** Will be deprecated soon, replaced by the <cite>add_comment</cite> method of the <cite>Request</cite> class **</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sys_id</strong> (<em>str</em>) – the sys_id (ServiceNow unique identifier) of the target record to be updated.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>number</strong> (<em>str</em>) – the number  of the target record to be updated.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>comment</strong> (<em>str</em>) – the new comment to be added to the target record</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
-<dd><p class="first last">The ‘text’ will contain a JSON or XML representation of the new record.</p>
-</dd>
-</dl>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
-or if the operation could not be performed due to an authentication issue</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.add_comment">
-<code class="descname">add_comment</code><span class="sig-paren">(</span><em>table</em>, <em>sys_id=None</em>, <em>number=None</em>, <em>comment=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.add_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.add_comment" title="Permalink to this definition">¶</a></dt>
-<dd><p>** Will be deprecated soon, replaced by the <cite>add_comment</cite> method of the <cite>Task</cite> class **</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>table</strong> (<em>str</em>) – the name of a ServiceNow table, such as <code class="docutils literal"><span class="pre">incident</span></code>. Mandatory parameter.</li>
-<li><strong>sys_id</strong> (<em>str</em>) – the sys_id (ServiceNow unique identifier) of the target record to be updated.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>number</strong> (<em>str</em>) – the number  of the target record to be updated.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>comment</strong> (<em>str</em>) – the new comment to be added to the target record</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
-<dd><p class="first last">The ‘text’ will contain a JSON or XML representation of the new record.</p>
-</dd>
-</dl>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
-or if the operation could not be performed due to an authentication issue</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.request_add_work_note">
-<code class="descname">request_add_work_note</code><span class="sig-paren">(</span><em>sys_id=None</em>, <em>number=None</em>, <em>work_note=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.request_add_work_note"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.request_add_work_note" title="Permalink to this definition">¶</a></dt>
-<dd><p>** Will be deprecated soon, replaced by the <cite>add_work_note</cite> method of the <cite>Request</cite> class **</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sys_id</strong> (<em>str</em>) – the sys_id (ServiceNow unique identifier) of the target record to be updated.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>number</strong> (<em>str</em>) – the number  of the target record to be updated.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>work_note</strong> (<em>str</em>) – the new work note to be added to the target record</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
-<dd><p class="first last">The ‘text’ will contain a JSON or XML representation of the new record.</p>
-</dd>
-</dl>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
-or if the operation could not be performed due to an authentication issue</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.incident_add_work_note">
-<code class="descname">incident_add_work_note</code><span class="sig-paren">(</span><em>sys_id=None</em>, <em>number=None</em>, <em>work_note=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.incident_add_work_note"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.incident_add_work_note" title="Permalink to this definition">¶</a></dt>
-<dd><p>** Will be deprecated soon, replaced by the <cite>add_work_note</cite> method of the <cite>Incident</cite> class **</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sys_id</strong> (<em>str</em>) – the sys_id (ServiceNow unique identifier) of the target record to be updated.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>number</strong> (<em>str</em>) – the number  of the target record to be updated.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>work_note</strong> (<em>str</em>) – the new work note to be added to the target record</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
-<dd><p class="first last">The ‘text’ will contain a JSON or XML representation of the new record.</p>
-</dd>
-</dl>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
-or if the operation could not be performed due to an authentication issue</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="cern_snow_client.session.SnowRestSession.add_work_note">
-<code class="descname">add_work_note</code><span class="sig-paren">(</span><em>table</em>, <em>sys_id=None</em>, <em>number=None</em>, <em>work_note=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/session.html#SnowRestSession.add_work_note"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.session.SnowRestSession.add_work_note" title="Permalink to this definition">¶</a></dt>
-<dd><p>** Will be deprecated soon, replaced by the <cite>add_work_note</cite> method of the <cite>Task</cite> class **</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>table</strong> (<em>str</em>) – the name of a ServiceNow table, such as <code class="docutils literal"><span class="pre">incident</span></code>. Mandatory parameter.</li>
-<li><strong>sys_id</strong> (<em>str</em>) – the sys_id (ServiceNow unique identifier) of the target record to be updated.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>number</strong> (<em>str</em>) – the number  of the target record to be updated.
-Giving either a <cite>sys_id</cite> or a <cite>number</cite> parameter is mandatory, but not both.</li>
-<li><strong>work_note</strong> (<em>str</em>) – the new work note to be added to the target record</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>If the status code is not 401, a <code class="docutils literal"><span class="pre">requests.Response</span></code> object is returned.</dt>
-<dd><p class="first last">The ‘text’ will contain a JSON or XML representation of the new record.</p>
-</dd>
-</dl>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">requests.Response</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#cern_snow_client.session.SnowRestSessionException" title="cern_snow_client.session.SnowRestSessionException"><code class="xref py py-exc docutils literal"><span class="pre">SnowRestSessionException</span></code></a> – if mandatory parameters are missing,
-or if the operation could not be performed due to an authentication issue</p>
-</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </dd></dl>
@@ -1877,6 +1234,40 @@ If this parameter is set, it will override the current sys_id of this record obj
 </dd></dl>
 
 <dl class="method">
+<dt id="cern_snow_client.task.Task.take_in_progress">
+<code class="descname">take_in_progress</code><span class="sig-paren">(</span><em>key=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/task.html#Task.take_in_progress"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.task.Task.take_in_progress" title="Permalink to this definition">¶</a></dt>
+<dd><p>The logged in account will take the task in progress.
+The state of the task will be changed to “In Progress”. If the “Assigned to” field is empty,
+the current account will be set in it.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<code class="xref py py-obj docutils literal"><span class="pre">str</span></code> or <code class="xref py py-obj docutils literal"><span class="pre">tuple</span></code>, optional) – a str the sys_id (ServiceNow unique identifier)
+of the record to update, or a tuple (field_name, field_value), such as (‘number’, ‘INC987654’).
+If this parameter is set, it will override the current sys_id of this record object, if any.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the record was updated succesfully, False otherwise.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Taking a task in progress after getting it:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;c1c535ba85f45540adf94de5b835cd43&#39;</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">t</span><span class="o">.</span><span class="n">take_in_progress</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Taking in progress a task for which we know the number:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">take_in_progress</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;INC0426232&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
 <dt id="cern_snow_client.task.Task.resolve">
 <code class="descname">resolve</code><span class="sig-paren">(</span><em>solution</em>, <em>close_code=None</em>, <em>key=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/task.html#Task.resolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.task.Task.resolve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resolves a Task in ServiceNow.
@@ -1928,7 +1319,7 @@ If this parameter is set, it will override the current sys_id of this record obj
 
 <dl class="class">
 <dt id="cern_snow_client.task.TaskQuery">
-<em class="property">class </em><code class="descclassname">cern_snow_client.task.</code><code class="descname">TaskQuery</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/task.html#TaskQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.task.TaskQuery" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">cern_snow_client.task.</code><code class="descname">TaskQuery</code><span class="sig-paren">(</span><em>session</em>, <em>table_name='task'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/task.html#TaskQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.task.TaskQuery" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cern_snow_client.record.RecordQuery" title="cern_snow_client.record.RecordQuery"><code class="xref py py-class docutils literal"><span class="pre">cern_snow_client.record.RecordQuery</span></code></a></p>
 </dd></dl>
 

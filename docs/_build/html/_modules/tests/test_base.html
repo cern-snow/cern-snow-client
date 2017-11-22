@@ -50,9 +50,13 @@
 
 <span class="kn">from</span> <span class="nn">cern_snow_client.session</span> <span class="k">import</span> <span class="n">SnowRestSession</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 
 <div class="viewcode-block" id="TestBase"><a class="viewcode-back" href="../../tests.html#tests.test_base.TestBase">[docs]</a><span class="k">class</span> <span class="nc">TestBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">basic_auth_user</span> <span class="o">=</span> <span class="s1">&#39;b09313fc4f16c70015d3bc511310c719&#39;</span>
+    <span class="n">sso_oauth_user</span> <span class="o">=</span> <span class="s1">&#39;7d480a864faa034064cc119f0310c77b&#39;</span>
 
     <span class="n">short_description_prefix</span> <span class="o">=</span> <span class="s2">&quot;snow client unit test&quot;</span>
 
@@ -60,6 +64,24 @@
     <span class="k">def</span> <span class="nf">make_session</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config_file_path</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">SnowRestSession</span><span class="p">()</span>
         <span class="n">s</span><span class="o">.</span><span class="n">load_config_file</span><span class="p">(</span><span class="n">config_file_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s</span></div>
+
+<div class="viewcode-block" id="TestBase.make_good_basic_auth_session"><a class="viewcode-back" href="../../tests.html#tests.test_base.TestBase.make_good_basic_auth_session">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">make_good_basic_auth_session</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">good_basic_auth_config_file</span> <span class="o">=</span> <span class="s1">&#39;tests/config_files/basic_good.yaml&#39;</span>
+        <span class="n">basic_auth_password</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_password</span><span class="p">(</span><span class="s1">&#39;basic_good&#39;</span><span class="p">)</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">make_session</span><span class="p">(</span><span class="n">good_basic_auth_config_file</span><span class="p">)</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">set_basic_auth_password</span><span class="p">(</span><span class="n">basic_auth_password</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">s</span></div>
+
+<div class="viewcode-block" id="TestBase.make_good_sso_oauth_session"><a class="viewcode-back" href="../../tests.html#tests.test_base.TestBase.make_good_sso_oauth_session">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">make_good_sso_oauth_session</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">good_sso_oauth_config_file</span> <span class="o">=</span> <span class="s1">&#39;tests/config_files/sso_oauth_good.yaml&#39;</span>
+        <span class="n">oauth_client_secret</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_password</span><span class="p">(</span><span class="s1">&#39;oauth_client_secret_good&#39;</span><span class="p">)</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">make_session</span><span class="p">(</span><span class="n">good_sso_oauth_config_file</span><span class="p">)</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">set_oauth_client_secret</span><span class="p">(</span><span class="n">oauth_client_secret</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">s</span></div>
 
 <div class="viewcode-block" id="TestBase.get_password"><a class="viewcode-back" href="../../tests.html#tests.test_base.TestBase.get_password">[docs]</a>    <span class="nd">@classmethod</span>
@@ -75,7 +97,22 @@
         <span class="k">for</span> <span class="n">cookie</span> <span class="ow">in</span> <span class="n">cookie_jar</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">cookie</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">cookie_name</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">cookie</span><span class="o">.</span><span class="n">value</span>
-        <span class="k">return</span> <span class="kc">None</span></div></div>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="TestBase.remove_basic_cookie_file"><a class="viewcode-back" href="../../tests.html#tests.test_base.TestBase.remove_basic_cookie_file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">remove_basic_cookie_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;basic_cookie.txt&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="TestBase.remove_sso_oauth_cookie_token_files"><a class="viewcode-back" href="../../tests.html#tests.test_base.TestBase.remove_sso_oauth_cookie_token_files">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">remove_sso_oauth_cookie_token_files</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;sso_oauth_cookie.txt&#39;</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;token_file.txt&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">pass</span></div></div>
 </pre></div>
 
           </div>

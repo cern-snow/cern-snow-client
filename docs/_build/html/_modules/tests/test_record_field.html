@@ -1,0 +1,220 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>tests.test_record_field &#8212; cern-snow-client 0.3 documentation</title>
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.3',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">cern-snow-client 0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tests.test_record_field</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding: utf-8</span>
+
+<span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">from</span> <span class="nn">cern_snow_client.record</span> <span class="k">import</span> <span class="n">RecordField</span>
+<span class="kn">from</span> <span class="nn">cern_snow_client.common</span> <span class="k">import</span> <span class="n">SnowClientException</span>
+
+
+<div class="viewcode-block" id="TestRecordBasicAuthentication"><a class="viewcode-back" href="../../tests.html#tests.test_record_field.TestRecordBasicAuthentication">[docs]</a><span class="k">class</span> <span class="nc">TestRecordBasicAuthentication</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="TestRecordBasicAuthentication.test_record_field_str"><a class="viewcode-back" href="../../tests.html#tests.test_record_field.TestRecordBasicAuthentication.test_record_field_str">[docs]</a>    <span class="k">def</span> <span class="nf">test_record_field_str</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">rf</span> <span class="o">=</span> <span class="n">RecordField</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;text&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">unicode</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span> <span class="o">+</span> <span class="s1">&#39; text2&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;text text2&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="s1">&#39;text&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;text&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span> <span class="ow">is</span> <span class="n">unicode</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">(),</span> <span class="s1">&#39;text&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;text&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">())</span> <span class="ow">is</span> <span class="n">unicode</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">is_reference</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_referenced_table</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestRecordBasicAuthentication.test_record_field_unicode"><a class="viewcode-back" href="../../tests.html#tests.test_record_field.TestRecordBasicAuthentication.test_record_field_unicode">[docs]</a>    <span class="k">def</span> <span class="nf">test_record_field_unicode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">rf</span> <span class="o">=</span> <span class="n">RecordField</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;text&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;text&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">unicode</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span> <span class="o">+</span> <span class="s1">&#39; text2&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;text text2&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="s1">&#39;text&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;text&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span> <span class="ow">is</span> <span class="n">unicode</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">(),</span> <span class="s1">&#39;text&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;text&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">())</span> <span class="ow">is</span> <span class="n">unicode</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">is_reference</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_referenced_table</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestRecordBasicAuthentication.test_record_field_dict_no_link"><a class="viewcode-back" href="../../tests.html#tests.test_record_field.TestRecordBasicAuthentication.test_record_field_dict_no_link">[docs]</a>    <span class="k">def</span> <span class="nf">test_record_field_dict_no_link</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">rf</span> <span class="o">=</span> <span class="n">RecordField</span><span class="p">({</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;some_value&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;display_value&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;some_display_value&#39;</span><span class="p">,</span>
+        <span class="p">})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="s1">&#39;some_value&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;some_value&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">unicode</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span> <span class="o">+</span> <span class="s1">&#39; some_value_2&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;some_value some_value_2&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="s1">&#39;some_value&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;some_value&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span> <span class="ow">is</span> <span class="n">unicode</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">(),</span> <span class="s1">&#39;some_display_value&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;some_display_value&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">())</span> <span class="ow">is</span> <span class="n">unicode</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">is_reference</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_referenced_table</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestRecordBasicAuthentication.test_record_field_dict_with_link"><a class="viewcode-back" href="../../tests.html#tests.test_record_field.TestRecordBasicAuthentication.test_record_field_dict_with_link">[docs]</a>    <span class="k">def</span> <span class="nf">test_record_field_dict_with_link</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">rf</span> <span class="o">=</span> <span class="n">RecordField</span><span class="p">({</span>
+            <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;579fb3d90a0a8c08017ac8a1137c8ee6&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;display_value&quot;</span><span class="p">:</span> <span class="s2">&quot;ServiceNow&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;link&quot;</span><span class="p">:</span> <span class="s2">&quot;https://cerntest.service-now.com/api/now/v2/table/&quot;</span>
+                    <span class="s2">&quot;u_cmdb_ci_functional_services/579fb3d90a0a8c08017ac8a1137c8ee6&quot;</span>
+        <span class="p">})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">unicode</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span> <span class="o">+</span> <span class="s1">&#39; some_value_2&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6 some_value_2&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span> <span class="ow">is</span> <span class="n">unicode</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">(),</span> <span class="s1">&#39;ServiceNow&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;ServiceNow&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">())</span> <span class="ow">is</span> <span class="n">unicode</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">is_reference</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_referenced_table</span><span class="p">(),</span> <span class="s1">&#39;u_cmdb_ci_functional_services&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestRecordBasicAuthentication.test_edge_cases"><a class="viewcode-back" href="../../tests.html#tests.test_record_field.TestRecordBasicAuthentication.test_edge_cases">[docs]</a>    <span class="k">def</span> <span class="nf">test_edge_cases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">rf</span> <span class="o">=</span> <span class="n">RecordField</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;42&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;42&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;42&#39;</span><span class="p">)</span>
+
+        <span class="n">rf</span> <span class="o">=</span> <span class="n">RecordField</span><span class="p">({</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span> <span class="s1">&#39;display_value&#39;</span><span class="p">:</span> <span class="mi">84</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;42&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;42&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;84&#39;</span><span class="p">)</span>
+
+        <span class="n">rf</span> <span class="o">=</span> <span class="n">RecordField</span><span class="p">({</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">42</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;42&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;42&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;42&#39;</span><span class="p">)</span>
+
+        <span class="n">rf</span> <span class="o">=</span> <span class="n">RecordField</span><span class="p">({</span><span class="s1">&#39;display_value&#39;</span><span class="p">:</span> <span class="mi">42</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;42&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;42&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;42&#39;</span><span class="p">)</span>
+
+        <span class="n">rf</span> <span class="o">=</span> <span class="n">RecordField</span><span class="p">({})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">(),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">rf</span> <span class="o">=</span> <span class="n">RecordField</span><span class="p">({</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;some_value&#39;</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;some_value&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;some_value&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;some_value&#39;</span><span class="p">)</span>
+
+        <span class="n">rf</span> <span class="o">=</span> <span class="n">RecordField</span><span class="p">({</span><span class="s1">&#39;display_value&#39;</span><span class="p">:</span> <span class="sa">u</span><span class="s1">&#39;some_value&#39;</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;some_value&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;some_value&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">get_display_value</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;some_value&#39;</span><span class="p">)</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>  <span class="c1"># for compatibility with Python2.6 unittest</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">cern-snow-client 0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, James Clerc, David Martin Clavo.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>
