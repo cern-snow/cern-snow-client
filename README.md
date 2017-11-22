@@ -28,8 +28,12 @@ python
 >>> from cern_snow_client.session import SnowRestSession
 >>> s = SnowRestSession()
 >>> s.load_config_file('config.yaml')  # points to cerntraining.service-now.com
->>> result = s.get('/api/now/v2/table/incident?sysparm_query=number=<number>')
->>> print result.text
+>>> inc = Incident(s)
+>>> if inc.get('c1c535ba85f45540adf94de5b835cd43'):
+>>>     print inc.short_description
+>>> inc2 = Incident(s)
+>>> if inc2.get(('number', 'INC0426232')):
+>>>     print inc2.short_description
 ```
 
  * You can see more the documentation for the class `SnowRestSession` in the [snow-client documentation website](https://snow-client-docs.web.cern.ch/snow-client-docs/cern_snow_client.html) and more examples in the file [`examples/main.py`](examples/main.py).
