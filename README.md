@@ -39,11 +39,11 @@ python
  * You can see more the documentation for the class `SnowRestSession` in the [snow-client documentation website](https://snow-client-docs.web.cern.ch/snow-client-docs/cern_snow_client.html) and more examples in the file [`examples/main.py`](examples/main.py).
 
  
-**Important** : with the included example `config.yaml`, a cookie file `mycookie.txt` and a token file `mytoken.npy` will be generated as a cache to avoid reauthenticating between requests. These files have to be stored securely, as anyone with access to them could impersonate your account in ServiceNow or even another SSO-enabled CERN system. If you are just testing, be sure to delete the files after running `main.py`.
+**Important** : with the included example `config.yaml`, a cookie file `cookie.txt` and a token file `tokens.txt` will be generated as a cache to avoid reauthenticating between requests. These files have to be stored securely, as anyone with access to them could impersonate your account in ServiceNow or even another SSO-enabled CERN system. If you are just testing, be sure to delete the files after running `main.py`.
 
 ## Installation
 
-You can clone this git repository:
+You can clone this git repository, using the URL at the top of this page, for example with:
 ``` bash
 git clone https://:@gitlab.cern.ch:8443/servicenow/snow-client.git
 ```
@@ -54,7 +54,7 @@ You can also download a .zip or .tar.gz file from this project.
 
 ## Documentation
 
-Tthe current documentation is in the [snow-client documentation website](https://snow-client-docs.web.cern.ch/snow-client-docs/cern_snow_client.html).
+The current documentation is in the [snow-client documentation website](https://snow-client-docs.web.cern.ch/snow-client-docs/cern_snow_client.html).
 
 ## Unit tests
 
@@ -72,6 +72,10 @@ While in the root of the project, please run `tests/run.sh`.
 The SSO+OAuth tests will only work in an environment with the tool `cern-get-sso-cookie` (e.g. Scientific Linux CERN or CERN CentOS).
 
 Tested environments are lxplus.cern.ch (currently Python 2.6) and aiadm (currently Python 2.7).
+
+## Future work
+
+Please check our [Issue List](https://gitlab.cern.ch/servicenow/snow-client/issues) to see the planned improvements.
 
 
 ## Contributors
