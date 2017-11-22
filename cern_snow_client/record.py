@@ -735,7 +735,7 @@ class RecordSet(SessionAware):
         if self.n < len(self._result_array):
             record_dict = self._result_array[self.n]
             if self._record_class is Record:
-                record = Record(self._session, table_name=self._table_name , values=record_dict)
+                record = Record(self._session, table_name=self._table_name, values=record_dict)
             else:
                 record = self._record_class(self._session, values=record_dict)
             self.n += 1

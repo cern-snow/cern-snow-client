@@ -198,8 +198,8 @@ class Task(Record):
         if not close_code:
             if self.sys_class_name == 'incident':
                 close_code = 'Restored'
-            elif self.sys_class_name=='u_request_fulfillment':
-                close_code='Fulfilled'
+            elif self.sys_class_name =='u_request_fulfillment':
+                close_code ='Fulfilled'
 
         self.u_close_code = close_code
 

@@ -54,7 +54,7 @@ class TestRecordBase(TestBase):
         self.assertTrue(found)
 
         self.assertEquals(r.number, r2.number)
-        self.assertEquals(r.short_description,r2.short_description)
+        self.assertEquals(r.short_description, r2.short_description)
         self.assertEquals(r.u_business_service, r2.u_business_service)
         self.assertEquals(r.u_functional_element, r2.u_functional_element)
         self.assertEquals(r.comments, r2.comments)
