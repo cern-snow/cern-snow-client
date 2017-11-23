@@ -135,10 +135,33 @@ class Task(Record):
             >>> t = Task(s)  # s is a SnowRestSession object
             >>> t.take_in_progress(key=('number', 'INC0426232'))
         """
-        # TODO: Finish this method
+
         # if an incident, make : incident_state=3
         # if an request, make : u_current_task_state=4
-        pass
+        is_key_text = isinstance(key, str) or isinstance(key, unicode)
+        is_key_tuple = isinstance(key, tuple) and len(key) == 2 and isinstance(key[0], str)
+
+        if not key and not self.sys_id:
+            raise SnowClientException('Record.resolve: The current Record instance does not have a sys_id. '
+                                      'Please provide a key to specify which record to update.')
+
+        elif not self.sys_id and not is_key_text and not is_key_tuple:
+            raise SnowClientException("Record.resolve: the \"key\" parameter should be a non empty str/unicode value, "
+                                      "or a tuple (field_name, field_value) where field_name is a str")
+
+        if not self.sys_class_name:
+            if key:
+                self.get(key)
+            elif self.sys_id:
+                self.get(self.sys_id)
+
+        if self.sys_class_name == 'incident':
+            self.incident_state = '3'
+        elif self.sys_class_name == 'u_request_fulfillment':
+            self.u_current_task_state = '4'
+
+        result = self.update()
+        return result
 
     def resolve(self, solution, close_code=None, key=None):
         """
@@ -174,7 +197,6 @@ class Task(Record):
             >>> t.resolve('New comment', close_code='Works as designed', key=('number', 'INC0426232'))
         """
 
-        # TODO: Finish this method
         # if an incident, make : incident_state=6, comments=solution, u_close_code=close_code
         # if a request, make : u_current_task_state=9, comments=solution, u_close_code=close_code
         # if no close_code is provided, choose 'Restored' for incident and 'Fulfilled' for request

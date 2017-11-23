@@ -181,7 +181,6 @@ class Record(SessionAware):
         if not key or (not is_key_text and not is_key_tuple):
             raise SnowClientException("Record.get: the \"key\" parameter should be a non empty str/unicode value, "
                                       "or a tuple (field_name, field_value) where field_name is a str")
-        # TODO: Finish this method
         url = '/api/now/v2/table/' + self._table_name
         if is_key_text:
             url = url + '/' + key
@@ -249,7 +248,6 @@ class Record(SessionAware):
             raise SnowClientException('Record.insert: The current Record is of class ' + class_name + ', '
                                       'which cannot be inserted. '
                                       'You need to instantiate a subclass of ' + class_name + '.')
-        # TODO: Finish this method
         #  build the URL
         url = '/api/now/v2/table/' + self._table_name
         #  execute a post using the changed data : get_changed_fields()
@@ -629,7 +627,6 @@ class RecordQuery(SessionAware):
         if not query_filter and not query_encoded:
             raise SnowClientException("RecordQuery.query: "
                                       "needs either a value in the query_filter or the query_encoded parameters")
-        # TODO: Finish this method
 
         #  build the URL
         url = '/api/now/v2/table/' + self._table_name

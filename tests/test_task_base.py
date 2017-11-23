@@ -321,7 +321,143 @@ class TestTaskBase(TestBase):
         self.assertTrue(updated)
 
     def base_test_take_in_progress(self, s):
-        pass
+        # first test: insert an incident, get it, take it in progress
+        r = Record(s, 'incident', {  # s is a SnowRestSession object
+            'short_description': self.short_description_prefix + ' test_take_in_progress',
+            'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
+            'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
+            'assignment_group': 'd34218f3b4a3a4006d2153f17c76edff',  # ServiceNow 4th line
+            'comments': "Initial description"
+        })
+        inserted = r.insert()
+        self.assertTrue(inserted)
+
+        t = Task(s)
+        found = t.get(r.sys_id)
+        self.assertTrue(found)
+
+        updated = t.take_in_progress()
+        self.assertTrue(updated)
+
+        r2 = Record(s, 'incident')
+        found = r2.get(r.sys_id)
+        self.assertTrue(found)
+        self.assertTrue(r2.incident_state, '3')
+        self.assertTrue(r2.state, '2')
+        self.assertTrue(r2.assigned_to, self.current_user)
+
+        # second test: insert an incident, take it in progress by providing the sys_id
+        r = Record(s, 'incident', {  # s is a SnowRestSession object
+            'short_description': self.short_description_prefix + ' test_take_in_progress_2',
+            'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
+            'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
+            'assignment_group': 'd34218f3b4a3a4006d2153f17c76edff',  # ServiceNow 4th line
+            'comments': "Initial description"
+        })
+        inserted = r.insert()
+        self.assertTrue(inserted)
+
+        t = Task(s)
+        updated = t.take_in_progress(key=r.sys_id)
+        self.assertTrue(updated)
+
+        r2 = Record(s, 'incident')
+        found = r2.get(r.sys_id)
+        self.assertTrue(found)
+        self.assertTrue(r2.incident_state, '3')
+        self.assertTrue(r2.state, '2')
+        self.assertTrue(r2.assigned_to, self.current_user)
+
+        # third test: insert an incident, take it in progress by providing the number
+        r = Record(s, 'incident', {  # s is a SnowRestSession object
+            'short_description': self.short_description_prefix + ' test_take_in_progress_3',
+            'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
+            'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
+            'assignment_group': 'd34218f3b4a3a4006d2153f17c76edff',  # ServiceNow 4th line
+            'comments': "Initial description"
+        })
+        inserted = r.insert()
+        self.assertTrue(inserted)
+
+        t = Task(s)
+        updated = t.take_in_progress(key=('number', r.number))
+        self.assertTrue(updated)
+
+        r2 = Record(s, 'incident')
+        found = r2.get(r.sys_id)
+        self.assertTrue(found)
+        self.assertTrue(r2.incident_state, '3')
+        self.assertTrue(r2.state, '2')
+        self.assertTrue(r2.assigned_to, self.current_user)
+
+        # fourth test: insert a request, get it, take it in progress
+        r = Record(s, 'u_request_fulfillment', {  # s is a SnowRestSession object
+            'short_description': self.short_description_prefix + ' test_take_in_progress_4',
+            'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
+            'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
+            'assignment_group': 'd34218f3b4a3a4006d2153f17c76edff',  # ServiceNow 4th line
+            'comments': "Initial description"
+        })
+        inserted = r.insert()
+        self.assertTrue(inserted)
+
+        t = Task(s)
+        found = t.get(r.sys_id)
+        self.assertTrue(found)
+
+        updated = t.take_in_progress()
+        self.assertTrue(updated)
+
+        r2 = Record(s, 'u_request_fulfillment')
+        found = r2.get(r.sys_id)
+        self.assertTrue(found)
+        self.assertTrue(r2.u_current_task_state, '4')
+        self.assertTrue(r2.state, '2')
+        self.assertTrue(r2.assigned_to, self.current_user)
+
+        # fifth test: insert an request, take it in progress by providing the sys_id
+        r = Record(s, 'u_request_fulfillment', {  # s is a SnowRestSession object
+            'short_description': self.short_description_prefix + ' test_take_in_progress_5',
+            'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
+            'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
+            'assignment_group': 'd34218f3b4a3a4006d2153f17c76edff',  # ServiceNow 4th line
+            'comments': "Initial description"
+        })
+        inserted = r.insert()
+        self.assertTrue(inserted)
+
+        t = Task(s)
+        updated = t.take_in_progress(key=r.sys_id)
+        self.assertTrue(updated)
+
+        r2 = Record(s, 'u_request_fulfillment')
+        found = r2.get(r.sys_id)
+        self.assertTrue(found)
+        self.assertTrue(r2.u_current_task_state, '4')
+        self.assertTrue(r2.state, '2')
+        self.assertTrue(r2.assigned_to, self.current_user)
+
+        # sixth test: insert an request, take it in progress by providing the number
+        r = Record(s, 'u_request_fulfillment', {  # s is a SnowRestSession object
+            'short_description': self.short_description_prefix + ' test_take_in_progress_6',
+            'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
+            'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
+            'assignment_group': 'd34218f3b4a3a4006d2153f17c76edff',  # ServiceNow 4th line
+            'comments': "Initial description"
+        })
+        inserted = r.insert()
+        self.assertTrue(inserted)
+
+        t = Task(s)
+        updated = t.take_in_progress(key=('number', r.number))
+        self.assertTrue(updated)
+
+        r2 = Record(s, 'u_request_fulfillment')
+        found = r2.get(r.sys_id)
+        self.assertTrue(found)
+        self.assertTrue(r2.u_current_task_state, '4')
+        self.assertTrue(r2.state, '2')
+        self.assertTrue(r2.assigned_to, self.current_user)
 
     def base_test_resolve(self, s):
         # first test: insert an incident, get it, resolve it. No close code provided
