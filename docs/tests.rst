@@ -102,16 +102,40 @@ tests\.test\_incident\_sso\_oauth module
     :undoc-members:
     :show-inheritance:
 
-tests\.test\_incident\_base module
-----------------------------------
+tests\.test\_request\_base module
+---------------------------------
 
-.. automodule:: tests.test_incident_base
+.. automodule:: tests.test_request_base
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+tests\.test\_request\_basic\_auth module
+----------------------------------------
+
+.. automodule:: tests.test_request_basic_auth
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+tests\.test\_request\_sso\_oauth module
+---------------------------------------
+
+.. automodule:: tests.test_request_sso_oauth
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+tests\.test\_request\_base module
+---------------------------------
+
+.. automodule:: tests.test_request_base
     :members:
     :undoc-members:
     :show-inheritance:
 
 tests\.test\_base module
----------------------------------
+------------------------
 
 .. automodule:: tests.test_base
     :members:

@@ -33,3 +33,9 @@ python -m tests.test_incident_basic_auth
 
 echo -e "\n\npython -m tests.test_incident_sso_oauth"
 python -m tests.test_incident_sso_oauth
+
+echo -e "\n\npython -m tests.test_request_basic_auth"
+python -m tests.test_request_basic_auth
+
+echo -e "\n\npython -m tests.test_request_sso_oauth"
+python -m tests.test_request_sso_oauth
