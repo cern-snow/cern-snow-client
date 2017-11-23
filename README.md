@@ -56,7 +56,7 @@ You can also download a .zip or .tar.gz file from this project.
 
 At the moment, there is no CLI around the library, other than using it interactively from the Python interpreter.
 
-Developing a CLI is in the issue list. If you would like to contribute doing so, please get in touch with us so as to coordinate the effort.
+Developing a CLI is in the issue list. If you would like to contribute, please get in touch with us so as to coordinate the effort.
 
 ## Documentation
 
@@ -82,6 +82,8 @@ Tested environments are lxplus.cern.ch (currently Python 2.6) and aiadm (current
 ## Future work
 
 Please check our [Issue List](https://gitlab.cern.ch/servicenow/snow-client/issues) to see the planned improvements.
+
+Any ideas or contributions are welcome. Please get in touch with us.
 
 
 ## Contributors
