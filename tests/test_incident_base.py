@@ -18,8 +18,8 @@ class TestIncidentBase(TestBase):
         self.assertEquals(i.sys_class_name, 'incident')
         self.assertEquals(i.incident_state, '7')
 
-        t = Incident(s)
-        found = t.get(('number', 'INC0426232'))
+        i = Incident(s)
+        found = i.get(('number', 'INC0426232'))
         self.assertTrue(found)
         self.assertEquals(i.sys_id, 'c1c535ba85f45540adf94de5b835cd43')
         self.assertEquals(i.number, 'INC0426232')
@@ -216,7 +216,7 @@ class TestIncidentBase(TestBase):
 
     def base_test_incident_add_work_note(self, s):
         i_original = Incident(s, {  # s is a SnowRestSession object
-            'short_description': self.short_description_prefix + ' test_incident_add_comment',
+            'short_description': self.short_description_prefix + ' test_incident_add_work_note',
             'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
             'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
             'assignment_group': 'd34218f3b4a3a4006d2153f17c76edff',  # ServiceNow 4th line
