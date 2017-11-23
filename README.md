@@ -52,6 +52,12 @@ You can then copy the package (folder) `cern_snow_client` into your Python proje
 
 You can also download a .zip or .tar.gz file from this project.
 
+## Command Line Interface (CLI)
+
+At the moment, there is no CLI around the library, other than using it interactively from the Python interpreter.
+
+Developing a CLI is in the issue list. If you would like to contribute doing so, please get in touch with us so as to coordinate the effort.
+
 ## Documentation
 
 The current documentation is in the [snow-client documentation website](https://snow-client-docs.web.cern.ch/snow-client-docs/cern_snow_client.html).
