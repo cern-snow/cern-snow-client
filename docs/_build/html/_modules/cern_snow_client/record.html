@@ -105,8 +105,7 @@
 <span class="sd">        &gt;&gt;&gt;    &#39;short_description&#39; : &quot;New request&quot;,</span>
 <span class="sd">        &gt;&gt;&gt;    &#39;u_business_service&#39; : &#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;, #  Service Element &quot;ServiceNow&quot;</span>
 <span class="sd">        &gt;&gt;&gt;    &#39;u_functional_element&#39; : &#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;,  # Functional Element &quot;ServiceNow&quot;</span>
-<span class="sd">        &gt;&gt;&gt;    &#39;comments&#39; : &quot;Initial description&quot;,</span>
-<span class="sd">        &gt;&gt;&gt;    &#39;u_current_task_state&#39; : &#39;2&#39;  # initial state : Assigned</span>
+<span class="sd">        &gt;&gt;&gt;    &#39;comments&#39; : &quot;Initial description&quot;</span>
 <span class="sd">        &gt;&gt;&gt; }</span>
 <span class="sd">        &gt;&gt;&gt; r = Record(s, &#39;u_request_fulfillment&#39;, values)  # record is created and ready for insert</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -278,8 +277,7 @@
 <span class="sd">            &gt;&gt;&gt;    &#39;short_description&#39; : &quot;New incident&quot;,</span>
 <span class="sd">            &gt;&gt;&gt;    &#39;u_business_service&#39; : &#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;,  # Service Element &quot;ServiceNow&quot;</span>
 <span class="sd">            &gt;&gt;&gt;    &#39;u_functional_element&#39; : &#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;,  # Functional Element &quot;ServiceNow&quot;</span>
-<span class="sd">            &gt;&gt;&gt;    &#39;comments&#39; : &quot;Initial description&quot;,</span>
-<span class="sd">            &gt;&gt;&gt;    &#39;incident_state&#39; : &#39;2&#39;  # initial state : Assigned</span>
+<span class="sd">            &gt;&gt;&gt;    &#39;comments&#39; : &quot;Initial description&quot;</span>
 <span class="sd">            &gt;&gt;&gt; })</span>
 <span class="sd">            &gt;&gt;&gt; r.insert()</span>
 <span class="sd">            &gt;&gt;&gt; print r.number  # will print the number of the new incident</span>
@@ -291,7 +289,6 @@
 <span class="sd">            &gt;&gt;&gt; r.u_business_service = &#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;  # Service Element &quot;ServiceNow&quot;</span>
 <span class="sd">            &gt;&gt;&gt; r.u_functional_element = &#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;  # Functional ELement &quot;ServiceNow&quot;</span>
 <span class="sd">            &gt;&gt;&gt; r.comments = &quot;Initial description&quot;</span>
-<span class="sd">            &gt;&gt;&gt; r.u_current_task_state = &#39;2&#39;   # request state = Assigned</span>
 <span class="sd">            &gt;&gt;&gt; r.insert()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 

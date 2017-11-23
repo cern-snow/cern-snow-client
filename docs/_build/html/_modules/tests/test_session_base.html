@@ -69,8 +69,7 @@
         <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
             <span class="s1">&#39;short_description&#39;</span><span class="p">:</span> <span class="n">sd</span><span class="p">,</span>
             <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="n">fe</span><span class="p">,</span>
-            <span class="s1">&#39;comments&#39;</span><span class="p">:</span> <span class="s1">&#39;Initial description&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;incident_state&#39;</span><span class="p">:</span> <span class="s1">&#39;2&#39;</span>
+            <span class="s1">&#39;comments&#39;</span><span class="p">:</span> <span class="s1">&#39;Initial description&#39;</span>
         <span class="p">})</span>
 
         <span class="n">result</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;/api/now/v2/table/incident&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
@@ -87,7 +86,6 @@
         <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
             <span class="s1">&#39;short_description&#39;</span><span class="p">:</span> <span class="n">sd</span><span class="p">,</span>
             <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="n">fe</span><span class="p">,</span>
-            <span class="s1">&#39;incident_state&#39;</span><span class="p">:</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span>
             <span class="s1">&#39;watch_list&#39;</span><span class="p">:</span> <span class="s1">&#39;noreply@cern.ch&#39;</span>
         <span class="p">})</span>
 
