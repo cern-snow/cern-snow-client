@@ -1,5 +1,4 @@
 # coding: utf-8
-# coding: utf-8
 
 from record import Record
 from record import RecordQuery
@@ -23,7 +22,7 @@ class Request(Task):
             Inserting a new incident:
 
             >>> req = Request(s)  # s is a SnowRestSession object
-            >>> req.short_description = "New incident"
+            >>> req.short_description = "New request"
             >>> req.u_business_service = 'e85a3f3b0a0a8c0a006a2912f2f352d1'  # Service Element "ServiceNow"
             >>> req.u_functional_element = '579fb3d90a0a8c08017ac8a1137c8ee6'  # Functional ELement "ServiceNow"
             >>> req.comments = "Initial description"
