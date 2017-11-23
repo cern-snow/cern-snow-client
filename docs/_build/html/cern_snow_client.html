@@ -1373,6 +1373,54 @@ to authenticate and communicate with ServiceNow</li>
 </div>
 <div class="section" id="module-cern_snow_client.request">
 <span id="cern-snow-client-request-module"></span><h2>cern_snow_client.request module<a class="headerlink" href="#module-cern_snow_client.request" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="cern_snow_client.request.Request">
+<em class="property">class </em><code class="descclassname">cern_snow_client.request.</code><code class="descname">Request</code><span class="sig-paren">(</span><em>session</em>, <em>values=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/request.html#Request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.request.Request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cern_snow_client.task.Task" title="cern_snow_client.task.Task"><code class="xref py py-class docutils literal"><span class="pre">cern_snow_client.task.Task</span></code></a></p>
+<p>The class Task has all the methods of the Record and Task classes,
+plus some extra methods.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>session</strong> (<a class="reference internal" href="#cern_snow_client.session.SnowRestSession" title="cern_snow_client.session.SnowRestSession"><em>SnowRestSession</em></a>) – a cern_snow_client.session.SnowRestSession object, which will be used
+to authenticate and communicate with ServiceNow</li>
+<li><strong>values</strong> (<code class="xref py py-obj docutils literal"><span class="pre">dict</span></code>, optional) – initial values for the record</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Inserting a new incident:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">req</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">req</span><span class="o">.</span><span class="n">short_description</span> <span class="o">=</span> <span class="s2">&quot;New request&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">req</span><span class="o">.</span><span class="n">u_business_service</span> <span class="o">=</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">req</span><span class="o">.</span><span class="n">u_functional_element</span> <span class="o">=</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span>  <span class="c1"># Functional ELement &quot;ServiceNow&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">req</span><span class="o">.</span><span class="n">comments</span> <span class="o">=</span> <span class="s2">&quot;Initial description&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">req</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Adding a comment to an incident after getting it:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">req</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;c69bd7324fdabac07db7d3ef0310c73b&#39;</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">req</span><span class="o">.</span><span class="n">add_comment</span><span class="p">(</span><span class="s1">&#39;New comment&#39;</span><span class="p">)</span>  <span class="c1"># will immediately add a new comment in ServiceNow</span>
+</pre></div>
+</div>
+<p>Resolving an Incident for which we know the number:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">req</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>  <span class="c1"># s is a SnowRestSession object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">req</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s1">&#39;New comment&#39;</span><span class="p">,</span> <span class="n">close_code</span><span class="o">=</span><span class="s1">&#39;Not authorised&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;RQF0746626&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="class">
+<dt id="cern_snow_client.request.RequestQuery">
+<em class="property">class </em><code class="descclassname">cern_snow_client.request.</code><code class="descname">RequestQuery</code><span class="sig-paren">(</span><em>session</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/request.html#RequestQuery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.request.RequestQuery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cern_snow_client.record.RecordQuery" title="cern_snow_client.record.RecordQuery"><code class="xref py py-class docutils literal"><span class="pre">cern_snow_client.record.RecordQuery</span></code></a></p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-cern_snow_client.common">
 <span id="cern-snow-client-common-module"></span><h2>cern_snow_client.common module<a class="headerlink" href="#module-cern_snow_client.common" title="Permalink to this headline">¶</a></h2>

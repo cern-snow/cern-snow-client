@@ -369,7 +369,143 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestTaskBase.base_test_take_in_progress"><a class="viewcode-back" href="../../tests.html#tests.test_task_base.TestTaskBase.base_test_take_in_progress">[docs]</a>    <span class="k">def</span> <span class="nf">base_test_take_in_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
-        <span class="k">pass</span></div>
+        <span class="c1"># first test: insert an incident, get it, take it in progress</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">,</span> <span class="p">{</span>  <span class="c1"># s is a SnowRestSession object</span>
+            <span class="s1">&#39;short_description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_take_in_progress&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;u_business_service&#39;</span><span class="p">:</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">,</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">,</span>  <span class="c1"># Functional Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;assignment_group&#39;</span><span class="p">:</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span><span class="p">,</span>  <span class="c1"># ServiceNow 4th line</span>
+            <span class="s1">&#39;comments&#39;</span><span class="p">:</span> <span class="s2">&quot;Initial description&quot;</span>
+        <span class="p">})</span>
+        <span class="n">inserted</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">inserted</span><span class="p">)</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">take_in_progress</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+
+        <span class="n">r2</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">r2</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">assigned_to</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_user</span><span class="p">)</span>
+
+        <span class="c1"># second test: insert an incident, take it in progress by providing the sys_id</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">,</span> <span class="p">{</span>  <span class="c1"># s is a SnowRestSession object</span>
+            <span class="s1">&#39;short_description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_take_in_progress_2&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;u_business_service&#39;</span><span class="p">:</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">,</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">,</span>  <span class="c1"># Functional Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;assignment_group&#39;</span><span class="p">:</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span><span class="p">,</span>  <span class="c1"># ServiceNow 4th line</span>
+            <span class="s1">&#39;comments&#39;</span><span class="p">:</span> <span class="s2">&quot;Initial description&quot;</span>
+        <span class="p">})</span>
+        <span class="n">inserted</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">inserted</span><span class="p">)</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">take_in_progress</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+
+        <span class="n">r2</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">r2</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">assigned_to</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_user</span><span class="p">)</span>
+
+        <span class="c1"># third test: insert an incident, take it in progress by providing the number</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">,</span> <span class="p">{</span>  <span class="c1"># s is a SnowRestSession object</span>
+            <span class="s1">&#39;short_description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_take_in_progress_3&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;u_business_service&#39;</span><span class="p">:</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">,</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">,</span>  <span class="c1"># Functional Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;assignment_group&#39;</span><span class="p">:</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span><span class="p">,</span>  <span class="c1"># ServiceNow 4th line</span>
+            <span class="s1">&#39;comments&#39;</span><span class="p">:</span> <span class="s2">&quot;Initial description&quot;</span>
+        <span class="p">})</span>
+        <span class="n">inserted</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">inserted</span><span class="p">)</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">take_in_progress</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">number</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+
+        <span class="n">r2</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;incident&#39;</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">r2</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">incident_state</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">assigned_to</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_user</span><span class="p">)</span>
+
+        <span class="c1"># fourth test: insert a request, get it, take it in progress</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">,</span> <span class="p">{</span>  <span class="c1"># s is a SnowRestSession object</span>
+            <span class="s1">&#39;short_description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_take_in_progress_4&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;u_business_service&#39;</span><span class="p">:</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">,</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">,</span>  <span class="c1"># Functional Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;assignment_group&#39;</span><span class="p">:</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span><span class="p">,</span>  <span class="c1"># ServiceNow 4th line</span>
+            <span class="s1">&#39;comments&#39;</span><span class="p">:</span> <span class="s2">&quot;Initial description&quot;</span>
+        <span class="p">})</span>
+        <span class="n">inserted</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">inserted</span><span class="p">)</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">take_in_progress</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+
+        <span class="n">r2</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">r2</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">u_current_task_state</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">assigned_to</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_user</span><span class="p">)</span>
+
+        <span class="c1"># fifth test: insert an request, take it in progress by providing the sys_id</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">,</span> <span class="p">{</span>  <span class="c1"># s is a SnowRestSession object</span>
+            <span class="s1">&#39;short_description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_take_in_progress_5&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;u_business_service&#39;</span><span class="p">:</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">,</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">,</span>  <span class="c1"># Functional Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;assignment_group&#39;</span><span class="p">:</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span><span class="p">,</span>  <span class="c1"># ServiceNow 4th line</span>
+            <span class="s1">&#39;comments&#39;</span><span class="p">:</span> <span class="s2">&quot;Initial description&quot;</span>
+        <span class="p">})</span>
+        <span class="n">inserted</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">inserted</span><span class="p">)</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">take_in_progress</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+
+        <span class="n">r2</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">r2</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">u_current_task_state</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">assigned_to</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_user</span><span class="p">)</span>
+
+        <span class="c1"># sixth test: insert an request, take it in progress by providing the number</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">,</span> <span class="p">{</span>  <span class="c1"># s is a SnowRestSession object</span>
+            <span class="s1">&#39;short_description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">short_description_prefix</span> <span class="o">+</span> <span class="s1">&#39; test_take_in_progress_6&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;u_business_service&#39;</span><span class="p">:</span> <span class="s1">&#39;e85a3f3b0a0a8c0a006a2912f2f352d1&#39;</span><span class="p">,</span>  <span class="c1"># Service Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;u_functional_element&#39;</span><span class="p">:</span> <span class="s1">&#39;579fb3d90a0a8c08017ac8a1137c8ee6&#39;</span><span class="p">,</span>  <span class="c1"># Functional Element &quot;ServiceNow&quot;</span>
+            <span class="s1">&#39;assignment_group&#39;</span><span class="p">:</span> <span class="s1">&#39;d34218f3b4a3a4006d2153f17c76edff&#39;</span><span class="p">,</span>  <span class="c1"># ServiceNow 4th line</span>
+            <span class="s1">&#39;comments&#39;</span><span class="p">:</span> <span class="s2">&quot;Initial description&quot;</span>
+        <span class="p">})</span>
+        <span class="n">inserted</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">insert</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">inserted</span><span class="p">)</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="n">Task</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">updated</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">take_in_progress</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">number</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+
+        <span class="n">r2</span> <span class="o">=</span> <span class="n">Record</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;u_request_fulfillment&#39;</span><span class="p">)</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="n">r2</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">sys_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">u_current_task_state</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">r2</span><span class="o">.</span><span class="n">assigned_to</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_user</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TestTaskBase.base_test_resolve"><a class="viewcode-back" href="../../tests.html#tests.test_task_base.TestTaskBase.base_test_resolve">[docs]</a>    <span class="k">def</span> <span class="nf">base_test_resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
         <span class="c1"># first test: insert an incident, get it, resolve it. No close code provided</span>

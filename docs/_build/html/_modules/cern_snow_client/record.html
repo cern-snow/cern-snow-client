@@ -229,7 +229,6 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">is_key_text</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_key_tuple</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s2">&quot;Record.get: the </span><span class="se">\&quot;</span><span class="s2">key</span><span class="se">\&quot;</span><span class="s2"> parameter should be a non empty str/unicode value, &quot;</span>
                                       <span class="s2">&quot;or a tuple (field_name, field_value) where field_name is a str&quot;</span><span class="p">)</span>
-        <span class="c1"># TODO: Finish this method</span>
         <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/api/now/v2/table/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span>
         <span class="k">if</span> <span class="n">is_key_text</span><span class="p">:</span>
             <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">key</span>
@@ -297,7 +296,6 @@
             <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s1">&#39;Record.insert: The current Record is of class &#39;</span> <span class="o">+</span> <span class="n">class_name</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span>
                                       <span class="s1">&#39;which cannot be inserted. &#39;</span>
                                       <span class="s1">&#39;You need to instantiate a subclass of &#39;</span> <span class="o">+</span> <span class="n">class_name</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
-        <span class="c1"># TODO: Finish this method</span>
         <span class="c1">#  build the URL</span>
         <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/api/now/v2/table/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span>
         <span class="c1">#  execute a post using the changed data : get_changed_fields()</span>
@@ -677,7 +675,6 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">query_filter</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">query_encoded</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SnowClientException</span><span class="p">(</span><span class="s2">&quot;RecordQuery.query: &quot;</span>
                                       <span class="s2">&quot;needs either a value in the query_filter or the query_encoded parameters&quot;</span><span class="p">)</span>
-        <span class="c1"># TODO: Finish this method</span>
 
         <span class="c1">#  build the URL</span>
         <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/api/now/v2/table/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_table_name</span>

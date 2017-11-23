@@ -520,7 +520,7 @@
 <dl class="class">
 <dt id="tests.test_incident_basic_auth.TestIncidentBasicAuthentication">
 <em class="property">class </em><code class="descclassname">tests.test_incident_basic_auth.</code><code class="descname">TestIncidentBasicAuthentication</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_incident_basic_auth.html#TestIncidentBasicAuthentication"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_incident_basic_auth.TestIncidentBasicAuthentication" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code>, <a class="reference internal" href="#tests.test_incident_base.TestIncidentBase" title="tests.test_incident_base.TestIncidentBase"><code class="xref py py-class docutils literal"><span class="pre">tests.test_incident_base.TestIncidentBase</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code>, <code class="xref py py-class docutils literal"><span class="pre">tests.test_incident_base.TestIncidentBase</span></code></p>
 <dl class="attribute">
 <dt id="tests.test_incident_basic_auth.TestIncidentBasicAuthentication.short_description_prefix">
 <code class="descname">short_description_prefix</code><em class="property"> = 'snow client - incident unit test - basic auth'</em><a class="headerlink" href="#tests.test_incident_basic_auth.TestIncidentBasicAuthentication.short_description_prefix" title="Permalink to this definition">¶</a></dt>
@@ -589,7 +589,7 @@
 <dl class="class">
 <dt id="tests.test_incident_sso_oauth.TestIncidentBasicAuthentication">
 <em class="property">class </em><code class="descclassname">tests.test_incident_sso_oauth.</code><code class="descname">TestIncidentBasicAuthentication</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_incident_sso_oauth.html#TestIncidentBasicAuthentication"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_incident_sso_oauth.TestIncidentBasicAuthentication" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code>, <a class="reference internal" href="#tests.test_incident_base.TestIncidentBase" title="tests.test_incident_base.TestIncidentBase"><code class="xref py py-class docutils literal"><span class="pre">tests.test_incident_base.TestIncidentBase</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code>, <code class="xref py py-class docutils literal"><span class="pre">tests.test_incident_base.TestIncidentBase</span></code></p>
 <dl class="attribute">
 <dt id="tests.test_incident_sso_oauth.TestIncidentBasicAuthentication.short_description_prefix">
 <code class="descname">short_description_prefix</code><em class="property"> = 'snow client - incident unit test - sso oauth'</em><a class="headerlink" href="#tests.test_incident_sso_oauth.TestIncidentBasicAuthentication.short_description_prefix" title="Permalink to this definition">¶</a></dt>
@@ -653,50 +653,237 @@
 </dd></dl>
 
 </div>
-<div class="section" id="module-tests.test_incident_base">
-<span id="tests-test-incident-base-module"></span><h2>tests.test_incident_base module<a class="headerlink" href="#module-tests.test_incident_base" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-tests.test_request_base">
+<span id="tests-test-request-base-module"></span><h2>tests.test_request_base module<a class="headerlink" href="#module-tests.test_request_base" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="tests.test_incident_base.TestIncidentBase">
-<em class="property">class </em><code class="descclassname">tests.test_incident_base.</code><code class="descname">TestIncidentBase</code><a class="reference internal" href="_modules/tests/test_incident_base.html#TestIncidentBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_incident_base.TestIncidentBase" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_request_base.TestRequestBase">
+<em class="property">class </em><code class="descclassname">tests.test_request_base.</code><code class="descname">TestRequestBase</code><a class="reference internal" href="_modules/tests/test_request_base.html#TestRequestBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_base.TestRequestBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#tests.test_base.TestBase" title="tests.test_base.TestBase"><code class="xref py py-class docutils literal"><span class="pre">tests.test_base.TestBase</span></code></a></p>
 <dl class="method">
-<dt id="tests.test_incident_base.TestIncidentBase.base_test_incident_get">
-<code class="descname">base_test_incident_get</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_incident_base.html#TestIncidentBase.base_test_incident_get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_incident_base.TestIncidentBase.base_test_incident_get" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_request_base.TestRequestBase.base_test_request_get">
+<code class="descname">base_test_request_get</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_base.html#TestRequestBase.base_test_request_get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_base.TestRequestBase.base_test_request_get" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.test_incident_base.TestIncidentBase.base_test_incident_insert">
-<code class="descname">base_test_incident_insert</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_incident_base.html#TestIncidentBase.base_test_incident_insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_incident_base.TestIncidentBase.base_test_incident_insert" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_request_base.TestRequestBase.base_test_request_insert">
+<code class="descname">base_test_request_insert</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_base.html#TestRequestBase.base_test_request_insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_base.TestRequestBase.base_test_request_insert" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.test_incident_base.TestIncidentBase.base_test_incident_update">
-<code class="descname">base_test_incident_update</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_incident_base.html#TestIncidentBase.base_test_incident_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_incident_base.TestIncidentBase.base_test_incident_update" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_request_base.TestRequestBase.base_test_request_update">
+<code class="descname">base_test_request_update</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_base.html#TestRequestBase.base_test_request_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_base.TestRequestBase.base_test_request_update" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.test_incident_base.TestIncidentBase.base_test_incident_add_comment">
-<code class="descname">base_test_incident_add_comment</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_incident_base.html#TestIncidentBase.base_test_incident_add_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_incident_base.TestIncidentBase.base_test_incident_add_comment" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_request_base.TestRequestBase.base_test_request_add_comment">
+<code class="descname">base_test_request_add_comment</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_base.html#TestRequestBase.base_test_request_add_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_base.TestRequestBase.base_test_request_add_comment" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.test_incident_base.TestIncidentBase.base_test_incident_add_work_note">
-<code class="descname">base_test_incident_add_work_note</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_incident_base.html#TestIncidentBase.base_test_incident_add_work_note"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_incident_base.TestIncidentBase.base_test_incident_add_work_note" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_request_base.TestRequestBase.base_test_request_add_work_note">
+<code class="descname">base_test_request_add_work_note</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_base.html#TestRequestBase.base_test_request_add_work_note"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_base.TestRequestBase.base_test_request_add_work_note" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.test_incident_base.TestIncidentBase.base_test_incident_take_in_progress">
-<code class="descname">base_test_incident_take_in_progress</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_incident_base.html#TestIncidentBase.base_test_incident_take_in_progress"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_incident_base.TestIncidentBase.base_test_incident_take_in_progress" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_request_base.TestRequestBase.base_test_request_take_in_progress">
+<code class="descname">base_test_request_take_in_progress</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_base.html#TestRequestBase.base_test_request_take_in_progress"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_base.TestRequestBase.base_test_request_take_in_progress" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.test_incident_base.TestIncidentBase.base_test_incident_resolve">
-<code class="descname">base_test_incident_resolve</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_incident_base.html#TestIncidentBase.base_test_incident_resolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_incident_base.TestIncidentBase.base_test_incident_resolve" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_request_base.TestRequestBase.base_test_request_resolve">
+<code class="descname">base_test_request_resolve</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_base.html#TestRequestBase.base_test_request_resolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_base.TestRequestBase.base_test_request_resolve" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="tests.test_incident_base.TestIncidentBase.base_test_incident_query">
-<code class="descname">base_test_incident_query</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_incident_base.html#TestIncidentBase.base_test_incident_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_incident_base.TestIncidentBase.base_test_incident_query" title="Permalink to this definition">¶</a></dt>
+<dt id="tests.test_request_base.TestRequestBase.base_test_request_query">
+<code class="descname">base_test_request_query</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_base.html#TestRequestBase.base_test_request_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_base.TestRequestBase.base_test_request_query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-tests.test_request_basic_auth">
+<span id="tests-test-request-basic-auth-module"></span><h2>tests.test_request_basic_auth module<a class="headerlink" href="#module-tests.test_request_basic_auth" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="tests.test_request_basic_auth.TestIncidentBasicAuthentication">
+<em class="property">class </em><code class="descclassname">tests.test_request_basic_auth.</code><code class="descname">TestIncidentBasicAuthentication</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_basic_auth.html#TestIncidentBasicAuthentication"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_basic_auth.TestIncidentBasicAuthentication" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code>, <a class="reference internal" href="#tests.test_request_base.TestRequestBase" title="tests.test_request_base.TestRequestBase"><code class="xref py py-class docutils literal"><span class="pre">tests.test_request_base.TestRequestBase</span></code></a></p>
+<dl class="attribute">
+<dt id="tests.test_request_basic_auth.TestIncidentBasicAuthentication.short_description_prefix">
+<code class="descname">short_description_prefix</code><em class="property"> = 'snow client - request unit test - basic auth'</em><a class="headerlink" href="#tests.test_request_basic_auth.TestIncidentBasicAuthentication.short_description_prefix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tests.test_request_basic_auth.TestIncidentBasicAuthentication.current_user">
+<code class="descname">current_user</code><em class="property"> = 'b09313fc4f16c70015d3bc511310c719'</em><a class="headerlink" href="#tests.test_request_basic_auth.TestIncidentBasicAuthentication.current_user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="tests.test_request_basic_auth.TestIncidentBasicAuthentication.make_good_session">
+<em class="property">classmethod </em><code class="descname">make_good_session</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_basic_auth.html#TestIncidentBasicAuthentication.make_good_session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_basic_auth.TestIncidentBasicAuthentication.make_good_session" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="tests.test_request_basic_auth.TestIncidentBasicAuthentication.remove_cookie">
+<em class="property">classmethod </em><code class="descname">remove_cookie</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_basic_auth.html#TestIncidentBasicAuthentication.remove_cookie"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_basic_auth.TestIncidentBasicAuthentication.remove_cookie" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_request_basic_auth.TestIncidentBasicAuthentication.test_request_get">
+<code class="descname">test_request_get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_basic_auth.html#TestIncidentBasicAuthentication.test_request_get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_basic_auth.TestIncidentBasicAuthentication.test_request_get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_request_basic_auth.TestIncidentBasicAuthentication.test_request_insert">
+<code class="descname">test_request_insert</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_basic_auth.html#TestIncidentBasicAuthentication.test_request_insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_basic_auth.TestIncidentBasicAuthentication.test_request_insert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_request_basic_auth.TestIncidentBasicAuthentication.test_request_update">
+<code class="descname">test_request_update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_basic_auth.html#TestIncidentBasicAuthentication.test_request_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_basic_auth.TestIncidentBasicAuthentication.test_request_update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_request_basic_auth.TestIncidentBasicAuthentication.test_request_add_comment">
+<code class="descname">test_request_add_comment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_basic_auth.html#TestIncidentBasicAuthentication.test_request_add_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_basic_auth.TestIncidentBasicAuthentication.test_request_add_comment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_request_basic_auth.TestIncidentBasicAuthentication.test_request_add_work_note">
+<code class="descname">test_request_add_work_note</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_basic_auth.html#TestIncidentBasicAuthentication.test_request_add_work_note"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_basic_auth.TestIncidentBasicAuthentication.test_request_add_work_note" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_request_basic_auth.TestIncidentBasicAuthentication.test_request_take_in_progress">
+<code class="descname">test_request_take_in_progress</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_basic_auth.html#TestIncidentBasicAuthentication.test_request_take_in_progress"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_basic_auth.TestIncidentBasicAuthentication.test_request_take_in_progress" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_request_basic_auth.TestIncidentBasicAuthentication.test_request_resolve">
+<code class="descname">test_request_resolve</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_basic_auth.html#TestIncidentBasicAuthentication.test_request_resolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_basic_auth.TestIncidentBasicAuthentication.test_request_resolve" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_request_basic_auth.TestIncidentBasicAuthentication.test_request_query">
+<code class="descname">test_request_query</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_basic_auth.html#TestIncidentBasicAuthentication.test_request_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_basic_auth.TestIncidentBasicAuthentication.test_request_query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-tests.test_request_sso_oauth">
+<span id="tests-test-request-sso-oauth-module"></span><h2>tests.test_request_sso_oauth module<a class="headerlink" href="#module-tests.test_request_sso_oauth" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="tests.test_request_sso_oauth.TestIncidentBasicAuthentication">
+<em class="property">class </em><code class="descclassname">tests.test_request_sso_oauth.</code><code class="descname">TestIncidentBasicAuthentication</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_sso_oauth.html#TestIncidentBasicAuthentication"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_sso_oauth.TestIncidentBasicAuthentication" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code>, <a class="reference internal" href="#tests.test_request_base.TestRequestBase" title="tests.test_request_base.TestRequestBase"><code class="xref py py-class docutils literal"><span class="pre">tests.test_request_base.TestRequestBase</span></code></a></p>
+<dl class="attribute">
+<dt id="tests.test_request_sso_oauth.TestIncidentBasicAuthentication.short_description_prefix">
+<code class="descname">short_description_prefix</code><em class="property"> = 'snow client - incident unit test - sso oauth'</em><a class="headerlink" href="#tests.test_request_sso_oauth.TestIncidentBasicAuthentication.short_description_prefix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="tests.test_request_sso_oauth.TestIncidentBasicAuthentication.current_user">
+<code class="descname">current_user</code><em class="property"> = '7d480a864faa034064cc119f0310c77b'</em><a class="headerlink" href="#tests.test_request_sso_oauth.TestIncidentBasicAuthentication.current_user" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="tests.test_request_sso_oauth.TestIncidentBasicAuthentication.make_good_session">
+<em class="property">classmethod </em><code class="descname">make_good_session</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_sso_oauth.html#TestIncidentBasicAuthentication.make_good_session"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_sso_oauth.TestIncidentBasicAuthentication.make_good_session" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="tests.test_request_sso_oauth.TestIncidentBasicAuthentication.remove_cookie">
+<em class="property">classmethod </em><code class="descname">remove_cookie</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_sso_oauth.html#TestIncidentBasicAuthentication.remove_cookie"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_sso_oauth.TestIncidentBasicAuthentication.remove_cookie" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_request_sso_oauth.TestIncidentBasicAuthentication.test_request_get">
+<code class="descname">test_request_get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_sso_oauth.html#TestIncidentBasicAuthentication.test_request_get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_sso_oauth.TestIncidentBasicAuthentication.test_request_get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_request_sso_oauth.TestIncidentBasicAuthentication.test_request_insert">
+<code class="descname">test_request_insert</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_sso_oauth.html#TestIncidentBasicAuthentication.test_request_insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_sso_oauth.TestIncidentBasicAuthentication.test_request_insert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_request_sso_oauth.TestIncidentBasicAuthentication.test_request_update">
+<code class="descname">test_request_update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_sso_oauth.html#TestIncidentBasicAuthentication.test_request_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_sso_oauth.TestIncidentBasicAuthentication.test_request_update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_request_sso_oauth.TestIncidentBasicAuthentication.test_request_add_comment">
+<code class="descname">test_request_add_comment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_sso_oauth.html#TestIncidentBasicAuthentication.test_request_add_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_sso_oauth.TestIncidentBasicAuthentication.test_request_add_comment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_request_sso_oauth.TestIncidentBasicAuthentication.test_request_add_work_note">
+<code class="descname">test_request_add_work_note</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_sso_oauth.html#TestIncidentBasicAuthentication.test_request_add_work_note"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_sso_oauth.TestIncidentBasicAuthentication.test_request_add_work_note" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_request_sso_oauth.TestIncidentBasicAuthentication.test_request_take_in_progress">
+<code class="descname">test_request_take_in_progress</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_sso_oauth.html#TestIncidentBasicAuthentication.test_request_take_in_progress"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_sso_oauth.TestIncidentBasicAuthentication.test_request_take_in_progress" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_request_sso_oauth.TestIncidentBasicAuthentication.test_request_resolve">
+<code class="descname">test_request_resolve</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_sso_oauth.html#TestIncidentBasicAuthentication.test_request_resolve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_sso_oauth.TestIncidentBasicAuthentication.test_request_resolve" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="tests.test_request_sso_oauth.TestIncidentBasicAuthentication.test_request_query">
+<code class="descname">test_request_query</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_sso_oauth.html#TestIncidentBasicAuthentication.test_request_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tests.test_request_sso_oauth.TestIncidentBasicAuthentication.test_request_query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="id1">
+<h2>tests.test_request_base module<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-tests.test_request_base"></span><dl class="class">
+<dt>
+<em class="property">class </em><code class="descclassname">tests.test_request_base.</code><code class="descname">TestRequestBase</code><a class="reference internal" href="_modules/tests/test_request_base.html#TestRequestBase"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#tests.test_base.TestBase" title="tests.test_base.TestBase"><code class="xref py py-class docutils literal"><span class="pre">tests.test_base.TestBase</span></code></a></p>
+<dl class="method">
+<dt>
+<code class="descname">base_test_request_get</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_base.html#TestRequestBase.base_test_request_get"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">base_test_request_insert</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_base.html#TestRequestBase.base_test_request_insert"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">base_test_request_update</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_base.html#TestRequestBase.base_test_request_update"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">base_test_request_add_comment</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_base.html#TestRequestBase.base_test_request_add_comment"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">base_test_request_add_work_note</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_base.html#TestRequestBase.base_test_request_add_work_note"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">base_test_request_take_in_progress</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_base.html#TestRequestBase.base_test_request_take_in_progress"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">base_test_request_resolve</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_base.html#TestRequestBase.base_test_request_resolve"><span class="viewcode-link">[source]</span></a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt>
+<code class="descname">base_test_request_query</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tests/test_request_base.html#TestRequestBase.base_test_request_query"><span class="viewcode-link">[source]</span></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
