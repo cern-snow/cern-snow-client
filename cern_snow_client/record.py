@@ -57,8 +57,7 @@ class Record(SessionAware):
         >>>    'short_description' : "New request",
         >>>    'u_business_service' : 'e85a3f3b0a0a8c0a006a2912f2f352d1', #  Service Element "ServiceNow"
         >>>    'u_functional_element' : '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
-        >>>    'comments' : "Initial description",
-        >>>    'u_current_task_state' : '2'  # initial state : Assigned
+        >>>    'comments' : "Initial description"
         >>> }
         >>> r = Record(s, 'u_request_fulfillment', values)  # record is created and ready for insert
     """
@@ -230,8 +229,7 @@ class Record(SessionAware):
             >>>    'short_description' : "New incident",
             >>>    'u_business_service' : 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
             >>>    'u_functional_element' : '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
-            >>>    'comments' : "Initial description",
-            >>>    'incident_state' : '2'  # initial state : Assigned
+            >>>    'comments' : "Initial description"
             >>> })
             >>> r.insert()
             >>> print r.number  # will print the number of the new incident
@@ -243,7 +241,6 @@ class Record(SessionAware):
             >>> r.u_business_service = 'e85a3f3b0a0a8c0a006a2912f2f352d1'  # Service Element "ServiceNow"
             >>> r.u_functional_element = '579fb3d90a0a8c08017ac8a1137c8ee6'  # Functional ELement "ServiceNow"
             >>> r.comments = "Initial description"
-            >>> r.u_current_task_state = '2'   # request state = Assigned
             >>> r.insert()
         """
 

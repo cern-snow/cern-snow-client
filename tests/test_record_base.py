@@ -41,8 +41,7 @@ class TestRecordBase(TestBase):
             'short_description': self.short_description_prefix + ' test_insert_record_1',
             'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
             'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
-            'comments': "Initial description",
-            'incident_state': '2'  # initial state : Assigned
+            'comments': "Initial description"
         })
         self.assertTrue(r.get_can_insert())
         inserted = r.insert()
@@ -66,7 +65,6 @@ class TestRecordBase(TestBase):
         r.u_business_service = 'e85a3f3b0a0a8c0a006a2912f2f352d1'  # Service Element "ServiceNow"
         r.u_functional_element = '579fb3d90a0a8c08017ac8a1137c8ee6'  # Functional Element "ServiceNow"
         r.comments = "Initial description"
-        r.u_current_task_state = '2'  # initial state : Assigned
         inserted = r.insert()
 
         r2 = Record(s, 'u_request_fulfillment')
@@ -90,8 +88,7 @@ class TestRecordBase(TestBase):
             'short_description': self.short_description_prefix + ' test_update_record',
             'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
             'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
-            'comments': "Initial description",
-            'incident_state': '2'  # initial state : Assigned
+            'comments': "Initial description"
         })
         inserted = r.insert()
         self.assertTrue(inserted)

@@ -16,7 +16,6 @@ if __name__ == '__main__':
     new_inc.u_business_service = 'e85a3f3b0a0a8c0a006a2912f2f352d1'  # Service Element "ServiceNow"
     new_inc.u_functional_element = '579fb3d90a0a8c08017ac8a1137c8ee6'  # Functional Element "ServiceNow"
     new_inc.comments = "Initial description"
-    new_inc.incident_state = '2'  # request state = Assigned
     inserted = new_inc.insert()  # returns True/False
 
     # Adding a comment to an incident after getting it

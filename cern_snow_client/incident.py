@@ -26,7 +26,6 @@ class Incident(Task):
             >>> inc.u_business_service = 'e85a3f3b0a0a8c0a006a2912f2f352d1'  # Service Element "ServiceNow"
             >>> inc.u_functional_element = '579fb3d90a0a8c08017ac8a1137c8ee6'  # Functional ELement "ServiceNow"
             >>> inc.comments = "Initial description"
-            >>> inc.incident_state = '2'   # request state = Assigned
             >>> inc.insert()
 
             Adding a comment to an incident after getting it:

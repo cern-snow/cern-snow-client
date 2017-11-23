@@ -39,8 +39,7 @@ class TestIncidentBase(TestBase):
             'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
             'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
             'assignment_group': 'd34218f3b4a3a4006d2153f17c76edff',  # ServiceNow 4th line
-            'comments': "Initial description",
-            'incident_state': '2'  # initial state : Assigned
+            'comments': "Initial description"
         })
         self.assertTrue(i_original.get_can_insert())
         inserted = i_original.insert()
@@ -74,7 +73,6 @@ class TestIncidentBase(TestBase):
         i_original.u_functional_element = '579fb3d90a0a8c08017ac8a1137c8ee6'  # Functional Element "ServiceNow"
         i_original.assignment_group = 'd34218f3b4a3a4006d2153f17c76edff'  # ServiceNow 4th line
         i_original.comments = "Initial description"
-        i_original.incident_state = '2'  # initial state : Assigned
         inserted = i_original.insert()
         self.assertTrue(i_original.get_can_insert())
 
@@ -109,8 +107,7 @@ class TestIncidentBase(TestBase):
             'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
             'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
             'assignment_group': 'd34218f3b4a3a4006d2153f17c76edff',  # ServiceNow 4th line
-            'comments': "Initial description",
-            'incident_state': '2'  # initial state : Assigned
+            'comments': "Initial description"
         })
         inserted = i_original.insert()
         self.assertTrue(inserted)
@@ -197,8 +194,7 @@ class TestIncidentBase(TestBase):
             'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
             'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
             'assignment_group': 'd34218f3b4a3a4006d2153f17c76edff',  # ServiceNow 4th line
-            'comments': "Initial description",
-            'incident_state': '2'  # initial state : Assigned
+            'comments': "Initial description"
         })
         inserted = i_original.insert()
         self.assertTrue(inserted)
@@ -224,8 +220,7 @@ class TestIncidentBase(TestBase):
             'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
             'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
             'assignment_group': 'd34218f3b4a3a4006d2153f17c76edff',  # ServiceNow 4th line
-            'comments': "Initial description",
-            'incident_state': '2'  # initial state : Assigned
+            'comments': "Initial description"
         })
         inserted = i_original.insert()
         self.assertTrue(inserted)
@@ -255,8 +250,7 @@ class TestIncidentBase(TestBase):
             'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
             'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
             'assignment_group': 'd34218f3b4a3a4006d2153f17c76edff',  # ServiceNow 4th line
-            'comments': "Initial description",
-            'incident_state': '2'  # initial state : Assigned
+            'comments': "Initial description"
         })
         inserted = i_original.insert()
         self.assertTrue(inserted)
@@ -283,8 +277,7 @@ class TestIncidentBase(TestBase):
             'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
             'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
             'assignment_group': 'd34218f3b4a3a4006d2153f17c76edff',  # ServiceNow 4th line
-            'comments': "Initial description",
-            'incident_state': '2'  # initial state : Assigned
+            'comments': "Initial description"
         })
         inserted = i_original.insert()
         self.assertTrue(inserted)
@@ -308,8 +301,7 @@ class TestIncidentBase(TestBase):
             'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
             'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
             'assignment_group': 'd34218f3b4a3a4006d2153f17c76edff',  # ServiceNow 4th line
-            'comments': "Initial description",
-            'incident_state': '2'  # initial state : Assigned
+            'comments': "Initial description"
         })
         inserted = i_original.insert()
         self.assertTrue(inserted)
@@ -333,8 +325,7 @@ class TestIncidentBase(TestBase):
             'u_business_service': 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
             'u_functional_element': '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
             'assignment_group': 'd34218f3b4a3a4006d2153f17c76edff',  # ServiceNow 4th line
-            'comments': "Initial description",
-            'incident_state': '2'  # initial state : Assigned
+            'comments': "Initial description"
         })
         inserted = i_original.insert()
         self.assertTrue(inserted)

@@ -373,8 +373,7 @@ class SnowRestSession(object):
             >>>    'short_description' : "New incident",
             >>>    'u_business_service' : 'e85a3f3b0a0a8c0a006a2912f2f352d1',  # Service Element "ServiceNow"
             >>>    'u_functional_element' : '579fb3d90a0a8c08017ac8a1137c8ee6',  # Functional Element "ServiceNow"
-            >>>    'comments' : "Initial description",
-            >>>    'incident_state' : '2'  # initial state : Assigned
+            >>>    'comments' : "Initial description"
             >>> }
             >>> import json
             >>> data = json.dumps(incident_attributes)

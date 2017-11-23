@@ -21,8 +21,7 @@ class TestSessionBase(TestBase):
         data = json.dumps({
             'short_description': sd,
             'u_functional_element': fe,
-            'comments': 'Initial description',
-            'incident_state': '2'
+            'comments': 'Initial description'
         })
 
         result = s.post('/api/now/v2/table/incident', data=data)
@@ -39,7 +38,6 @@ class TestSessionBase(TestBase):
         data = json.dumps({
             'short_description': sd,
             'u_functional_element': fe,
-            'incident_state': '2',
             'watch_list': 'noreply@cern.ch'
         })
 
