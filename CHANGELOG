@@ -1,6 +1,6 @@
 v0.3
 - Refactor into classes: new Record, Task, Incident, Request classes
-- High-level methods
+- High-level methods, such as get, insert, update, add_comment, add_work_note, take_in_progress, resolve
 - Added logging mechanism
 
 v0.2
