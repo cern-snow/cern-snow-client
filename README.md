@@ -67,7 +67,7 @@ You can request the values of these passwords to the ServiceNow developers team 
 
 **Tests should never be done in the ServiceNow production instance `cern.service-now.com`** . The target instance is controlled by the `instance` parameter in the .yaml configuration file.
 
-While in the root of the project, please run `tests/run.sh`.
+While in the root of the project, please run `tests/run_python26.sh` or `tests/run_python27.sh`.
 
 The SSO+OAuth tests will only work in an environment with the tool `cern-get-sso-cookie` (e.g. Scientific Linux CERN or CERN CentOS).
 
