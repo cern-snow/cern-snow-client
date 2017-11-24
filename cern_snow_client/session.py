@@ -9,6 +9,7 @@ import sys
 import yaml
 import uuid
 import logging
+import getpass
 from logging.handlers import RotatingFileHandler
 
 try:  # Python 2.7+
@@ -714,15 +715,16 @@ class SnowRestSession(object):
         else:
             if self.auth_type == 'basic':
                 if not self.fresh_cookie:
-                    self.session.auth = (self.basic_auth_user, self.basic_auth_password)
-                    result = self.__execute(operation, url, headers=headers, params=params, data=data)
-                    if result.status_code != 401:
-                        self.__save_cookie_basic()
-                        return result
-                    else:
-                        raise SnowRestSessionException(
-                            "SnowRestSession.__operation: Your basic authentication "
-                            "user and password might not be valid")
+                    for x in range(0,3):
+                        self.basic_auth_password = getpass.getpass('Enter your password : ')
+                        self.session.auth = (self.basic_auth_user, self.basic_auth_password)
+                        result = self.__execute(operation, url, headers=headers, params=params, data=data)
+                        if result.status_code != 401:
+                            self.__save_cookie_basic()
+                            return result
+                    raise SnowRestSessionException(
+                        "SnowRestSession.__operation: Your basic authentication "
+                        "user and password might not be valid")
                 else:
                     raise SnowRestSessionException(
                         "SnowRestSession.__operation: Your basic authentication "
