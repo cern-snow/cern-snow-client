@@ -234,6 +234,31 @@ class Task(Record):
         result = self.update()
         return result
 
+    def get_by_number(self, number=None):
+        """
+        Get an Incident/Requests/Record in ServiceNow
+        Args:
+            number: (str) the number of the incident that you want to get
+
+        Returns:
+            bool: True if the record was get succesfully, False otherwise.
+
+        Raises:
+            SnowClientException: if no key is provided and the current record has no ``number`
+
+        Examples:
+            get_by_number a Task after getting it:
+
+            >>> t = Task(s)  # s is a SnowRestSession object
+            >>> if t.get_by_number('INC0426232'):
+            >>>     ...
+
+        """
+
+        key = ('number', number)
+        result = self.get(key)
+        return result
+    
 
 class TaskQuery(RecordQuery):
 

@@ -715,7 +715,7 @@ class SnowRestSession(object):
         else:
             if self.auth_type == 'basic':
                 if not self.fresh_cookie:
-                    for x in range(0,3):
+                    for x in range(0, 3):
                         self.basic_auth_password = getpass.getpass('Enter your password : ')
                         self.session.auth = (self.basic_auth_user, self.basic_auth_password)
                         result = self.__execute(operation, url, headers=headers, params=params, data=data)

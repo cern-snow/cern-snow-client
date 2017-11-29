@@ -2,14 +2,17 @@
 import sys
 import getpass
 
+
 def basic_squelette():
     f = open('config.yaml', 'w')
     f.write('instance: \nauth:\n    type: sso_oauth\n    sso_method: basic\n    user: \n    password: \nsession:\n    cookie_file: cookie.txt\nlog:\n    log_enabled: true\n    log_file_path: log.txt\n    log_level: DEBUG\n    log_format: %(asctime)s [%(name)s] [%(levelname)s] %(message)s\n    log_file_size_bytes: 1000000\n    log_file_rotations: 10\n    log_file_encoding: utf-8')
     f.close()
 
+
 def kerberos_squelette():
     f = open('config.yaml', 'w')
     f.write('instance: \nauth:\n    type: sso_oauth\n    sso_method: kerberos\n    oauth_client_id: \n    oauth_client_secret: \nsession:\n    cookie_file: cookie.txt\n    oauth_tokens_file: tokens.txt\nlog:\n    log_enabled: true\n    log_file_path: log.txt\n    log_level: DEBUG\n    log_format: %(asctime)s [%(name)s] [%(levelname)s] %(message)s\n    log_file_size_bytes: 1000000\n    log_file_rotations: 10\n    log_file_encoding: utf-8')
+
 
 def construct_config_file():
     f = open('config.yaml', 'w')
@@ -17,7 +20,7 @@ def construct_config_file():
 
     instance = raw_input('Set the instance (ex: cern|cerntraining|cerndev|cerntest : ')
     i = 0
-    while (instance != 'cern' and instance != 'cerntraining' and instance != 'cerndev' and instance != 'cerntest'):
+    while instance != 'cern' and instance != 'cerntraining' and instance != 'cerndev' and instance != 'cerntest':
         instance = raw_input('Bad input please enter cern|cerntraining|cerndev|cerntest: ')
         i+=1
         if i == 3:
@@ -27,7 +30,7 @@ def construct_config_file():
 
     i = 0
     auth_type = raw_input('Set the auth type (ex: sso_oauth): ')
-    while (auth_type != 'sso_oauth'):
+    while auth_type != 'sso_oauth':
         auth_type = raw_input('Bad input please enter sso_oauth|other: ')
         i+=1
         if i == 3:
@@ -36,7 +39,7 @@ def construct_config_file():
     f.write('auth:\n    type: ' + auth_type + '\n')
     
     sso_method = raw_input('Set the sso_method (ex: basic|kerberos): ')
-    while (sso_method != 'basic' and sso_method != 'kerberos'):
+    while sso_method != 'basic' and sso_method != 'kerberos':
         sso_method = raw_input('Bad input please enter basic|kerberos: ')
         i+=1
         if i == 3:
@@ -58,7 +61,7 @@ def construct_config_file():
     answer = raw_input('Do you want to Store cookie in your computer ? Y|N (highly recommended !) ')
     i = 0
     cookie_file = None
-    while (answer != 'Y' and answer != 'N'):
+    while answer != 'Y' and answer != 'N':
         answer = raw_input('Do you want to Store cookie in your computer ? Y|N (highly recommended !) ')
         i+=1
         if i == 3:
@@ -97,7 +100,8 @@ def construct_config_file():
         if i == 3:
             print 'Problem in the input'
             sys.exit(0)
-        
+
+
 def main():
     if len(sys.argv) >= 2:
         if sys.argv[1] == '-b':
@@ -105,10 +109,12 @@ def main():
         elif sys.argv[1] == '-k':
             kerberos_squelette()
         else:
-            print 'USAGE\t./config_file_generator [-b|-k|-h]\nDESCRIPTION:\n\t-b : create a config_file.yaml with basic configuration\n\t-k : create a config_file.yaml with the kerbe
-ros configuration'
+            print 'USAGE\t./config_file_generator [-b|-k|-h]\nDESCRIPTION:' \
+                  '\n\t-b : create a config_file.yaml with basic configuration' \
+                  '\n\t-k : create a config_file.yaml with the kerberos configuration'
     else:
         construct_config_file()
+
 
 if __name__ == '__main__':
     main()
