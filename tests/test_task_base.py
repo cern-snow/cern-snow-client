@@ -674,3 +674,9 @@ class TestTaskBase(TestBase):
             self.assertFalse(hasattr(record, 'incident_state'))
 
         self.assertTrue(records_found)
+
+
+        def base_task_get_by_number(s):
+            t = Task(s)
+            if t.get_by_number('INC0426232'):
+                self.assertTrue(t.number, 'INC0426232')
