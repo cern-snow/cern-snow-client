@@ -730,8 +730,7 @@ class SnowRestSession(object):
                         "SnowRestSession.__operation: Your basic authentication "
                         "user and password might not be valid")
 
-            elif self.auth_type == 'sso_auth':
-
+            elif self.auth_type == 'sso_oauth':
                 if self.fresh_token:
                     raise SnowRestSessionException(
                         "SnowRestSession.__operation: failed to perform the operation. The current account might not "
