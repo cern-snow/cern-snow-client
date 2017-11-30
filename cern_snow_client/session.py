@@ -705,32 +705,27 @@ class SnowRestSession(object):
         """
         self.__initiate_session()
 
-        result = self.__execute(operation, url, headers=headers, params=params, data=data)
-
-        if result.status_code != 401:
-            if self.auth_type == 'basic':
-                self.__save_cookie_basic()
-            return result
-
-        else:
-            if self.auth_type == 'basic':
-                if not self.fresh_cookie:
-                    for x in range(0, 3):
-                        self.basic_auth_password = getpass.getpass('Enter your password : ')
-                        self.session.auth = (self.basic_auth_user, self.basic_auth_password)
-                        result = self.__execute(operation, url, headers=headers, params=params, data=data)
-                        if result.status_code != 401:
+        if self.auth_type == 'basic':
+            tries = 0
+            while tries < 3:
+                if self.basic_auth_password:
+                    result = self.__execute(operation, url, headers=headers, params=params, data=data)
+                    if result.status_code != 401:
+                        if self.auth_type == 'basic':
                             self.__save_cookie_basic()
-                            return result
-                    raise SnowRestSessionException(
-                        "SnowRestSession.__operation: Your basic authentication "
-                        "user and password might not be valid")
-                else:
-                    raise SnowRestSessionException(
-                        "SnowRestSession.__operation: Your basic authentication "
-                        "user and password might not be valid")
+                        return result
+                self.basic_auth_password = getpass.getpass('Enter your password : ')
+                self.session.auth = (self.basic_auth_user, self.basic_auth_password)
+                tries = tries + 1
+            raise SnowRestSessionException(
+                "SnowRestSession.__operation: Your basic authentication "
+                "user and password might not be valid")
 
-            elif self.auth_type == 'sso_oauth':
+        elif self.auth_type == 'sso_oauth':
+            result = self.__execute(operation, url, headers=headers, params=params, data=data)
+            if result.status_code != 401:
+                return result
+            else:
                 if self.fresh_token:
                     raise SnowRestSessionException(
                         "SnowRestSession.__operation: failed to perform the operation. The current account might not "
@@ -786,9 +781,9 @@ class SnowRestSession(object):
                                         "SnowRestSession.__operation: failed to perform the operation. "
                                         "The current account might not be able to log in to ServiceNow or "
                                         "the OAuth client id and secret might not be valid")
-            else:
-                raise SnowRestSessionException(
-                    "SnowRestSession.__operation: self.auth_type has a value different from \"basic\" and \"sso_oauth\"")
+        else:
+            raise SnowRestSessionException(
+                "SnowRestSession.__operation: self.auth_type has a value different from \"basic\" and \"sso_oauth\"")
 
     def _configure_handler(self):
         self._logger.removeHandler(self._log_handler)
