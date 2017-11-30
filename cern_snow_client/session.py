@@ -123,7 +123,7 @@ class SnowRestSession(object):
         else:
             raise SnowRestSessionException(
                 "SnowRestSession.load_config_file: the property \"auth_type\" "
-                "must have a value of \"sso_auth\" or \"basic\"")
+                "must have a value of \"sso_oauth\" or \"basic\"")
 
         if 'log' in config_file:
             if 'log_enabled' in config_file['log'] and config_file['log']['log_enabled']:
@@ -161,22 +161,22 @@ class SnowRestSession(object):
     def set_auth_type(self, auth_type):
         """
         Args:
-            auth_type (str): the authentication type to use. Either 'sso_auth' or 'basic'
+            auth_type (str): the authentication type to use. Either 'sso_oauth' or 'basic'
 
         Raises:
-            SnowRestSessionException: if auth_type is not 'sso_auth' or 'basic'
+            SnowRestSessionException: if auth_type is not 'sso_oauth' or 'basic'
         """
-        if auth_type != 'basic' and auth_type != 'sso_auth':
+        if auth_type != 'basic' and auth_type != 'sso_oauth':
             raise SnowRestSessionException(
                 "SnowRestSession.set_auth_type: the parameter \"auth_type\" "
-                "must have a value of \"sso_auth\" or \"basic\"")
+                "must have a value of \"sso_oauth\" or \"basic\"")
         self.auth_type = auth_type
 
     def set_sso_method(self, sso_method):
         """
         Args:
             sso_method (str): the Single Sign On method to use. Either 'kerberos' or 'certificate'.
-            Needs set_auth_type('sso_auth') to have an effect.
+            Needs set_auth_type('sso_oauth') to have an effect.
 
         Raises:
             SnowRestSessionException: if sso_method is not 'kerberos' or 'certificate'
@@ -197,7 +197,7 @@ class SnowRestSession(object):
         """
         Args:
             oauth_client_id (str): the OAuth client id provided to you by your instance's ServiceNow administrator.
-            Needs set_auth_type('sso_auth') to have an effect.
+            Needs set_auth_type('sso_oauth') to have an effect.
         """
         self.oauth_client_id = oauth_client_id
 
@@ -206,7 +206,7 @@ class SnowRestSession(object):
         Args:
             oauth_client_secret (str): the OAuth client secret provided to you by your instance's
             ServiceNow administrator.
-            Needs set_auth_type('sso_auth') to have an effect.
+            Needs set_auth_type('sso_oauth') to have an effect.
             An OAuth client secret is sensitive information; please store it as securely as possible.
         """
         self.oauth_client_secret = oauth_client_secret
@@ -560,7 +560,7 @@ class SnowRestSession(object):
         Initiates a session via CERN Single-Sign-On + OAuth, or basic Authentication
 
         Raises:
-            SnowRestSessionException: if auth_type is not 'sso_auth' nor 'basic'
+            SnowRestSessionException: if auth_type is not 'sso_oauth' nor 'basic'
         """
         if self.auth_type == 'sso_oauth':
             self.__cern_get_sso_cookie()
@@ -575,7 +575,7 @@ class SnowRestSession(object):
         else:
             raise SnowRestSessionException(
                 "SnowRestSession.__initiate_session: self.auth_type "
-                "has a value different from \"basic\" and \"sso_auth\"")
+                "has a value different from \"basic\" and \"sso_oauth\"")
 
     def __refresh_token(self):
         """
@@ -637,7 +637,7 @@ class SnowRestSession(object):
                 or the value set with the ``.set_instance()`` method.
             headers (:obj:`dict`, optional): any additional headers to be be passed. This method will add
                 Accept:application/json and Content-Type:application/json if not specified.
-                It will also add the Authorization header if the authentication type is 'sso_auth',
+                It will also add the Authorization header if the authentication type is 'sso_oauth',
                 by setting it to the OAuth access header.
             params (:obj:`dict`, optional): any additional URL parameters to be be passed
             data (object): the data to be sent in a post or put operation
@@ -788,7 +788,7 @@ class SnowRestSession(object):
                                         "the OAuth client id and secret might not be valid")
             else:
                 raise SnowRestSessionException(
-                    "SnowRestSession.__operation: self.auth_type has a value different from \"basic\" and \"sso_auth\"")
+                    "SnowRestSession.__operation: self.auth_type has a value different from \"basic\" and \"sso_oauth\"")
 
     def _configure_handler(self):
         self._logger.removeHandler(self._log_handler)

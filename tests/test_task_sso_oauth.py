@@ -60,6 +60,10 @@ class TestTaskBasicAuthentication(unittest.TestCase, TestTaskBase):
         TestTaskBase.base_test_task_query(self, s)
         self.remove_cookie()
 
+    def test_task_get_by_number(self):
+        s = self.make_good_session()
+        TestTaskBase.base_test_get_by_number(self, s)
+        self.remove_cookie()
 
 if __name__ == '__main__':
     unittest.main()  # for compatibility with Python2.6 unittest
