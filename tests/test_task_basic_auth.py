@@ -63,7 +63,7 @@ class TestTaskBasicAuthentication(unittest.TestCase, TestTaskBase):
     def test_task_get_by_number(self):
         s = self.make_good_session()
         TestTaskBase.base_task_get_by_number(self, s)
-        self.Remove_cookie()
+        self.remove_cookie()
 
 
 if __name__ == '__main__':

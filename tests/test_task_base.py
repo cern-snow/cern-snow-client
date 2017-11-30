@@ -676,7 +676,14 @@ class TestTaskBase(TestBase):
         self.assertTrue(records_found)
 
 
-        def base_task_get_by_number(s):
-            t = Task(s)
-            if t.get_by_number('INC0426232'):
-                self.assertTrue(t.number, 'INC0426232')
+    def base_task_get_by_number(self, s):
+        t = Task(s)
+        found = t.get_by_number('INC0426232')
+        self.assertTrue(found)
+        self.assertEquals(t.sys_id, 'c1c535ba85f45540adf94de5b835cd43')
+        self.assertEquals(t.number, 'INC0426232')
+        self.assertEquals(t.short_description, 'Test')
+        self.assertEquals(t.get_table_name(), 'task')
+        self.assertEquals(t.sys_class_name, 'incident')
+        self.assertTrue(not hasattr(t, 'incident_state'))
+
