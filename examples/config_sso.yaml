@@ -1,7 +1,6 @@
 instance: cerntraining.service-now.com
 auth:
-    type: sso_oauth
-    sso_method: kerberos
+    type: kerberos
     oauth_client_id: 6405e..........
     oauth_client_secret: sdazh8........
 session:

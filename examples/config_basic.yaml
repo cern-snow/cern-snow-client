@@ -1,7 +1,6 @@
 instance: cerntraining.service-now.com
 auth:
-    type: sso_oauth
-    sso_method: basic
+    type: basic
     user: account_name
     password: ...
 session:
