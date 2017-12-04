@@ -595,7 +595,7 @@ class SnowRestSession(object):
             self.token_dic = json.loads(token_request.text)
             with open(self.oauth_token_file_path, 'w') as token_file:
                 json.dump(self.token_dic, token_file)
-
+            return True
         else:
             token_request = self.session.post(self.instance + '/oauth_token.do',
                                               data={'grant_type': 'password',
@@ -605,10 +605,12 @@ class SnowRestSession(object):
                 self.token_dic = json.loads(token_request.text)
                 with open(self.oauth_token_file_path, 'w') as token_file:
                     json.dump(self.token_dic, token_file)
+                return True
             else:
                 if self.fresh_cookie:
                     raise SnowRestSessionException(
                         "SnowRestSession.__refresh_token: the OAuth client id and OAuth secret might not be valid")
+                return False
 
     def __save_cookie_basic(self):
         """
@@ -732,15 +734,8 @@ class SnowRestSession(object):
                         "be able to log in to ServiceNow or the OAuth client id and secret might not be valid")
 
                 else:
-                    self.__refresh_token()
-                    token_request = self.session.post('post', self.instance + '/oauth_token.do',
-                                                      data={'grant_type': 'password',
-                                                            'client_id': self.oauth_client_id,
-                                                            'client_secret': self.oauth_client_secret})
-                    if token_request.status_code == 200:
-                        self.token_dic = json.loads(token_request.text)
-                        with open(self.oauth_token_file_path, 'w') as token_file:
-                            json.dump(self.token_dic, token_file)
+                    token_request = self.__refresh_token()
+                    if token_request:
                         headers['Authorization'] = 'Bearer ' + self.token_dic['access_token']
                         result = self.__execute(operation, url, headers=headers, params=params, data=data)
                         if result.status_code != 401:
