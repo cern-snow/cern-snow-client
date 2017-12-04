@@ -111,7 +111,7 @@ def usage():
 
 def main():
     if os.path.exists('config.yaml'):
-        print 'Problem, configfile.yaml exist already'
+        print 'Problem, config.yaml exist already'
         sys.exit(0)
     if len(sys.argv) >= 2:
         if sys.argv[1] == '-b':
