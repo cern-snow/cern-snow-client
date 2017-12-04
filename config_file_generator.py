@@ -3,6 +3,7 @@ import sys
 import getpass
 import os
 
+
 def basic_squelette(file_name='config.yaml'):
     f = open(file_name, 'w')
     f.write('instance: \nauth:\n    type: sso_oauth\n    sso_method: basic\n    user: \n    password: \nsession:\n    '
@@ -11,6 +12,7 @@ def basic_squelette(file_name='config.yaml'):
             'log_file_rotations: 10\n    log_file_encoding: utf-8')
     f.close()
     print 'Generated file ' + file_name + '\n'
+
 
 def kerberos_squelette(file_name='config.yaml'):
     f = open(file_name, 'w')
@@ -21,6 +23,7 @@ def kerberos_squelette(file_name='config.yaml'):
             'log_file_encoding: utf-8')
     f.close()
     print 'Generated file ' + file_name+ '\n'
+
 
 def construct_config_file():    
     print 'Hi and welcome to the  config file generator\n'
@@ -58,10 +61,12 @@ def construct_config_file():
         oauth_client_secret = raw_input('Enter your oauth_client_secret\n')
         f.write('    oauth_client_secret: ' + oauth_client_secret + '\n')
 
-    answer = raw_input('Do you want to Store cookie in your computer ? Y|N (highly recommended !)\n')
+    answer = raw_input('Do you want to Store cookie in your computer ? Y/n (highly recommended !)\n')
+    if len(answer) == 0:
+        answer = 'Y'
     i = 0
-    cookie_file = None
-    while answer != 'Y' and answer != 'N':
+    cookie_file = ''
+    while answer != 'Y' and answer != 'N' and answer != 'n' and answer != 'y':
         answer = raw_input('Do you want to Store cookie in your computer ? Y|N (highly recommended !)\n')
         i+=1
         if i == 3:
@@ -75,9 +80,11 @@ def construct_config_file():
         f.write('session:\n    cookie_file: ' + cookie_file + '\n')
 
     if auth == 'kerberos':
-        answer = raw_input('Do you want to Store Token in your computer ? Y|N (highly recommended !)\n')
+        answer = raw_input('Do you want to Store Token in your computer ? Y/n (highly recommended !)\n')
+        if len(answer) == 0:
+            answer = 'Y'
         i = 0
-        while answer != 'Y' and answer != 'N':
+        while answer != 'Y' and answer != 'N' and answer != 'y' and answer != 'n':
             answer = raw_input('Do you want to Store Token in your computer ? Y|N (highly recommended !)\n')
             i+=1
             if i == 3:
@@ -91,21 +98,16 @@ def construct_config_file():
                 f.write('    oauth_tokens_file: ' + token_file + '\n')
             else:
                 f.write('session:\n    oauth_token_file: ' + token_file + '\n')
-
-    answer = raw_input('Do you want a log_file ? Y|N\n')
-    i = 0
-    while answer != 'Y' and answer != 'N':
-        answer = raw_input('Bad input You want a log_file enter Y or N\n')
-        i+=1
-        if i == 3:
-            print 'Problem in the input'
-            sys.exit(0)
     f.close()
-    
+
+
 def usage():
     print 'USAGE\t./config_file_generator [-b|-k|-h]\nDESCRIPTION:'\
         '\n\t-b : create a config_file.yaml with basic configuration (-o "name of your file")' \
-        '\n\t-k : create a config_file.yaml with the kerberos configuration (-o "name of your file")'
+        '\n\t-k : create a config_file.yaml with the kerberos configuration (-o "name of your file")' \
+        '\nEXAMPLE:\n\t./config_file_generator -k -o config_file_kerberos.yaml' \
+        '\n\t./config_file_generator -k\n\t./config_file_generator'
+
 
 def main():
     if os.path.exists('config.yaml'):
