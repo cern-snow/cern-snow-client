@@ -705,27 +705,32 @@ class SnowRestSession(object):
         Raises:
             SnowRestSessionException : if the operation could not be performed due to an authentication issue
         """
+        self._info("Session: we are going to do a " + operation + "to this url : " + url)
         self.__initiate_session()
 
         if self.auth_type == 'basic':
+            self._debug("authentification is basic")
             tries = 0
             while tries < 3:
                 if self.basic_auth_password:
                     result = self.__execute(operation, url, headers=headers, params=params, data=data)
                     if result.status_code != 401:
-                        if self.auth_type == 'basic':
-                            self.__save_cookie_basic()
+                        self._debug("The request is good everything is ok")
+                        self.__save_cookie_basic()
                         return result
                 self.basic_auth_password = getpass.getpass('Enter your password : ')
                 self.session.auth = (self.basic_auth_user, self.basic_auth_password)
+                self._debug("The request is bad because of the password maybe tries = " + tries)
                 tries = tries + 1
             raise SnowRestSessionException(
                 "SnowRestSession.__operation: Your basic authentication "
                 "user and password might not be valid")
 
         elif self.auth_type == 'sso_oauth':
+            self._debug("authentification is sso_oauth")
             result = self.__execute(operation, url, headers=headers, params=params, data=data)
             if result.status_code != 401:
+                self._debug("The request is good everything is ok")
                 return result
             else:
                 if self.fresh_token:
@@ -734,11 +739,15 @@ class SnowRestSession(object):
                         "be able to log in to ServiceNow or the OAuth client id and secret might not be valid")
 
                 else:
+                    self._debug("Problem in the request maybe the token are outdated rebuild of the token")
                     token_request = self.__refresh_token()
                     if token_request:
                         headers['Authorization'] = 'Bearer ' + self.token_dic['access_token']
+                        self._debug("Doing the request")
                         result = self.__execute(operation, url, headers=headers, params=params, data=data)
                         if result.status_code != 401:
+                            self._debug("The request is good the problem was that the token "
+                                        "were outdated everything is ok")
                             return result
                         else:
                             raise SnowRestSessionException(
@@ -747,18 +756,23 @@ class SnowRestSession(object):
                                 "the OAuth client id and secret might not be valid")
 
                     else:
+                        self._debug("Problem with asking the new token, maybe we are not logged into the session")
                         if self.fresh_cookie:
                             raise SnowRestSessionException(
                                 "SnowRestSession.__operation: OAuth tokens could not be retrieved from ServiceNow. "
                                 "Please check the OAuth client id and OAuth client secret.")
                         else:
+                            self._debug("Cookies are old, asking for new cookies with cern_get_sso_cookie")
                             os.remove(self.session_cookie_file_path)
                             self.__cern_get_sso_cookie()
                             token_request = self.session.post('post', self.instance + '/oauth_token.do',
                                                               data={'grant_type': 'password',
                                                                     'client_id': self.oauth_client_id,
                                                                     'client_secret': self.oauth_client_secret})
+                            self._debug("Trying to get the access token")
                             if token_request.status_code == 401:
+                                self._debug("Something goes wrong, Oauth client id/secret are not "
+                                            "good or you cant access to this server of service now")
                                 raise SnowRestSessionException(
                                     "SnowRestSession.__operation: OAuth tokens could not be retrieved from ServiceNow. "
                                     "Please check the OAuth client id and OAuth client secret.")
@@ -767,16 +781,21 @@ class SnowRestSession(object):
                                 with open(self.oauth_token_file_path, 'w') as token_file:
                                     json.dump(self.token_dic, token_file)
                                 headers['Authorization'] = 'Bearer ' + self.token_dic['access_token']
+                                self._debug("Doing the request")
                                 result = self.__execute(operation, url, headers=headers, params=params,
                                                         data=data)
                                 if result.status_code != 401:
+                                    self._debug("The request is good everything is ok")
                                     return result
                                 else:
+                                    self._debug("Request failed, maybe you are not able to log into ServiceNow"
+                                                "or maybe your Oauth client id/secret are not valid")
                                     raise SnowRestSessionException(
                                         "SnowRestSession.__operation: failed to perform the operation. "
                                         "The current account might not be able to log in to ServiceNow or "
                                         "the OAuth client id and secret might not be valid")
         else:
+            self._debug("The authentification is not basic or sso_oauth")
             raise SnowRestSessionException(
                 "SnowRestSession.__operation: self.auth_type has a value different from \"basic\" and \"sso_oauth\"")
 
