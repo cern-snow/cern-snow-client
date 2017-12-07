@@ -38,6 +38,8 @@ class SnowRestSession(object):
         self.basic_auth_password = None
         self.oauth_client_id = None
         self.oauth_client_secret = None
+        self.cert_pem_file = None
+        self.cert_key_file = None
         self.session_cookie_file_path = None
         self.session_cookie = None
         self.oauth_token_file_path = None
@@ -102,6 +104,13 @@ class SnowRestSession(object):
 
             if 'oauth_client_secret' in config_file['auth']:
                 self.oauth_client_secret = config_file['auth']['oauth_client_secret']
+
+            if self.sso_method == 'certificate':
+                if 'cert_pem_file' in config_file['auth']:
+                    self.cert_pem_file = config_file['auth']['cert_pem_file']
+
+                if 'cert_key_file' in config_file['auth']:
+                    self.cert_pem_file = config_file['auth']['cert_key_file']
 
             if 'session' in config_file:
                 if 'cookie_file' in config_file['session']:
@@ -192,6 +201,22 @@ class SnowRestSession(object):
         if sso_method == 'certificate':
             raise SnowRestSessionException("SnowRestSession.set_sso_method: certificate support is not yet implemented")
         self.sso_method = sso_method
+
+    def set_cert_pem_file(self, pem_file):
+        """
+        Args:
+            pem_file (str): It is the pem of the certificat. you need to specified the way to find the file.
+            Needs set sso_method with 'certificate'.
+        """
+        self.cert_pem_file = pem_file
+
+    def set_cert_key_file(self, key_file):
+        """
+        Args:
+            key_file (str): It is the key of the certificat. you need to specified the way to find the file.
+            Needs set sso_method with 'certificate'.
+        """
+        self.cert_key_file = key_file
 
     def set_oauth_client_id(self, oauth_client_id):
         """
@@ -442,6 +467,9 @@ class SnowRestSession(object):
         in order to perform a Single Sign-On and produce a cookie file.
         """
         args = ["cern-get-sso-cookie", "--reprocess", "--url", self.instance, "--outfile", self.session_cookie_file_path]
+        if self.sso_method == 'certificate':
+            args = ["cern-get-sso-cookie", "-v", "--cert", self.cert_pem_file, "--key",
+                    self.cert_key_file, "-r", "-u", self.instance, "-o", self.session_cookie_file_path]
         p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         p.wait()
 
