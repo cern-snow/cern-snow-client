@@ -759,3 +759,10 @@ class RecordSet(SessionAware):
             type : The Python class (Task, Incident...) that is used to build the objects returned by ``next()``
         """
         return self._record_class
+
+    def __len__record_set(self):
+        """
+        Returns:
+             :return int that is the len of the result_array
+        """
+        return len(self._result_array)
