@@ -1,3 +1,6 @@
+v0.3.0.1
+- Added the LGPLv3 License
+
 v0.3
 - Refactor into classes: new Record, Task, Incident, Request classes
 - High-level methods, such as get, insert, update, add_comment, add_work_note, take_in_progress, resolve
