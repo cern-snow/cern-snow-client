@@ -1,7 +1,7 @@
 ## Synopsis
-Welcome on the snow-client library. It facilitates usage of the ServiceNow REST interface with a CERN Single Sign On account, such as a service account. Basic Authentication is also supported.
+Welcome to the cern-snow-client library, which facilitates the usage of the ServiceNow REST API with a CERN Single Sign On account, such as a CERN service account. Basic Authentication is also supported.
 
-The library is compatible with Python 2.6+ but not Python 3 yet.
+The library is compatible with Python 2.6 and Python 2.7 but not Python 3 yet.
 
 The library code is in the package [**cern_snow_client**](cern_snow_client), and example usage is in [`examples/main.py`](examples/main.py). You should modify the configuration file [`examples/config.yaml`](examples/config.yaml) as well.
 
@@ -84,7 +84,6 @@ Tested environments are lxplus.cern.ch (currently Python 2.6) and aiadm (current
 Please check our [Issue List](https://gitlab.cern.ch/servicenow/snow-client/issues) to see the planned improvements.
 
 Any ideas or contributions are welcome. Please get in touch with us.
-
 
 ## Contributors
 
