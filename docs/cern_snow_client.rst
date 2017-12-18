@@ -1,6 +1,8 @@
 .. This file is part of the cern-snow-client library.
    Copyright (c) 2017 CERN
-   Authors: James Clerc <james.clerc@cern.ch>, David Martin Clavo <david.martin.clavo@cern.ch>
+   Authors:
+   - James Clerc <james.clerc@cern.ch> <james.clerc@epitech.eu>
+   - David Martin Clavo <david.martin.clavo@cern.ch>
 
    The cern-snow-client library is free software; you can redistribute it
    and/or modify it under the terms of the GNU Lesser General Public License as published by
