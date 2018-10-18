@@ -160,7 +160,7 @@ class Record(SessionAware):
 
         Raises:
             SnowClientException: if the ``key`` argument is invalid.
-            SnowRestSessionException : if there is any authentication problem
+   z         SnowRestSessionException : if there is any authentication problem
 
         Examples:
             Getting an incident by sys_id:
@@ -217,9 +217,13 @@ class Record(SessionAware):
                 return False
             result = result['result']
         elif is_key_tuple:
-            if not result['result']:
+            if 'result' not in result:
                 return False
-            result = result['result'][0]
+            result = result['result']
+            if len(result) > 0:
+                result = result[0]
+            else:
+                return False
         #  set the values inside the current object : _set_values()
         self._set_values(result)
         #  return True or False
@@ -665,7 +669,9 @@ class RecordQuery(SessionAware):
 
         #  execute a get
         self._info('RecordQuery.query: querying the table ' + self._table_name + ' with URL ' + url)
-        result = self._session.get(url)
+        result = self._session.get(url, params={'sysparm_display_value': 'all'})
+        self._debug('RecordQuery.query: result of querying the table ' + self._table_name + ' with URL ' + url +
+                    ': ' + result.text)
 
         #  build an array of objects where each object represents a record
         result_array = []

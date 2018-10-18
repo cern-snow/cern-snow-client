@@ -1,3 +1,8 @@
+v0.3.0.2
+- Fix issue when using Record.get() passing a tuple as key
+- Fix RecordQuery.query() not retrieving display values
+-
+
 v0.3.0.1
 - Added the LGPLv3 License
 
