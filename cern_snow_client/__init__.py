@@ -30,7 +30,7 @@ Also, other higher level operations have been implemented, such as querying/inse
 or querying/inserting/updating incidents and requests, including adding comments and work notes.
 """
 
-__version__ = "0.3.0.1"
+__version__ = "0.3.0.2"
 
 
 import logging
