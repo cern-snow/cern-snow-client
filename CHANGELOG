@@ -1,7 +1,7 @@
 v0.3.0.2
 - Fix issue when using Record.get() passing a tuple as key
 - Fix RecordQuery.query() not retrieving display values
--
+- Added new parameter "url_params" to RecordQuery.query()
 
 v0.3.0.1
 - Added the LGPLv3 License

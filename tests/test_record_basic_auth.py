@@ -45,6 +45,11 @@ class TestRecordBasicAuthentication(unittest.TestCase, TestRecordBase):
         TestRecordBase.base_test_get_record(self, s)
         self.remove_cookie()
 
+    def test_get_record_with_tuple(self):
+        s = self.make_good_session()
+        TestRecordBase.base_test_get_record_with_tuple(self, s)
+        self.remove_cookie()
+
     def test_insert_record(self):
         s = self.make_good_session()
         TestRecordBase.base_test_insert_record(self, s)

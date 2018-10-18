@@ -160,7 +160,7 @@ class Record(SessionAware):
 
         Raises:
             SnowClientException: if the ``key`` argument is invalid.
-   z         SnowRestSessionException : if there is any authentication problem
+            SnowRestSessionException : if there is any authentication problem
 
         Examples:
             Getting an incident by sys_id:
@@ -596,6 +596,8 @@ class RecordQuery(SessionAware):
         SnowClientException : if any of the parameters is set incorrectly
     """
 
+    sysparm_fields_in_url_params_pattern = None
+
     def __init__(self, session, table_name=None):
         if not session:
             raise SnowClientException('RecordQuery.__init__: To create a RecordQuery instance'
@@ -607,7 +609,7 @@ class RecordQuery(SessionAware):
         super(RecordQuery, self).__init__(session)
         self._table_name = table_name
 
-    def query(self, query_filter=None, query_encoded=None):
+    def query(self, query_filter=None, query_encoded=None, url_params=None):
         """
         Executes the query.
         At least a `query_filter` or `query_encoded` parameter need to be provided.
@@ -617,6 +619,8 @@ class RecordQuery(SessionAware):
                 the corresponding values will be returned
             query_encoded (str): a ServiceNow encoded query.
                 See https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html
+            url_params (str): additional URL parameters, as a string: param1=value1&param2=value2 ...
+                See https://docs.servicenow.com/bundle/geneva-servicenow-platform/page/integrate/inbound_rest/reference/r_TableAPI-GET.html
 
         Returns:
             RecordSet : A RecordSet object, which is an iterable, and which will return in each iteration
@@ -637,14 +641,15 @@ class RecordQuery(SessionAware):
             >>>     'active': 'false'
             >>> })
             >>>
-            >>> # Same query with encoded query
+            >>> # Same query with encoded query, and requesting only the sys_id, number and short_description
             >>> record_set = r.query(
             >>>     query_encoded="u_functional_element=ea56fb210a0a8c0a015a591ddbed3676^"
-            >>>                   "u_visibility=cern^active=false")
+            >>>                   "u_visibility=cern^active=false",
+            >>>     url_params="sysparm_fields=number,short_description")
             >>>
             >>> for record in record_set:
             >>>     print record.number + " " + record.short_description
-            >>>     print record.sys_class_name  # will print 'incident
+            >>>     print record.sys_class_name  # will print 'incident' even if we did not request this field
             >>>     print type(record)  # will print the Incident class
         """
 
@@ -666,6 +671,9 @@ class RecordQuery(SessionAware):
             query_encoded = query_encoded + '^'.join(query)
         if query_encoded:
             url = url + '?sysparm_query=' + query_encoded
+        if url_params:
+            url_params = self.__check_and_fix_url_params(url_params)
+            url = url + '&' + url_params
 
         #  execute a get
         self._info('RecordQuery.query: querying the table ' + self._table_name + ' with URL ' + url)
@@ -700,6 +708,38 @@ class RecordQuery(SessionAware):
             str : The table_name argument that was used to build this RecordQuery object.
         """
         return self._table_name
+
+    @classmethod
+    def __check_and_fix_url_params(cls, url_params):
+        """
+            Checks for potentially dangerous URL parameters.
+            For example, the parameter sysparm_fields should always include the sys_id and sys_class_name fields.
+
+        Args:
+            url_params (str): additional URL parameters passed to the REST API
+
+        Returns:
+            str: checked and eventually fixed URL paramaters
+        """
+        pattern = cls.__get_sysparm_fields_in_url_params_re()
+        match = pattern.search(url_params)
+        if match:
+            matched_value = match.group(1)
+            if matched_value:
+                field_name_array = matched_value.split(',')
+                if 'sys_id' not in field_name_array:
+                    field_name_array.append('sys_id')
+                if 'sys_class_name' not in field_name_array:
+                    field_name_array.append('sys_class_name')
+                url_params = pattern.sub("sysparm_fields=" + ",".join(field_name_array), url_params)
+
+        return url_params
+
+    @classmethod
+    def __get_sysparm_fields_in_url_params_re(cls):
+        if not cls.sysparm_fields_in_url_params_pattern:
+            cls.sysparm_fields_in_url_params_pattern = re.compile('sysparm_fields=([^&]+)')
+        return cls.sysparm_fields_in_url_params_pattern
 
 
 class RecordSet(SessionAware):

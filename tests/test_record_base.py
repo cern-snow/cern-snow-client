@@ -55,6 +55,32 @@ class TestRecordBase(TestBase):
         self.assertEquals(r.incident_state.get_display_value(), 'Closed')
         self.assertFalse(r.incident_state.is_reference())
 
+    def base_test_get_record_with_tuple(self, s):
+        r = Record(s, 'incident')  # s is a SnowRestSession object
+        found = r.get(('number', 'INC0426232'))
+
+        self.assertTrue(found)
+
+        self.assertEquals(r.number, 'INC0426232')
+        self.assertEquals(r.sys_id, 'c1c535ba85f45540adf94de5b835cd43')
+        self.assertEquals(r.sys_class_name, 'incident')
+
+        self.assertEquals(r.short_description, 'Test')
+        self.assertEquals(r.short_description.get_value(), 'Test')
+        self.assertEquals(r.short_description.get_display_value(), 'Test')
+        self.assertFalse(r.short_description.is_reference())
+
+        self.assertEquals(r.u_functional_element, 'ea56fb210a0a8c0a015a591ddbed3676')
+        self.assertEquals(r.u_functional_element.get_value(), 'ea56fb210a0a8c0a015a591ddbed3676')
+        self.assertEquals(r.u_functional_element.get_display_value(), 'IT Service Management Support')
+        self.assertTrue(r.u_functional_element.is_reference())
+        self.assertEquals(r.u_functional_element.get_referenced_table(), 'u_cmdb_ci_functional_services')
+
+        self.assertEquals(r.incident_state, '7')
+        self.assertEquals(r.incident_state.get_value(), '7')
+        self.assertEquals(r.incident_state.get_display_value(), 'Closed')
+        self.assertFalse(r.incident_state.is_reference())
+
     def base_test_insert_record(self, s):
         # incident test
         r = Record(s, 'incident', {
@@ -152,7 +178,7 @@ class TestRecordBase(TestBase):
         r = RecordQuery(s, 'incident')
 
         # Query the incidents with FE=IT Service Management Support,
-        # Visibility=CERN, Created in 2016, and already closed
+        # Visibility=CERN, Created in 2016, and already closed, using a query filter
         record_set = r.query(query_filter={
             'u_functional_element': 'ea56fb210a0a8c0a015a591ddbed3676',
             'u_visibility': 'cern',
@@ -162,8 +188,14 @@ class TestRecordBase(TestBase):
         records_found = False
         for record in record_set:
             records_found = True
+            self.assertTrue(bool(record.sys_id))
             self.assertTrue(bool(record.number))
             self.assertTrue(bool(record.short_description))
+            self.assertEquals(record.u_functional_element, 'ea56fb210a0a8c0a015a591ddbed3676')
+            self.assertEquals(record.u_functional_element.get_value(), 'ea56fb210a0a8c0a015a591ddbed3676')
+            self.assertEquals(record.u_functional_element.get_display_value(), 'IT Service Management Support')
+            self.assertTrue(record.u_functional_element.is_reference())
+            self.assertEquals(record.u_functional_element.get_referenced_table(), 'u_cmdb_ci_functional_services')
             self.assertEquals(record.sys_class_name, 'incident')
             self.assertTrue(type(record) is Incident)
 
@@ -172,7 +204,7 @@ class TestRecordBase(TestBase):
         r2 = RecordQuery(s, 'incident')
 
         # Query the incidents with FE=IT Service Management Support,
-        # Visibility=CERN, Created in 2016, and already closed
+        # Visibility=CERN, Created in 2016, and already closedm using an encoded query
         record_set_2 = r2.query(
             query_encoded="u_functional_element=ea56fb210a0a8c0a015a591ddbed3676^u_visibility=cern^active=false^"
                           "sys_created_onDATEPART2016@javascript:gs.datePart('year','2016','EE')")
@@ -180,8 +212,14 @@ class TestRecordBase(TestBase):
         records_found = False
         for record in record_set_2:
             records_found = True
+            self.assertTrue(bool(record.sys_id))
             self.assertTrue(bool(record.number))
             self.assertTrue(bool(record.short_description))
+            self.assertEquals(record.u_functional_element, 'ea56fb210a0a8c0a015a591ddbed3676')
+            self.assertEquals(record.u_functional_element.get_value(), 'ea56fb210a0a8c0a015a591ddbed3676')
+            self.assertEquals(record.u_functional_element.get_display_value(), 'IT Service Management Support')
+            self.assertTrue(record.u_functional_element.is_reference())
+            self.assertEquals(record.u_functional_element.get_referenced_table(), 'u_cmdb_ci_functional_services')
             self.assertEquals(record.sys_class_name, 'incident')
             self.assertTrue(type(record) is Incident)
 
@@ -190,17 +228,25 @@ class TestRecordBase(TestBase):
         r3 = RecordQuery(s, 'task')
 
         # Query the incidents with FE=IT Service Management Support,
-        # Visibility=CERN, Created in 2016, and already closed
+        # Visibility=CERN, Created in 2016, and already closed, using an encoded query on the task table,
+        # and getting only the relevant fields
         record_set_3 = r3.query(
             query_encoded="sys_class_name=incident^u_functional_element=ea56fb210a0a8c0a015a591ddbed3676"
                           "^u_visibility=cern^active=false^"
-                          "sys_created_onDATEPART2016@javascript:gs.datePart('year','2016','EE')")
+                          "sys_created_onDATEPART2016@javascript:gs.datePart('year','2016','EE')",
+            url_params="sysparm_fields=number,short_description,u_functional_element")
 
         records_found = False
         for record in record_set_3:
             records_found = True
+            self.assertTrue(bool(record.sys_id))
             self.assertTrue(bool(record.number))
             self.assertTrue(bool(record.short_description))
+            self.assertEquals(record.u_functional_element, 'ea56fb210a0a8c0a015a591ddbed3676')
+            self.assertEquals(record.u_functional_element.get_value(), 'ea56fb210a0a8c0a015a591ddbed3676')
+            self.assertEquals(record.u_functional_element.get_display_value(), 'IT Service Management Support')
+            self.assertTrue(record.u_functional_element.is_reference())
+            self.assertEquals(record.u_functional_element.get_referenced_table(), 'u_cmdb_ci_functional_services')
             self.assertEquals(record.sys_class_name, 'incident')
             self.assertTrue(type(record) is Task)
 
