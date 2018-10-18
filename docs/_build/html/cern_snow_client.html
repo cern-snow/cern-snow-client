@@ -913,9 +913,14 @@ to authenticate and communicate with ServiceNow</li>
 </tr>
 </tbody>
 </table>
+<dl class="attribute">
+<dt id="cern_snow_client.record.RecordQuery.sysparm_fields_in_url_params_pattern">
+<code class="descname">sysparm_fields_in_url_params_pattern</code><em class="property"> = None</em><a class="headerlink" href="#cern_snow_client.record.RecordQuery.sysparm_fields_in_url_params_pattern" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="cern_snow_client.record.RecordQuery.query">
-<code class="descname">query</code><span class="sig-paren">(</span><em>query_filter=None</em>, <em>query_encoded=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordQuery.query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordQuery.query" title="Permalink to this definition">¶</a></dt>
+<code class="descname">query</code><span class="sig-paren">(</span><em>query_filter=None</em>, <em>query_encoded=None</em>, <em>url_params=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cern_snow_client/record.html#RecordQuery.query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cern_snow_client.record.RecordQuery.query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Executes the query.
 At least a <cite>query_filter</cite> or <cite>query_encoded</cite> parameter need to be provided.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -927,6 +932,8 @@ At least a <cite>query_filter</cite> or <cite>query_encoded</cite> parameter nee
 the corresponding values will be returned</li>
 <li><strong>query_encoded</strong> (<em>str</em>) – a ServiceNow encoded query.
 See <a class="reference external" href="https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html">https://docs.servicenow.com/bundle/helsinki-servicenow-platform/page/use/using-lists/concept/c_EncodedQueryStrings.html</a></li>
+<li><strong>url_params</strong> (<em>str</em>) – additional URL parameters, as a string: param1=value1&amp;param2=value2 …
+See <a class="reference external" href="https://docs.servicenow.com/bundle/geneva-servicenow-platform/page/integrate/inbound_rest/reference/r_TableAPI-GET.html">https://docs.servicenow.com/bundle/geneva-servicenow-platform/page/integrate/inbound_rest/reference/r_TableAPI-GET.html</a></li>
 </ul>
 </td>
 </tr>
@@ -954,14 +961,15 @@ otherwise, an instance of the Record class.</p>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;active&#39;</span><span class="p">:</span> <span class="s1">&#39;false&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">})</span>
 <span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Same query with encoded query</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Same query with encoded query, and requesting only the sys_id, number and short_description</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">record_set</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">query_encoded</span><span class="o">=</span><span class="s2">&quot;u_functional_element=ea56fb210a0a8c0a015a591ddbed3676^&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span>                  <span class="s2">&quot;u_visibility=cern^active=false&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>                  <span class="s2">&quot;u_visibility=cern^active=false&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">url_params</span><span class="o">=</span><span class="s2">&quot;sysparm_fields=number,short_description&quot;</span><span class="p">)</span>
 <span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">record_set</span><span class="p">:</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">record</span><span class="o">.</span><span class="n">number</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">record</span><span class="o">.</span><span class="n">short_description</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">record</span><span class="o">.</span><span class="n">sys_class_name</span>  <span class="c1"># will print &#39;incident</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="n">record</span><span class="o">.</span><span class="n">sys_class_name</span>  <span class="c1"># will print &#39;incident&#39; even if we did not request this field</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span> <span class="nb">type</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>  <span class="c1"># will print the Incident class</span>
 </pre></div>
 </div>
